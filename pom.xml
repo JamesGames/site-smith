@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.jamesgames</groupId>
+    <artifactId>site-smith-parent</artifactId>
+    <version>0.1</version>
+
+    <packaging>pom</packaging>
+    <name>Site Smith</name>
+    <description>Site Smith Parent, this maven build is used to package together build dependencies. The executable jar
+        for the application is built via the module site-smith.
+    </description>
+
+    <developers>
+        <developer>
+            <id>jamesgames</id>
+            <name>James Murphy</name>
+            <email>JamesGames.Org@gmail.com</email>
+        </developer>
+    </developers>
+
+    <modules>
+        <module>site-smith</module>
+    </modules>
+</project>
