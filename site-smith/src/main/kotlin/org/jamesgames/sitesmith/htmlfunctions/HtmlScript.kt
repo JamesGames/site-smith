@@ -12,14 +12,14 @@ import kotlin.text.isEmpty
 /**
  * @author James Murphy
  */
-class Template(val name: String) : HtmlProducer {
+class HtmlScript(val name: String) : HtmlProducer {
     private val htmlFunctionCalls: ArrayList<HtmlFunctionCall> = ArrayList();
-    private val templateDirectory: Path = Paths.get("/templates");
+    private val htmlScriptDirectory: Path = Paths.get("/scripts");
 
     init {
-        val templateFile: File = File(templateDirectory.resolve(name).toUri())
-        if (templateFile.exists() && templateFile.isFile) {
-            Files.lines(templateFile.toPath())
+        val htmlScriptFile: File = File(htmlScriptDirectory.resolve(name).toUri())
+        if (htmlScriptFile.exists() && htmlScriptFile.isFile) {
+            Files.lines(htmlScriptFile.toPath())
                     .filter(String::isEmpty)
                     .map { toHtmlFunctionCall(it) }.forEach { htmlFunctionCalls.add(it) }
         }

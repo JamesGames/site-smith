@@ -11,9 +11,9 @@ import java.nio.file.Paths
  */
 class Project(val projectDirectory: File) {
     private val htmlFunctionDirectoryName = "html-functions"
-    private val templateDirectoryName = "templates"
+    private val htmlScriptDirectoryName = "templates"
     val htmlFunctionDirectory: File
-    val templateDirectory: File
+    val htmlScriptDirectory: File
     private val htmlFunctionMap: HtmlFunctionMap = HtmlFunctionMap()
     private val resourceMap: ResourceMap = ResourceMap()
 
@@ -22,8 +22,8 @@ class Project(val projectDirectory: File) {
         if (!projectDirectory.isDirectory) throw IllegalArgumentException("The project directory specified is not a directory")
         htmlFunctionDirectory = Paths.get(projectDirectory.toURI()).resolve(htmlFunctionDirectoryName).toFile();
         if (!htmlFunctionDirectory.exists()) htmlFunctionDirectory.mkdir()
-        templateDirectory = Paths.get(projectDirectory.toURI()).resolve(templateDirectoryName).toFile();
-        if (!templateDirectory.exists()) templateDirectory.mkdir()
+        htmlScriptDirectory = Paths.get(projectDirectory.toURI()).resolve(htmlScriptDirectoryName).toFile();
+        if (!htmlScriptDirectory.exists()) htmlScriptDirectory.mkdir()
     }
 
     fun addResource(name: String, resource: Resource) = resourceMap.addResource(name, resource)
