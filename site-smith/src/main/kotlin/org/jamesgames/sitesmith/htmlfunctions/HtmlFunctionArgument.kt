@@ -1,6 +1,6 @@
 package org.jamesgames.sitesmith.htmlfunctions
 
-import org.jamesgames.sitesmith.project.ResourceMap
+import org.jamesgames.sitesmith.project.Project
 import org.jamesgames.sitesmith.resources.Page
 import java.nio.file.Paths
 import kotlin.text.startsWith
@@ -12,13 +12,13 @@ import kotlin.text.substring
 class HtmlFunctionArgument(val argument: String) {
     private val startOfResourceReference: String = "resource:";
 
-    fun evaluate(pageFunctionCalledOn: Page, resourceMap: ResourceMap): String {
-        if (argument.startsWith(startOfResourceReference)) {
-            val restOfArgument = argument.substring(startOfResourceReference.length)
-            return Paths.get(pageFunctionCalledOn.getPath())
-                    .relativize(Paths.get(resourceMap.getResourcePath(restOfArgument, pageFunctionCalledOn))).toString()
-        } else {
-            return argument;
-        }
+    fun evaluate(pageFunctionCalledOn: Page, project: Project): String {
+        return if (argument.startsWith(startOfResourceReference))
+            Paths.get(pageFunctionCalledOn.getPath())
+                    .relativize(Paths.get(project.getRelativeResourcePath(
+                            argument.substring(startOfResourceReference.length),
+                            pageFunctionCalledOn))).toString()
+        else
+            argument;
     }
 }

@@ -1,7 +1,7 @@
 package org.jamesgames.sitesmith.project
 
 import org.jamesgames.sitesmith.htmlfunctions.HtmlFunction
-import org.jamesgames.sitesmith.htmlfunctions.exception.UndefinedHtmlFunctionException
+import org.jamesgames.sitesmith.project.UndefinedHtmlFunctionException
 import java.util.*
 
 /**

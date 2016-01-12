@@ -1,7 +1,6 @@
 package org.jamesgames.sitesmith.htmlfunctions
 
-import org.jamesgames.sitesmith.project.HtmlFunctionMap
-import org.jamesgames.sitesmith.project.ResourceMap
+import org.jamesgames.sitesmith.project.Project
 import org.jamesgames.sitesmith.resources.Page
 import java.io.File
 import java.nio.file.Files
@@ -27,9 +26,9 @@ class Template(val name: String) : HtmlProducer {
     }
 
     private fun toHtmlFunctionCall(line: String): HtmlFunctionCall {
-        val jString: java.lang.String = java.lang.String(line);
-        val tokens: Array<String> = jString.split("|");
-        val function: HtmlFunctionCall = HtmlFunctionCall(tokens[0]);
+        val jString: java.lang.String = java.lang.String(line)
+        val tokens: Array<String> = jString.split("|")
+        val function: HtmlFunctionCall = HtmlFunctionCall(tokens[0])
         Arrays.stream(tokens)
                 .skip(0)
                 .map(::HtmlFunctionArgument)
@@ -38,14 +37,11 @@ class Template(val name: String) : HtmlProducer {
     }
 
     override fun appendHtml(page: Page,
-                            resourceMap: ResourceMap,
-                            htmlFunctionMap: HtmlFunctionMap,
+                            project: Project,
                             stringBuilder: StringBuilder) {
         htmlFunctionCalls.forEach {
-            stringBuilder.append(it.appendHtml(page, resourceMap, htmlFunctionMap, stringBuilder))
+            stringBuilder.append(it.appendHtml(page, project, stringBuilder))
         }
     }
-
-
 }
 

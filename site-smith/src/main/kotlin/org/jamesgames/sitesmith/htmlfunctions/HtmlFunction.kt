@@ -1,7 +1,6 @@
 package org.jamesgames.sitesmith.htmlfunctions
 
-import org.jamesgames.sitesmith.htmlfunctions.exception.ParameterMismatchException
-import org.jamesgames.sitesmith.project.ResourceMap
+import org.jamesgames.sitesmith.project.Project
 import org.jamesgames.sitesmith.resources.Page
 import org.pegdown.PegDownProcessor
 import java.util.*
@@ -13,14 +12,14 @@ import java.util.stream.IntStream
 class HtmlFunction(val name: String, private val functionBody: String, private val isMarkdown: Boolean) {
     private val parameters: ArrayList<String> = ArrayList()
 
-    constructor(name: String, functionBody: String, isMarkdown: Boolean, params: List<String>) :
-    this(name, functionBody, isMarkdown) {
+    constructor (name: String, functionBody: String,
+                 isMarkdown: Boolean, params: List<String>) : this(name, functionBody, isMarkdown) {
         parameters.addAll(params)
     }
 
     fun callFunction(pageCalledFrom: Page,
                      arguments: List<HtmlFunctionArgument>,
-                     resourceMap: ResourceMap): String {
+                     project: Project): String {
         if (arguments.size != parameters.size) {
             throw ParameterMismatchException(name, parameters.size, arguments.size);
         }
@@ -29,13 +28,13 @@ class HtmlFunction(val name: String, private val functionBody: String, private v
                 .rangeClosed(0, parameters.size - 1)
                 .forEach { i ->
                     replaceAll(result, "$" + parameters[i],
-                            arguments[i].evaluate(pageCalledFrom, resourceMap))
+                            arguments[i].evaluate(pageCalledFrom, project))
                 };
         return if (isMarkdown) PegDownProcessor().markdownToHtml(result.toString()) else result.toString();
     }
 
     private fun replaceAll(stringBuilder: StringBuilder, from: String, to: String) {
-        var index: Int = stringBuilder.indexOf(from);
+        var index = stringBuilder.indexOf(from);
         while (index != -1) {
             stringBuilder.replace(index, index + from.length, to);
             index += to.length;

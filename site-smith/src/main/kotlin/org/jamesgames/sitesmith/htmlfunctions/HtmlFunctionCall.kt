@@ -1,7 +1,6 @@
 package org.jamesgames.sitesmith.htmlfunctions
 
-import org.jamesgames.sitesmith.project.HtmlFunctionMap
-import org.jamesgames.sitesmith.project.ResourceMap
+import org.jamesgames.sitesmith.project.Project
 import org.jamesgames.sitesmith.resources.Page
 import java.util.*
 
@@ -13,9 +12,8 @@ class HtmlFunctionCall(val name: String) : HtmlProducer {
     }
 
     override fun appendHtml(page: Page,
-                            resourceMap: ResourceMap,
-                            htmlFunctionMap: HtmlFunctionMap,
+                            project: Project,
                             stringBuilder: StringBuilder) {
-        stringBuilder.append(htmlFunctionMap.getHtmlFunction(name).callFunction(page, arguments, resourceMap));
+        stringBuilder.append(project.getHtmlFunction(name).callFunction(page, arguments, project));
     }
 }

@@ -1,4 +1,4 @@
-package org.jamesgames.sitesmith.htmlfunctions.exception
+package org.jamesgames.sitesmith.htmlfunctions
 
 /**
  * @author James Murphy
