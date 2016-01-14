@@ -2,14 +2,16 @@ package org.jamesgames.sitesmith.parsers
 
 import org.jamesgames.sitesmith.htmlfunctions.HtmlFunctionArgument
 import org.jamesgames.sitesmith.htmlfunctions.HtmlFunctionCall
-import org.jamesgames.sitesmith.htmlfunctions.HtmlFunctionParseException
+import org.jamesgames.sitesmith.htmlfunctions.HtmlScript
+import org.jamesgames.sitesmith.htmlfunctions.HtmlScriptParseException
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.*
 import kotlin.collections.drop
-import kotlin.collections.forEach
+import kotlin.collections.filterNot
 import kotlin.collections.map
+import kotlin.collections.toList
+import kotlin.text.isEmpty
 import kotlin.text.split
 import kotlin.text.trim
 
@@ -19,20 +21,22 @@ import kotlin.text.trim
 class HtmlScriptParser(private val htmlScriptSourceFile: File) {
     private val argumentSeparator = ","
 
-    fun getHtmlScript() {
+    fun getHtmlScript(): HtmlScript {
         val name = com.google.common.io.Files.getNameWithoutExtension(htmlScriptSourceFile.name)
-
-
+        val lines = try {
+            Files.readAllLines(Paths.get(htmlScriptSourceFile.toURI()))
+        } catch (e: Exception) {
+            throw HtmlScriptParseException(name, e.message!!)
+        }
+        if (lines.isEmpty()) throw HtmlScriptParseException(name,
+                "Script is empty, expected at least one line for the script");
+        return HtmlScript(name, lines.map { toHtmlFunctionCall(it) }.toList())
     }
 
     private fun toHtmlFunctionCall(line: String): HtmlFunctionCall {
-        var htmlFunctionArguments = ArrayList<HtmlFunctionArgument>();
-        val tokens: List<String> = line.split(argumentSeparator)
-        tokens
-                .drop(0)
+        val tokens: List<String> = line.split(argumentSeparator).filterNot { it.isEmpty() }
+        return HtmlFunctionCall(tokens[0], tokens.drop(0)
                 .map { it.trim() }
-                .map { ::HtmlFunctionArgument }
-                .forEach { it -> htmlFunctionArguments.add(it.call()) }
-        return HtmlFunctionCall(tokens[0], htmlFunctionArguments);
+                .map { HtmlFunctionArgument(it) }.toList());
     }
 }

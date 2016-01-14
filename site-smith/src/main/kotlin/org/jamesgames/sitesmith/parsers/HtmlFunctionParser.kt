@@ -5,10 +5,7 @@ import org.jamesgames.sitesmith.htmlfunctions.HtmlFunctionParseException
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.collections.drop
-import kotlin.collections.forEach
-import kotlin.collections.map
-import kotlin.collections.toList
+import kotlin.collections.*
 import kotlin.text.*
 
 /**
@@ -31,7 +28,9 @@ class HtmlFunctionParser(private val htmlFunctionSourceFile: File) {
         val paramLine = lines[0].trim()
         val isMarkDown = paramLine.startsWith(markdownNotice)
         val restOfParamLine = if (isMarkDown) paramLine.substring(markdownNotice.length) else paramLine
-        val params = restOfParamLine.split(parameterSeparator).map { it.trim() }.toList()
+        val params = restOfParamLine.split(parameterSeparator)
+                .filterNot { it.isEmpty() }
+                .map { it.trim() }.toList()
         val body = StringBuilder()
         lines.drop(1).forEach { body.appendln(it) }
         return HtmlFunction(name, body.toString(), isMarkDown, params)
