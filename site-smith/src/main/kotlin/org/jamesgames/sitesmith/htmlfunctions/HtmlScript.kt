@@ -2,39 +2,12 @@ package org.jamesgames.sitesmith.htmlfunctions
 
 import org.jamesgames.sitesmith.project.Project
 import org.jamesgames.sitesmith.resources.Page
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
-import java.util.*
-import kotlin.text.isEmpty
+import kotlin.collections.forEach
 
 /**
  * @author James Murphy
  */
-class HtmlScript(val name: String) : HtmlProducer {
-    private val htmlFunctionCalls: ArrayList<HtmlFunctionCall> = ArrayList();
-    private val htmlScriptDirectory: Path = Paths.get("/scripts");
-
-    init {
-        val htmlScriptFile: File = File(htmlScriptDirectory.resolve(name).toUri())
-        if (htmlScriptFile.exists() && htmlScriptFile.isFile) {
-            Files.lines(htmlScriptFile.toPath())
-                    .filter(String::isEmpty)
-                    .map { toHtmlFunctionCall(it) }.forEach { htmlFunctionCalls.add(it) }
-        }
-    }
-
-    private fun toHtmlFunctionCall(line: String): HtmlFunctionCall {
-        val jString: java.lang.String = java.lang.String(line)
-        val tokens: Array<String> = jString.split("|")
-        val function: HtmlFunctionCall = HtmlFunctionCall(tokens[0])
-        Arrays.stream(tokens)
-                .skip(0)
-                .map(::HtmlFunctionArgument)
-                .forEach { function.addArgument(it) }
-        return function;
-    }
+class HtmlScript(val name: String, private val htmlFunctionCalls: List<HtmlFunctionCall>) : HtmlProducer {
 
     override fun appendHtml(page: Page,
                             project: Project,
