@@ -1,4 +1,4 @@
-package org.jamesgames.sitesmith.project
+package org.jamesgames.sitesmith.builder
 
 import org.jamesgames.sitesmith.resources.Page
 import org.jamesgames.sitesmith.resources.Resource
@@ -8,7 +8,7 @@ import java.util.*
 /**
  * @author James Murphy
  */
-class ResourceMap {
+internal class ResourceMap {
 
     private val nameToFunction: HashMap<String, Resource> = HashMap()
 

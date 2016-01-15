@@ -1,4 +1,4 @@
-package org.jamesgames.sitesmith.project
+package org.jamesgames.sitesmith.builder
 
 import org.jamesgames.sitesmith.htmlfunctions.HtmlScript
 import java.util.*
@@ -6,7 +6,7 @@ import java.util.*
 /**
  * @author James Murphy
  */
-class HtmlScriptMap {
+internal class HtmlScriptMap {
     private val nameToScript: HashMap<String, HtmlScript> = HashMap()
 
     fun addHtmlScript(script: HtmlScript) {

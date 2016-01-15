@@ -1,4 +1,4 @@
-package org.jamesgames.sitesmith.project
+package org.jamesgames.sitesmith.builder
 
 import org.jamesgames.sitesmith.htmlfunctions.HtmlFunction
 import java.util.*
@@ -6,7 +6,7 @@ import java.util.*
 /**
  * @author James Murphy
  */
-class HtmlFunctionMap {
+internal class HtmlFunctionMap {
     private val nameToFunction: HashMap<String, HtmlFunction> = HashMap()
 
     fun addHtmlFunction(function: HtmlFunction) {

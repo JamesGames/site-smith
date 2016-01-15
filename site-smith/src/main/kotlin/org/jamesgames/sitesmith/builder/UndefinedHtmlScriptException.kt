@@ -1,4 +1,4 @@
-package org.jamesgames.sitesmith.project
+package org.jamesgames.sitesmith.builder
 
 /**
  * @author James Murphy
