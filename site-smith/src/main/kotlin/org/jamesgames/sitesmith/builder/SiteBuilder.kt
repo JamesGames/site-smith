@@ -1,10 +1,11 @@
 package org.jamesgames.sitesmith.builder
 
-import org.jamesgames.sitesmith.htmlfunctions.HtmlFunctionArgument
 import org.jamesgames.sitesmith.parsers.HtmlFunctionParser
 import org.jamesgames.sitesmith.parsers.HtmlScriptParser
 import org.jamesgames.sitesmith.resources.Page
 import org.jamesgames.sitesmith.resources.Resource
+import org.jamesgames.sitesmith.sitecomponents.HtmlFunctionArgument
+import org.jamesgames.sitesmith.sitecomponents.SiteLayout
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -12,7 +13,8 @@ import java.nio.file.Paths
 /**
  * @author James Murphy
  */
-class SiteBuilder(private val htmlFunctionDirectory: File,
+class SiteBuilder(private val siteLayoutFile: File,
+                  private val htmlFunctionDirectory: File,
                   private val htmlScriptDirectory: File,
                   private val resourceDirectory: File,
                   private val outputDirectory: File) {
@@ -37,9 +39,13 @@ class SiteBuilder(private val htmlFunctionDirectory: File,
         clearOutputDirectory()
         fillFunctionMap()
         fillScriptMap()
-
+        val siteLayout = readSiteLayout()
+        if (validateSiteLayout(siteLayout)) {
+            generateDirectoryAndPageStubs(siteLayout)
+            moveSiteResources(siteLayout)
+            fillPages(siteLayout)
+        }
     }
-
 
     private fun clearOutputDirectory() {
         Files.walk(Paths.get(outputDirectory.toURI()))
@@ -63,5 +69,26 @@ class SiteBuilder(private val htmlFunctionDirectory: File,
                 .forEach { htmlScriptMap.addHtmlScript(it) }
     }
 
+    private fun readSiteLayout(): SiteLayout {
+        // TODO
+        return SiteLayout()
+    }
 
+    private fun validateSiteLayout(siteLayout: SiteLayout): Boolean {
+        // TODO
+        return false
+    }
+
+
+    private fun generateDirectoryAndPageStubs(siteLayout: SiteLayout) {
+        // TODO
+    }
+
+    private fun moveSiteResources(siteLayout: SiteLayout) {
+        // TODO
+    }
+
+    private fun fillPages(siteLayout: SiteLayout) {
+        // TODO
+    }
 }

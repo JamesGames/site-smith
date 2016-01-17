@@ -1,4 +1,4 @@
-package org.jamesgames.sitesmith.htmlfunctions
+package org.jamesgames.sitesmith.sitecomponents
 
 import org.jamesgames.sitesmith.builder.SiteBuilder
 import org.jamesgames.sitesmith.resources.Page

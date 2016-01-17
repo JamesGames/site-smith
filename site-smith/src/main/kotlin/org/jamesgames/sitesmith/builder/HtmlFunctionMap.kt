@@ -1,6 +1,6 @@
 package org.jamesgames.sitesmith.builder
 
-import org.jamesgames.sitesmith.htmlfunctions.HtmlFunction
+import org.jamesgames.sitesmith.sitecomponents.HtmlFunction
 import java.util.*
 
 /**

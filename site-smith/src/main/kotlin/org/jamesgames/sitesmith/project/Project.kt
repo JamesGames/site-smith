@@ -7,7 +7,7 @@ import java.nio.file.Paths
 /**
  * @author James Murphy
  */
-class Project(val projectDirectory: File) {
+class Project(val projectDirectory: File, val siteLayout: File) {
     private val htmlFunctionDirectoryName = "html-functions"
     private val htmlScriptDirectoryName = "scripts"
     private val resourceDirectoryName = "resources"
@@ -19,6 +19,8 @@ class Project(val projectDirectory: File) {
     val outputDirectory: File
 
     init {
+        if (!siteLayout.exists()) throw IllegalArgumentException("The site layout file does not exist")
+        if (!siteLayout.isFile) throw IllegalArgumentException("The site layout file is not a file")
         if (!projectDirectory.exists()) throw IllegalArgumentException("The project directory specified does not exist")
         if (!projectDirectory.isDirectory) throw IllegalArgumentException("The project directory specified is not a directory")
         htmlFunctionDirectory = Paths.get(projectDirectory.toURI()).resolve(htmlFunctionDirectoryName).toFile()
@@ -32,7 +34,7 @@ class Project(val projectDirectory: File) {
     }
 
     fun buildSite() =
-            SiteBuilder(htmlFunctionDirectory, htmlScriptDirectory, resourceDirectory, outputDirectory).buildSite()
+            SiteBuilder(siteLayout, htmlFunctionDirectory, htmlScriptDirectory, resourceDirectory, outputDirectory).buildSite()
 
 
 }

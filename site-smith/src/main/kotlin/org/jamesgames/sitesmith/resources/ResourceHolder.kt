@@ -5,5 +5,5 @@ package org.jamesgames.sitesmith.resources
  */
 interface ResourceHolder {
     fun getPath(): String
-    fun addResource()
+    fun addResource(resource: Resource)
 }

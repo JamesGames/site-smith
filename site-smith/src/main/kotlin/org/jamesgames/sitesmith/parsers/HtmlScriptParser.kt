@@ -1,9 +1,9 @@
 package org.jamesgames.sitesmith.parsers
 
-import org.jamesgames.sitesmith.htmlfunctions.HtmlFunctionArgument
-import org.jamesgames.sitesmith.htmlfunctions.HtmlFunctionCall
-import org.jamesgames.sitesmith.htmlfunctions.HtmlScript
-import org.jamesgames.sitesmith.htmlfunctions.HtmlScriptParseException
+import org.jamesgames.sitesmith.sitecomponents.HtmlFunctionArgument
+import org.jamesgames.sitesmith.sitecomponents.HtmlFunctionCall
+import org.jamesgames.sitesmith.sitecomponents.HtmlScript
+import org.jamesgames.sitesmith.sitecomponents.HtmlScriptParseException
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
