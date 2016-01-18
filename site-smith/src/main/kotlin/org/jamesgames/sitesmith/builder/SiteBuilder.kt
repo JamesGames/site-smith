@@ -1,11 +1,12 @@
 package org.jamesgames.sitesmith.builder
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.jamesgames.sitesmith.parsers.HtmlFunctionParser
 import org.jamesgames.sitesmith.parsers.HtmlScriptParser
 import org.jamesgames.sitesmith.resources.Page
 import org.jamesgames.sitesmith.resources.Resource
 import org.jamesgames.sitesmith.sitecomponents.HtmlFunctionArgument
-import org.jamesgames.sitesmith.sitecomponents.SiteLayout
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -35,16 +36,19 @@ class SiteBuilder(private val siteLayoutFile: File,
             htmlFunctionMap.getHtmlFunction(name).callFunction(page, arguments, siteBuilder).toString()
 
 
-    fun buildSite() {
+    fun buildSite(): String {
         clearOutputDirectory()
         fillFunctionMap()
         fillScriptMap()
         val siteLayout = readSiteLayout()
-        if (validateSiteLayout(siteLayout)) {
-            generateDirectoryAndPageStubs(siteLayout)
-            moveSiteResources(siteLayout)
-            fillPages(siteLayout)
-        }
+        val siteValidator = SiteLayoutValidator(siteLayout)
+        if (!siteValidator.validateSiteLayout())
+            return siteValidator.toString()
+        generateDirectoryAndPageStubs(siteLayout)
+        moveSiteResources(siteLayout)
+        fillPages(siteLayout)
+
+        return ""
     }
 
     private fun clearOutputDirectory() {
@@ -69,15 +73,7 @@ class SiteBuilder(private val siteLayoutFile: File,
                 .forEach { htmlScriptMap.addHtmlScript(it) }
     }
 
-    private fun readSiteLayout(): SiteLayout {
-        // TODO
-        return SiteLayout()
-    }
-
-    private fun validateSiteLayout(siteLayout: SiteLayout): Boolean {
-        // TODO
-        return false
-    }
+    private fun readSiteLayout(): SiteLayout = jacksonObjectMapper().readValue(siteLayoutFile.readText())
 
 
     private fun generateDirectoryAndPageStubs(siteLayout: SiteLayout) {

@@ -10,7 +10,7 @@ import java.util.stream.IntStream
  * @author James Murphy
  */
 class HtmlFunction(val name: String, private val functionBody: String, private val isMarkdown: Boolean) {
-    private val parameters: ArrayList<String> = ArrayList()
+    private val parameters: MutableList<String> = ArrayList()
 
     constructor (name: String, functionBody: String,
                  isMarkdown: Boolean, params: List<String>) : this(name, functionBody, isMarkdown) {

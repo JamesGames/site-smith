@@ -33,8 +33,8 @@ class Project(val projectDirectory: File, val siteLayout: File) {
         if (!outputDirectory.exists()) outputDirectory.mkdir()
     }
 
-    fun buildSite() =
-            SiteBuilder(siteLayout, htmlFunctionDirectory, htmlScriptDirectory, resourceDirectory, outputDirectory).buildSite()
+    fun buildSite(): String = SiteBuilder(siteLayout, htmlFunctionDirectory,
+            htmlScriptDirectory, resourceDirectory, outputDirectory).buildSite()
 
 
 }
