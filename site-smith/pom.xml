@@ -75,7 +75,7 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <source>site-smith/src/main/kotlin</source>
+                                <source>src/main/kotlin</source>
                             </sourceDirs>
                         </configuration>
                     </execution>
@@ -87,7 +87,7 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <source>site-smith/src/test/kotlin</source>
+                                <source>src/test/kotlin</source>
                             </sourceDirs>
                         </configuration>
                     </execution>
