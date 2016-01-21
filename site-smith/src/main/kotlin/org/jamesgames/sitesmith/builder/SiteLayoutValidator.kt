@@ -3,6 +3,7 @@ package org.jamesgames.sitesmith.builder
 import java.io.File
 import java.util.*
 import kotlin.collections.forEach
+import kotlin.collections.joinToString
 import kotlin.collections.map
 import kotlin.text.appendln
 import kotlin.text.isEmpty
@@ -22,28 +23,24 @@ class SiteLayoutValidator(private val siteLayout: SiteLayout) {
     private val listOfEmptyDirectoryNames: MutableList<Pair<SiteLayout.DirectoryInfo, String>> = ArrayList()
     private val listOfEmptyFileNames: MutableList<Pair<String, String>> = ArrayList()
 
-    override fun toString(): String {
-        val problems: StringBuilder = StringBuilder()
-        listOfDuplicateResourcesNamesWithinEntireProject
-                .map { "Duplicate resource id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
-                .forEach { problems.appendln(it) }
-        listOfDuplicateDirectoriesWithinSameDirectory
-                .map { "Duplicate directory name in directory: ${it.first.name}, duplicate found in: ${it.second}" }
-                .forEach { problems.appendln(it) }
-        listOfDuplicatePageIdentifierWithinEntireProject
-                .map { "Duplicate page id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
-                .forEach { problems.appendln(it) }
-        listOfDuplicateFileNamesWithinSameDirectory
-                .map { "Duplicate file name in directory: ${it.first}, duplicate found in: ${it.second}" }
-                .forEach { problems.appendln(it) }
-        listOfEmptyDirectoryNames
-                .map { "Empty directory name, found in: ${it.second}" }
-                .forEach { problems.appendln(it) }
-        listOfEmptyFileNames
-                .map { "Empty file name, found in: ${it.second}" }
-                .forEach { problems.appendln(it) }
-        return problems.toString()
-    }
+    override fun toString(): String = StringBuilder().appendln(listOfDuplicateResourcesNamesWithinEntireProject
+            .map { "Duplicate resource id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
+            .joinToString { System.lineSeparator() }).
+            appendln(listOfDuplicateDirectoriesWithinSameDirectory
+                    .map { "Duplicate directory name in directory: ${it.first.name}, duplicate found in: ${it.second}" }
+                    .joinToString { System.lineSeparator() }).
+            appendln(listOfDuplicatePageIdentifierWithinEntireProject
+                    .map { "Duplicate page id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
+                    .joinToString { System.lineSeparator() }).
+            appendln(listOfDuplicateFileNamesWithinSameDirectory
+                    .map { "Duplicate file name in directory: ${it.first}, duplicate found in: ${it.second}" }
+                    .joinToString { System.lineSeparator() }).
+            appendln(listOfEmptyDirectoryNames
+                    .map { "Empty directory name, found in: ${it.second}" }
+                    .joinToString { System.lineSeparator() }).
+            appendln(listOfEmptyFileNames
+                    .map { "Empty file name, found in: ${it.second}" }
+                    .joinToString { System.lineSeparator() }).toString()
 
     fun validateSiteLayout(): Boolean {
         clearErrorLists()

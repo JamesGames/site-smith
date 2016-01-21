@@ -37,6 +37,7 @@ class SiteBuilder(private val siteLayoutFile: File,
 
 
     fun buildSite(): String {
+        validateResourceDirectory()
         clearOutputDirectory()
         fillFunctionMap()
         fillScriptMap()
@@ -44,11 +45,14 @@ class SiteBuilder(private val siteLayoutFile: File,
         val siteValidator = SiteLayoutValidator(siteLayout)
         if (!siteValidator.validateSiteLayout())
             return siteValidator.toString()
-        generateDirectoryAndPageStubs(siteLayout)
-        moveSiteResources(siteLayout)
+        generateStubFilesAndCopyResources(siteLayout)
         fillPages(siteLayout)
 
         return ""
+    }
+
+    private fun validateResourceDirectory() {
+        // TODO
     }
 
     private fun clearOutputDirectory() {
@@ -76,15 +80,15 @@ class SiteBuilder(private val siteLayoutFile: File,
     private fun readSiteLayout(): SiteLayout = jacksonObjectMapper().readValue(siteLayoutFile.readText())
 
 
-    private fun generateDirectoryAndPageStubs(siteLayout: SiteLayout) {
-        // TODO
-    }
-
-    private fun moveSiteResources(siteLayout: SiteLayout) {
-        // TODO
+    private fun generateStubFilesAndCopyResources(siteLayout: SiteLayout) {
+        SiteStubGenerator(siteLayout, outputDirectory, resourceDirectory).generateSiteStub()
     }
 
     private fun fillPages(siteLayout: SiteLayout) {
         // TODO
     }
 }
+
+
+
+
