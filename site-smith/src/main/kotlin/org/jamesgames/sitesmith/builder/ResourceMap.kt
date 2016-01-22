@@ -2,7 +2,6 @@ package org.jamesgames.sitesmith.builder
 
 import org.jamesgames.sitesmith.resources.Page
 import org.jamesgames.sitesmith.resources.Resource
-import java.nio.file.Paths
 import java.util.*
 
 /**
@@ -18,6 +17,6 @@ internal class ResourceMap {
 
     fun getRelativeResourcePath(name: String, relativeTo: Page): String {
         val resource = nameToFunction[name] ?: throw UndefinedResourceException(name)
-        return Paths.get(relativeTo.getPath()).relativize(Paths.get(resource.getPath())).normalize().toString()
+        return relativeTo.getPath().relativize(resource.getPath()).normalize().toString()
     }
 }

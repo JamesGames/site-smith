@@ -14,7 +14,7 @@ class HtmlFunctionArgument(val argument: String) {
 
     fun evaluate(pageFunctionCalledOn: Page, siteBuilder: SiteBuilder): String {
         return if (argument.startsWith(startOfResourceReference))
-            Paths.get(pageFunctionCalledOn.getPath())
+            pageFunctionCalledOn.getPath()
                     .relativize(Paths.get(siteBuilder.getRelativeResourcePath(
                             argument.substring(startOfResourceReference.length),
                             pageFunctionCalledOn))).toString()

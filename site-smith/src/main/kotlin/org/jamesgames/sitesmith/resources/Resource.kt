@@ -6,6 +6,6 @@ import java.nio.file.Path
  * @author James Murphy
  */
 interface Resource {
-    fun getName(): String
+    fun getUniqueName(): String
     fun getPath(): Path
 }

@@ -27,7 +27,7 @@ class SiteBuilder(private val siteLayoutFile: File,
     private val resourceMap: ResourceMap = ResourceMap()
 
     fun recordResource(resource: Resource) =
-            resourceMap.addResource(resource.getName(), resource)
+            resourceMap.addResource(resource.getUniqueName(), resource)
 
     fun getRelativeResourcePath(name: String, relativeTo: Page): String =
             resourceMap.getRelativeResourcePath(name, relativeTo)

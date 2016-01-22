@@ -8,7 +8,7 @@ import java.nio.file.Path
  */
 class Page(private val file: File, private val uniqueName: String) : Resource {
     override fun getPath(): Path = file.toPath()
-    override fun getName(): String = uniqueName
+    override fun getUniqueName(): String = uniqueName
 
     fun getHtml(): String = ""
 }
