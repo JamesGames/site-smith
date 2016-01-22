@@ -23,7 +23,7 @@ class SiteLayoutValidator(private val siteLayout: SiteLayout) {
     private val listOfEmptyDirectoryNames: MutableList<Pair<SiteLayout.DirectoryInfo, String>> = ArrayList()
     private val listOfEmptyFileNames: MutableList<Pair<String, String>> = ArrayList()
 
-    override fun toString(): String = StringBuilder().appendln(listOfDuplicateResourcesNamesWithinEntireProject
+    fun getErrorMessages(): String = StringBuilder().appendln(listOfDuplicateResourcesNamesWithinEntireProject
             .map { "Duplicate resource id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
             .joinToString { System.lineSeparator() }).
             appendln(listOfDuplicateDirectoriesWithinSameDirectory

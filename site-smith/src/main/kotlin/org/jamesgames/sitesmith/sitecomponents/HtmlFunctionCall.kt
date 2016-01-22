@@ -7,6 +7,6 @@ class HtmlFunctionCall(val name: String, private val arguments: List<HtmlFunctio
     override fun appendHtml(page: Page,
                             siteBuilder: SiteBuilder,
                             stringBuilder: StringBuilder) {
-        stringBuilder.append(siteBuilder.callFunction(name, page, arguments, siteBuilder));
+        stringBuilder.append(siteBuilder.callFunction(name, page, arguments));
     }
 }

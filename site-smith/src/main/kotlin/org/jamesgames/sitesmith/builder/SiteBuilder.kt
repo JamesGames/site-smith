@@ -32,9 +32,8 @@ class SiteBuilder(private val siteLayoutFile: File,
     fun getRelativeResourcePath(name: String, relativeTo: Page): String =
             resourceMap.getRelativeResourcePath(name, relativeTo)
 
-    fun callFunction(name: String, page: Page, arguments: List<HtmlFunctionArgument>, siteBuilder: SiteBuilder): String =
-            htmlFunctionMap.getHtmlFunction(name).callFunction(page, arguments, siteBuilder).toString()
-
+    fun callFunction(name: String, page: Page, arguments: List<HtmlFunctionArgument>): String =
+            htmlFunctionMap.getHtmlFunction(name).callFunction(page, arguments, this)
 
     fun buildSite(): String {
         validateResourceDirectory()
@@ -44,7 +43,7 @@ class SiteBuilder(private val siteLayoutFile: File,
         val siteLayout = readSiteLayout()
         val siteValidator = SiteLayoutValidator(siteLayout)
         if (!siteValidator.validateSiteLayout())
-            return siteValidator.toString()
+            return siteValidator.getErrorMessages()
         generateStubFilesAndCopyResources(siteLayout)
         fillPages(siteLayout)
 
@@ -81,7 +80,7 @@ class SiteBuilder(private val siteLayoutFile: File,
 
 
     private fun generateStubFilesAndCopyResources(siteLayout: SiteLayout) {
-        SiteStubGenerator(siteLayout, outputDirectory, resourceDirectory).generateSiteStub()
+        SiteStubGenerator(siteLayout, this, outputDirectory, resourceDirectory).generateSiteStub()
     }
 
     private fun fillPages(siteLayout: SiteLayout) {
