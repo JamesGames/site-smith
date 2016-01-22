@@ -1,6 +1,6 @@
 package org.jamesgames.sitesmith.sitecomponents
 
-import org.jamesgames.sitesmith.builder.SiteBuilder
+import org.jamesgames.sitesmith.builder.SiteComponentDatabase
 import org.jamesgames.sitesmith.resources.Page
 import kotlin.collections.forEach
 
@@ -10,10 +10,10 @@ import kotlin.collections.forEach
 class HtmlScript(val name: String, private val htmlFunctionCalls: List<HtmlFunctionCall>) : HtmlProducer {
 
     override fun appendHtml(page: Page,
-                            siteBuilder: SiteBuilder,
+                            componentDb: SiteComponentDatabase,
                             stringBuilder: StringBuilder) {
         htmlFunctionCalls.forEach {
-            stringBuilder.append(it.appendHtml(page, siteBuilder, stringBuilder))
+            it.appendHtml(page, componentDb, stringBuilder)
         }
     }
 }

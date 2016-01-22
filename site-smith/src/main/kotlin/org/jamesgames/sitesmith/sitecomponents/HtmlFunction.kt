@@ -1,6 +1,6 @@
 package org.jamesgames.sitesmith.sitecomponents
 
-import org.jamesgames.sitesmith.builder.SiteBuilder
+import org.jamesgames.sitesmith.builder.SiteComponentDatabase
 import org.jamesgames.sitesmith.resources.Page
 import org.pegdown.PegDownProcessor
 import java.util.*
@@ -19,7 +19,7 @@ class HtmlFunction(val name: String, private val functionBody: String, private v
 
     fun callFunction(pageCalledFrom: Page,
                      arguments: List<HtmlFunctionArgument>,
-                     siteBuilder: SiteBuilder): String {
+                     componentDb: SiteComponentDatabase): String {
         if (arguments.size != parameters.size) {
             throw ParameterMismatchException(name, parameters.size, arguments.size);
         }
@@ -28,7 +28,7 @@ class HtmlFunction(val name: String, private val functionBody: String, private v
                 .rangeClosed(0, parameters.size - 1)
                 .forEach { i ->
                     replaceAll(result, "$" + parameters[i],
-                            arguments[i].evaluate(pageCalledFrom, siteBuilder))
+                            arguments[i].evaluate(pageCalledFrom, componentDb))
                 };
         return if (isMarkdown) PegDownProcessor().markdownToHtml(result.toString()) else result.toString();
     }
