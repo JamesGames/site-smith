@@ -1,4 +1,4 @@
-package org.jamesgames.sitesmith.parsers
+package org.jamesgames.sitesmith.builder.parsers
 
 import org.jamesgames.sitesmith.sitecomponents.HtmlFunction
 import org.jamesgames.sitesmith.sitecomponents.HtmlFunctionParseException

@@ -1,4 +1,4 @@
-package org.jamesgames.sitesmith.parsers
+package org.jamesgames.sitesmith.builder.parsers
 
 import org.jamesgames.sitesmith.sitecomponents.HtmlFunctionArgument
 import org.jamesgames.sitesmith.sitecomponents.HtmlFunctionCall

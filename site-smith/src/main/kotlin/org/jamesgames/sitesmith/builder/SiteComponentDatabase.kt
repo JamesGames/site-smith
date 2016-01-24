@@ -1,7 +1,7 @@
 package org.jamesgames.sitesmith.builder
 
-import org.jamesgames.sitesmith.parsers.HtmlFunctionParser
-import org.jamesgames.sitesmith.parsers.HtmlScriptParser
+import org.jamesgames.sitesmith.builder.parsers.HtmlFunctionParser
+import org.jamesgames.sitesmith.builder.parsers.HtmlScriptParser
 import org.jamesgames.sitesmith.resources.Page
 import org.jamesgames.sitesmith.resources.Resource
 import org.jamesgames.sitesmith.sitecomponents.HtmlFunctionArgument

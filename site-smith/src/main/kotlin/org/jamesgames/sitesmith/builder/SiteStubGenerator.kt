@@ -10,7 +10,7 @@ import kotlin.collections.forEach
 /**
  * @author James Murphy
  */
-class SiteStubGenerator(private val siteLayout: SiteLayout, private val componentDb: SiteComponentDatabase,
+internal class SiteStubGenerator(private val siteLayout: SiteLayout, private val componentDb: SiteComponentDatabase,
                         private val outputDirectory: File, private val resourceDirectory: File) {
     fun generateSiteStub() {
         createStubsAndDirectories(siteLayout.root, File.separator)

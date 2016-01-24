@@ -4,7 +4,7 @@ package org.jamesgames.sitesmith.builder
 /**
  * @author James Murphy
  */
-class SiteLayout(val root: SiteLayout.DirectoryInfo) {
+internal class SiteLayout(val root: SiteLayout.DirectoryInfo) {
     data class PageInfo(val uniqueName: String, val fileName: String, val templateNamesForPage: List<String>)
 
     data class ResourceInfo(val uniqueName: String, val fileName: String)

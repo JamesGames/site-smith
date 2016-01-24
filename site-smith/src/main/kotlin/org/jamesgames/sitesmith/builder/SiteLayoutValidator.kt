@@ -11,7 +11,7 @@ import kotlin.text.isEmpty
 /**
  * @author James Murphy
  */
-class SiteLayoutValidator(private val siteLayout: SiteLayout) {
+internal class SiteLayoutValidator(private val siteLayout: SiteLayout) {
 
     private val resourceIdentifierNamesWithinSameProject: MutableSet<String> = HashSet()
     private val pageIdentifierNamesWithinSameProject: MutableSet<String> = HashSet()
