@@ -18,7 +18,7 @@ import kotlin.text.trim
 /**
  * @author James Murphy
  */
-class HtmlScriptParser(private val htmlScriptSourceFile: File) {
+internal class HtmlScriptParser(private val htmlScriptSourceFile: File) {
     private val argumentSeparator = ","
 
     fun getHtmlScript(): HtmlScript {

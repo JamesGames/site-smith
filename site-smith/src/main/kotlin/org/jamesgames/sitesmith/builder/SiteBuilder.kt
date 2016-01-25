@@ -22,20 +22,22 @@ class SiteBuilder(private val siteLayoutFile: File,
 
 
     fun buildSite(): String {
-        validateResourceDirectory()
         clearOutputDirectory()
+
+        val resourceDirectoryValidator = ResourceDirectoryValidator(resourceDirectory)
+        if (!resourceDirectoryValidator.validateDirectory())
+            return resourceDirectoryValidator.getErrorMessages()
+
         componentDatabase.populateDatabase()
         val siteLayout = readSiteLayout()
+
         val siteValidator = SiteLayoutValidator(siteLayout)
         if (!siteValidator.validateSiteLayout())
             return siteValidator.getErrorMessages()
+
         generateSiteStubAndRecordResources(siteLayout)
         fillPages()
         return successString
-    }
-
-    private fun validateResourceDirectory() {
-        // TODO
     }
 
     private fun clearOutputDirectory() =

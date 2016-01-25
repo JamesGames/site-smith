@@ -11,7 +11,7 @@ import kotlin.text.*
 /**
  * @author James Murphy
  */
-class HtmlFunctionParser(private val htmlFunctionSourceFile: File) {
+internal class HtmlFunctionParser(private val htmlFunctionSourceFile: File) {
     private val parameterSeparator = ","
     private val markdownNotice = "(markdown)"
 
