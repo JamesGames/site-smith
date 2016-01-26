@@ -11,7 +11,7 @@ import kotlin.collections.forEach
  * @author James Murphy
  */
 internal class SiteStubGenerator(private val siteLayout: SiteLayout, private val componentDb: SiteComponentDatabase,
-                        private val outputDirectory: File, private val resourceDirectory: File) {
+                                 private val outputDirectory: File, private val resourceDirectory: File) {
     fun generateSiteStub() {
         createStubsAndDirectories(siteLayout.root, File.separator)
     }
@@ -29,7 +29,7 @@ internal class SiteStubGenerator(private val siteLayout: SiteLayout, private val
     private fun createStubPages(pages: List<SiteLayout.PageInfo>) {
         pages.forEach {
             val path = Files.createFile(Paths.get(outputDirectory.toURI())).resolve(Paths.get(it.fileName))
-            componentDb.recordResource(Page(path.toFile(), it.uniqueName, it.templateNamesForPage))
+            componentDb.recordResource(Page(path.toFile(), it.uniqueName, it.pageTitle, it.templateNamesForPage))
         }
     }
 

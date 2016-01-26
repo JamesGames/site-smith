@@ -10,8 +10,9 @@ import kotlin.collections.map
 /**
  * @author James Murphy
  */
-class ResourceDirectoryValidator(private val resourceDirectory: File) {
+class ResourceDirectoryValidator(private val resourceDirectory: File, private val cssStyleFileName: String) {
     private val resourceFilesWithDuplicateUniqueFileNames: MutableList<File> = ArrayList()
+    private var cssStyleFileFound: Boolean = false;
 
     fun validateDirectory(): Boolean {
         resourceFilesWithDuplicateUniqueFileNames.clear()
@@ -19,6 +20,8 @@ class ResourceDirectoryValidator(private val resourceDirectory: File) {
         Files.walk(resourceDirectory.toPath()).map { it.toFile() }.forEach {
             if (!uniqueFileNames.add(it.name))
                 resourceFilesWithDuplicateUniqueFileNames.add(it)
+            if (!cssStyleFileFound)
+                cssStyleFileFound = it.name.equals(cssStyleFileName)
         }
         return resourceFilesWithDuplicateUniqueFileNames.isEmpty()
     }
@@ -27,4 +30,9 @@ class ResourceDirectoryValidator(private val resourceDirectory: File) {
             resourceFilesWithDuplicateUniqueFileNames.map {
                 "Resource file with duplicate unique name in resource directory: ${it.absolutePath}"
             }.joinToString { System.lineSeparator() }
+
+    fun getWarningMessages(): String {
+        return if (!cssStyleFileFound) "No site wide css style file found under the name: $cssStyleFileName" else ""
+    }
+
 }

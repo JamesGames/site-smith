@@ -2,6 +2,7 @@ package org.jamesgames.sitesmith.builder
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import org.jamesgames.sitesmith.resources.Page
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -24,7 +25,7 @@ class SiteBuilder(private val siteLayoutFile: File,
     fun buildSite(): String {
         clearOutputDirectory()
 
-        val resourceDirectoryValidator = ResourceDirectoryValidator(resourceDirectory)
+        val resourceDirectoryValidator = ResourceDirectoryValidator(resourceDirectory, Page.siteWideCssFileName)
         if (!resourceDirectoryValidator.validateDirectory())
             return resourceDirectoryValidator.getErrorMessages()
 
@@ -37,7 +38,10 @@ class SiteBuilder(private val siteLayoutFile: File,
 
         generateSiteStubAndRecordResources(siteLayout)
         fillPages()
-        return successString
+
+        // TODO, make common step builder that has getErrors and getWarnings, which are returned and collected on each
+        // step to better programmatically collect warnings and errors
+        return resourceDirectoryValidator.getWarningMessages() + System.lineSeparator() + successString
     }
 
     private fun clearOutputDirectory() =

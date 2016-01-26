@@ -35,6 +35,9 @@ class SiteComponentDatabase(private val htmlFunctionDirectory: File,
     fun getRelativeResourcePath(name: String, relativeTo: Page): String =
             resourceMap.getRelativeResourcePath(name, relativeTo)
 
+    fun doesResourceExist(name: String): Boolean =
+    resourceMap.doesResourceExist(name)
+
     fun callFunction(name: String, page: Page, arguments: List<HtmlFunctionArgument>, stringBuilder: StringBuilder) =
             htmlFunctionMap.callFunction(name, page, arguments, this, stringBuilder)
 
