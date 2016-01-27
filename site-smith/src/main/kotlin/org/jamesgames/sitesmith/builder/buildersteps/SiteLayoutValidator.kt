@@ -1,5 +1,6 @@
-package org.jamesgames.sitesmith.builder
+package org.jamesgames.sitesmith.builder.buildersteps
 
+import org.jamesgames.sitesmith.builder.SiteLayout
 import java.io.File
 import java.util.*
 import kotlin.collections.*

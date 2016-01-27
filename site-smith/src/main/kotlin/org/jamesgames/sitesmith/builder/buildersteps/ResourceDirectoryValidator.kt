@@ -1,4 +1,4 @@
-package org.jamesgames.sitesmith.builder
+package org.jamesgames.sitesmith.builder.buildersteps
 
 import java.io.File
 import java.nio.file.Files
@@ -10,7 +10,7 @@ import kotlin.collections.map
 /**
  * @author James Murphy
  */
-class ResourceDirectoryValidator(private val resourceDirectory: File, private val cssStyleFileName: String) {
+internal class ResourceDirectoryValidator(private val resourceDirectory: File, private val cssStyleFileName: String) {
     private val resourceFilesWithDuplicateUniqueFileNames: MutableList<File> = ArrayList()
     private var cssStyleFileFound: Boolean = false;
 

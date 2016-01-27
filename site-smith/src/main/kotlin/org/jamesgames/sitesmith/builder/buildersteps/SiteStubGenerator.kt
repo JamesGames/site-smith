@@ -1,5 +1,7 @@
-package org.jamesgames.sitesmith.builder
+package org.jamesgames.sitesmith.builder.buildersteps
 
+import org.jamesgames.sitesmith.builder.SiteComponentDatabase
+import org.jamesgames.sitesmith.builder.SiteLayout
 import org.jamesgames.sitesmith.resources.Page
 import org.jamesgames.sitesmith.resources.SiteFile
 import java.io.File
