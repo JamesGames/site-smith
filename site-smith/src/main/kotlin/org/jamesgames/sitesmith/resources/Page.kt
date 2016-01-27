@@ -3,6 +3,7 @@ package org.jamesgames.sitesmith.resources
 import org.jamesgames.sitesmith.builder.SiteComponentDatabase
 import java.io.File
 import java.nio.file.Path
+import kotlin.collections.forEach
 import kotlin.collections.map
 import kotlin.text.appendln
 
@@ -12,10 +13,22 @@ import kotlin.text.appendln
 class Page(private val file: File,
            private val uniqueName: String,
            private val pageTitle: String,
+           private val additionalCssFiles: List<String>,
            private val htmlScriptNames: List<String>) : Resource {
 
     companion object constants {
         val siteWideCssFileName = "global-style.css"
+        private val docType = "<!DOCTYPE html>"
+        private val htmlOpen = "<html>"
+        private val headOpen = "<head>"
+        private val titleOpen = "<title>"
+        private val titleClose = "</title>"
+        private val cssLinkStart = "<link rel=\"stylesheet\" href=\""
+        private val cssLinkEnd = "\">"
+        private val headClose = "</head>"
+        private val bodyOpen = "<body>"
+        private val bodyClose = "</body>"
+        private val htmlClose = "</html>"
     }
 
     override fun getPath(): Path = file.toPath()
@@ -35,28 +48,29 @@ class Page(private val file: File,
     }
 
     private fun writeHtmlPageOpen(pageData: StringBuilder) {
-        pageData.appendln("<!DOCTYPE html>").appendln("<html>")
+        pageData.appendln(docType).appendln(htmlOpen)
     }
 
     private fun writeHtmlHeadTag(pageData: StringBuilder, componentDb: SiteComponentDatabase) {
 
-        pageData.appendln("  <head>")
-        pageData.appendln("    <title>$pageTitle</title>")
+        pageData.appendln(headOpen)
+        pageData.appendln("$titleOpen$pageTitle$titleClose")
         if (componentDb.doesResourceExist(siteWideCssFileName)) {
             val pathToCssFile = componentDb.getRelativeResourcePath(siteWideCssFileName, this)
-            pageData.appendln("    <link rel=\"stylesheet\" href=\"$pathToCssFile\">")
+            pageData.appendln("$cssLinkStart$pathToCssFile$cssLinkEnd")
         }
-        pageData.appendln("  </head>")
+        additionalCssFiles.map { "$cssLinkStart$it$cssLinkEnd" }.forEach { pageData.appendln(it) }
+        pageData.appendln(headClose)
     }
 
     private fun writePageBody(pageData: StringBuilder, componentDb: SiteComponentDatabase) {
-        pageData.appendln("  <body>")
-        htmlScriptNames.map { componentDb.appendHtmlFromScript(uniqueName, this, pageData) }
-        pageData.appendln("  </body>")
+        pageData.appendln(bodyOpen)
+        htmlScriptNames.map { componentDb.appendHtmlFromScript(uniqueName, this, pageData) }.forEach { pageData.appendln(it) }
+        pageData.appendln(bodyClose)
     }
 
     private fun writeHtmlPageClose(pageData: StringBuilder) {
-        pageData.appendln("</body>")
+        pageData.appendln(htmlClose)
     }
 
 }

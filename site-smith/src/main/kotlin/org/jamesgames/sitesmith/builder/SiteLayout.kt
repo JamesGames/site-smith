@@ -6,7 +6,8 @@ package org.jamesgames.sitesmith.builder
  */
 internal class SiteLayout(val root: SiteLayout.DirectoryInfo) {
     data class PageInfo(val uniqueName: String, val fileName: String,
-                        val pageTitle: String, val templateNamesForPage: List<String>)
+                        val pageTitle: String, val additionalCssFiles: List<String>,
+                        val templateNamesForPage: List<String>)
 
     data class ResourceInfo(val uniqueName: String, val fileName: String)
 
