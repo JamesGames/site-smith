@@ -10,7 +10,7 @@ import kotlin.text.isEmpty
 /**
  * @author James Murphy
  */
-internal class SiteLayoutValidator(private val siteLayout: SiteLayout) {
+internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHelper {
 
     private val resourceIdentifierNamesWithinSameProject: MutableSet<String> = HashSet()
     private val pageIdentifierNamesWithinSameProject: MutableSet<String> = HashSet()
@@ -24,7 +24,7 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) {
     private val listOfEmptyFileNames: MutableList<Pair<String, String>> = ArrayList()
     private var specifiedCssFilesThatDoNotExist: List<Triple<String, SiteLayout.PageInfo, String>> = ArrayList()
 
-    fun getErrorMessages(): String = StringBuilder().appendln(listOfDuplicateResourcesNamesWithinEntireProject
+    override fun getErrorMessages(): String = StringBuilder().appendln(listOfDuplicateResourcesNamesWithinEntireProject
             .map { "Duplicate resource id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
             .joinToString { System.lineSeparator() }).
             appendln(listOfDuplicateDirectoriesWithinSameDirectory
@@ -46,14 +46,10 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) {
                     .map { "Css file with the unique resource id of ${it.first} not found, page that used file: ${it.third}${it.second.fileName}" }
                     .joinToString { System.lineSeparator() }).toString()
 
-    fun validateSiteLayout(): Boolean {
+    override fun applyBuildAction() {
         clearErrorLists()
         validateDirectories(siteLayout.root, File.separator);
         findSpecifiedCssFilesThatDoNotExist()
-        return listOfDuplicateResourcesNamesWithinEntireProject.isEmpty() &&
-                listOfDuplicateDirectoriesWithinSameDirectory.isEmpty() &&
-                listOfDuplicatePageIdentifierWithinEntireProject.isEmpty() &&
-                listOfDuplicateFileNamesWithinSameDirectory.isEmpty()
     }
 
     private fun findSpecifiedCssFilesThatDoNotExist() {

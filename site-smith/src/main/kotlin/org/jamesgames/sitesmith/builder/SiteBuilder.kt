@@ -2,6 +2,7 @@ package org.jamesgames.sitesmith.builder
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import org.jamesgames.sitesmith.builder.buildersteps.BuildHelper
 import org.jamesgames.sitesmith.builder.buildersteps.ResourceDirectoryValidator
 import org.jamesgames.sitesmith.builder.buildersteps.SiteLayoutValidator
 import org.jamesgames.sitesmith.builder.buildersteps.SiteStubGenerator
@@ -9,6 +10,11 @@ import org.jamesgames.sitesmith.resources.Page
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.*
+import kotlin.collections.firstOrNull
+import kotlin.collections.forEach
+import kotlin.collections.joinToString
+import kotlin.collections.map
 
 /**
  * @author James Murphy
@@ -21,45 +27,40 @@ class SiteBuilder(private val siteLayoutFile: File,
 
     private val successString: String = "Project generated successfully in: " +
             System.lineSeparator() + outputDirectory.absoluteFile
+    private val failureString: String = "Project generation failed"
     private val componentDatabase: SiteComponentDatabase =
             SiteComponentDatabase(htmlFunctionDirectory, htmlScriptDirectory)
 
 
     fun buildSite(): String {
         clearOutputDirectory()
-
-        val resourceDirectoryValidator = ResourceDirectoryValidator(resourceDirectory, Page.siteWideCssFileName)
-        if (!resourceDirectoryValidator.validateDirectory())
-            return resourceDirectoryValidator.getErrorMessages()
-
-        componentDatabase.populateDatabase()
         val siteLayout = readSiteLayout()
+        componentDatabase.populateDatabase()
 
-        val siteValidator = SiteLayoutValidator(siteLayout)
-        if (!siteValidator.validateSiteLayout())
-            return siteValidator.getErrorMessages()
+        val buildHelpers: MutableList<BuildHelper> = ArrayList()
+        buildHelpers.add(ResourceDirectoryValidator(resourceDirectory, Page.siteWideCssFileName))
+        buildHelpers.add(SiteLayoutValidator(siteLayout))
+        buildHelpers.add(SiteStubGenerator(siteLayout, componentDatabase, outputDirectory, resourceDirectory))
+        buildHelpers.forEach { it.applyBuildAction() }
+        val failedBuildHelper = buildHelpers.firstOrNull { !it.buildHelperPassed() }
+        if (failedBuildHelper != null) {
+            return arrayOf(failedBuildHelper.getErrorMessages(),
+                    failedBuildHelper.getWarningMessages(),
+                    failureString).joinToString { System.lineSeparator() }
+        }
 
-        generateSiteStubAndRecordResources(siteLayout)
-        fillPages()
-
-        // TODO, make common step builder that has getErrors and getWarnings, which are returned and collected on each
-        // step to better programmatically collect warnings and errors
-        return resourceDirectoryValidator.getWarningMessages() + System.lineSeparator() + successString
+        componentDatabase.writePages()
+        return joinBuilderHelperWarnings(buildHelpers) + System.lineSeparator() + successString
     }
+
+    private fun joinBuilderHelperWarnings(buildHelpers: List<BuildHelper>): String =
+            buildHelpers.map { it.getErrorMessages() }.joinToString { System.lineSeparator() }
 
     private fun clearOutputDirectory() =
             Files.walk(Paths.get(outputDirectory.toURI())).forEach { Files.deleteIfExists(it) }
 
-
     private fun readSiteLayout(): SiteLayout =
             jacksonObjectMapper().readValue(siteLayoutFile.readText())
-
-
-    private fun generateSiteStubAndRecordResources(siteLayout: SiteLayout) =
-            SiteStubGenerator(siteLayout, componentDatabase, outputDirectory, resourceDirectory).generateSiteStub()
-
-    private fun fillPages() = componentDatabase.writePages()
-
 }
 
 

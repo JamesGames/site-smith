@@ -13,8 +13,8 @@ import kotlin.collections.forEach
  * @author James Murphy
  */
 internal class SiteStubGenerator(private val siteLayout: SiteLayout, private val componentDb: SiteComponentDatabase,
-                                 private val outputDirectory: File, private val resourceDirectory: File) {
-    fun generateSiteStub() {
+                                 private val outputDirectory: File, private val resourceDirectory: File) : BuildHelper {
+    override fun applyBuildAction() {
         createStubsAndDirectories(siteLayout.root, File.separator)
     }
 
