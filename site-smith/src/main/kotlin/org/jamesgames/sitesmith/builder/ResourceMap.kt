@@ -11,7 +11,6 @@ import kotlin.collections.toList
  * @author James Murphy
  */
 internal class ResourceMap {
-
     private val nameToResource: HashMap<String, Resource> = HashMap()
 
     fun addResource(name: String, resource: Resource) {

@@ -16,8 +16,11 @@ import kotlin.collections.forEach
 class SiteComponentDatabase(private val htmlFunctionDirectory: File,
                             private val htmlScriptDirectory: File) {
 
-    private val htmlFunctionSourceExtension = ".hf"
-    private val htmlScriptSourceExtension = ".hs"
+    companion object {
+        const private val htmlFunctionSourceExtension = ".hf"
+        const private val htmlScriptSourceExtension = ".hs"
+    }
+
     private val htmlFunctionMap: HtmlFunctionMap = HtmlFunctionMap()
     private val htmlScriptMap: HtmlScriptMap = HtmlScriptMap()
     private val resourceMap: ResourceMap = ResourceMap()
@@ -36,7 +39,7 @@ class SiteComponentDatabase(private val htmlFunctionDirectory: File,
             resourceMap.getRelativeResourcePath(name, relativeTo)
 
     fun doesResourceExist(name: String): Boolean =
-    resourceMap.doesResourceExist(name)
+            resourceMap.doesResourceExist(name)
 
     fun callFunction(name: String, page: Page, arguments: List<HtmlFunctionArgument>, stringBuilder: StringBuilder) =
             htmlFunctionMap.callFunction(name, page, arguments, this, stringBuilder)

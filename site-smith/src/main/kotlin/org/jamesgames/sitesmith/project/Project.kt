@@ -8,10 +8,12 @@ import java.nio.file.Paths
  * @author James Murphy
  */
 class Project(val projectDirectory: File, val siteLayout: File) {
-    private val htmlFunctionDirectoryName = "html-functions"
-    private val htmlScriptDirectoryName = "scripts"
-    private val resourceDirectoryName = "resources"
-    private val outputDirectoryName = "output"
+    companion object {
+        const private val htmlFunctionDirectoryName = "html-functions"
+        const private val htmlScriptDirectoryName = "scripts"
+        const private val resourceDirectoryName = "resources"
+        const private val outputDirectoryName = "output"
+    }
 
     val htmlFunctionDirectory: File
     val htmlScriptDirectory: File

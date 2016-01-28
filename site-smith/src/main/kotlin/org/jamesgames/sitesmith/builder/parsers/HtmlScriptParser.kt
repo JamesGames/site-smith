@@ -19,7 +19,9 @@ import kotlin.text.trim
  * @author James Murphy
  */
 internal class HtmlScriptParser(private val htmlScriptSourceFile: File) {
-    private val argumentSeparator = ","
+    companion object {
+        private val argumentSeparator = ","
+    }
 
     fun getHtmlScript(): HtmlScript {
         val name = com.google.common.io.Files.getNameWithoutExtension(htmlScriptSourceFile.name)

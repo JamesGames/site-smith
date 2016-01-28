@@ -12,8 +12,10 @@ import kotlin.text.*
  * @author James Murphy
  */
 internal class HtmlFunctionParser(private val htmlFunctionSourceFile: File) {
-    private val parameterSeparator = ","
-    private val markdownNotice = "(markdown)"
+    companion object {
+        private val parameterSeparator = ","
+        private val markdownNotice = "(markdown)"
+    }
 
     fun getHtmlFunction(): HtmlFunction {
         val name = com.google.common.io.Files.getNameWithoutExtension(htmlFunctionSourceFile.name)

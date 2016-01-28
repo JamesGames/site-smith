@@ -16,7 +16,7 @@ class Page(private val file: File,
            private val additionalCssFiles: List<String>,
            private val htmlScriptNames: List<String>) : Resource {
 
-    companion object constants {
+    companion object {
         val siteWideCssFileName = "global-style.css"
         private val docType = "<!DOCTYPE html>"
         private val htmlOpen = "<html>"
