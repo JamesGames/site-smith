@@ -21,10 +21,10 @@ class Project(val projectDirectory: File, val siteLayout: File) {
     val outputDirectory: File
 
     init {
-        if (!siteLayout.exists()) throw IllegalArgumentException("The site layout file does not exist")
-        if (!siteLayout.isFile) throw IllegalArgumentException("The site layout file is not a file")
-        if (!projectDirectory.exists()) throw IllegalArgumentException("The project directory specified does not exist")
-        if (!projectDirectory.isDirectory) throw IllegalArgumentException("The project directory specified is not a directory")
+        if (!siteLayout.exists()) throw IllegalArgumentException("The site layout file, ${siteLayout.absolutePath}, does not exist")
+        if (!siteLayout.isFile) throw IllegalArgumentException("The site layout file, ${siteLayout.absolutePath}, is not a file")
+        if (!projectDirectory.exists()) throw IllegalArgumentException("The project directory specified, ${projectDirectory.absolutePath}, does not exist")
+        if (!projectDirectory.isDirectory) throw IllegalArgumentException("The project directory specified, ${projectDirectory.absolutePath}, is not a directory")
         htmlFunctionDirectory = Paths.get(projectDirectory.toURI()).resolve(htmlFunctionDirectoryName).toFile()
         if (!htmlFunctionDirectory.exists()) htmlFunctionDirectory.mkdir()
         htmlScriptDirectory = Paths.get(projectDirectory.toURI()).resolve(htmlScriptDirectoryName).toFile()

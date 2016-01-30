@@ -15,22 +15,21 @@ import kotlin.collections.forEach
 internal class SiteStubGenerator(private val siteLayout: SiteLayout, private val componentDb: SiteComponentDatabase,
                                  private val outputDirectory: File, private val resourceDirectory: File) : BuildHelper {
     override fun applyBuildAction() {
-        createStubsAndDirectories(siteLayout.root, File.separator)
+        createStubsAndDirectories(siteLayout.root, "")
     }
 
     private fun createStubsAndDirectories(directory: SiteLayout.DirectoryInfo, directoryPathSoFar: String) {
-        createStubPages(directory.pages)
+        createStubPages(directory.pages, directoryPathSoFar)
+        copyResources(directory.resources, directoryPathSoFar)
         directory.directories.forEach {
-            Files.createDirectory(Paths.get(outputDirectory.toURI())).resolve(Paths.get(it.name))
-            createStubPages(it.pages)
-            copyResources(it.resources, directoryPathSoFar + File.separator)
-            createStubsAndDirectories(it, directoryPathSoFar + File.separator)
+            Files.createDirectory(Paths.get(outputDirectory.absolutePath, directoryPathSoFar, it.name))
+            createStubsAndDirectories(it, directoryPathSoFar + it.name + File.separator)
         }
     }
 
-    private fun createStubPages(pages: List<SiteLayout.PageInfo>) {
+    private fun createStubPages(pages: List<SiteLayout.PageInfo>, directoryPathSoFar: String) {
         pages.forEach {
-            val path = Files.createFile(Paths.get(outputDirectory.toURI())).resolve(Paths.get(it.fileName))
+            val path = Files.createFile(Paths.get(outputDirectory.absolutePath, directoryPathSoFar, it.fileName))
             componentDb.recordResource(Page(path.toFile(), it.uniqueName, it.pageTitle,
                     it.additionalCssFiles, it.templateNamesForPage))
         }

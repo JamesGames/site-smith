@@ -41,7 +41,9 @@ class SiteBuilder(private val siteLayoutFile: File,
         buildHelpers.add(ResourceDirectoryValidator(resourceDirectory, Page.siteWideCssFileName))
         buildHelpers.add(SiteLayoutValidator(siteLayout))
         buildHelpers.add(SiteStubGenerator(siteLayout, componentDatabase, outputDirectory, resourceDirectory))
-        buildHelpers.forEach { it.applyBuildAction() }
+        buildHelpers.forEach {
+            it.applyBuildAction()
+        }
         val failedBuildHelper = buildHelpers.firstOrNull { !it.buildHelperPassed() }
         if (failedBuildHelper != null) {
             return arrayOf(failedBuildHelper.getErrorMessages(),
@@ -56,13 +58,23 @@ class SiteBuilder(private val siteLayoutFile: File,
     private fun joinBuilderHelperWarnings(buildHelpers: List<BuildHelper>): String =
             buildHelpers.map { it.getErrorMessages() }.joinToString { System.lineSeparator() }
 
-    private fun clearOutputDirectory() =
-            Files.walk(Paths.get(outputDirectory.toURI())).forEach { Files.deleteIfExists(it) }
+    private fun clearOutputDirectory() {
+        // Have to remove all files from directories first
+        Files.walk(Paths.get(outputDirectory.toURI()))
+                .filter { it.toFile() != outputDirectory }
+                .filter { !it.toFile().isDirectory }
+                .forEach {
+                    Files.deleteIfExists(it)
+                }
+        // Now will be able to delete all empty directories
+        // (Is there a way to delete a directory with the JCL that has files?)
+        Files.walk(Paths.get(outputDirectory.toURI()))
+                .filter { it.toFile() != outputDirectory }
+                .forEach {
+                    Files.deleteIfExists(it)
+                }
+    }
 
     private fun readSiteLayout(): SiteLayout =
             jacksonObjectMapper().readValue(siteLayoutFile.readText())
 }
-
-
-
-
