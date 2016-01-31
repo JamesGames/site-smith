@@ -75,6 +75,11 @@ class SiteBuilder(private val siteLayoutFile: File,
                 }
     }
 
-    private fun readSiteLayout(): SiteLayout =
+    private fun readSiteLayout(): SiteLayout {
+        return try {
             jacksonObjectMapper().readValue(siteLayoutFile.readText())
+        } catch (e: Exception) {
+            throw InvalidSiteLayoutException(siteLayoutFile, e.toString())
+        }
+    }
 }

@@ -1,19 +1,25 @@
 package org.jamesgames.sitesmith.builder
 
+import java.util.*
+
 
 /**
  * @author James Murphy
  */
 internal class SiteLayout(val root: SiteLayout.DirectoryInfo) {
-    data class PageInfo(val uniqueName: String, val fileName: String,
-                        val pageTitle: String, val additionalCssFiles: List<String>,
-                        val templateNamesForPage: List<String>)
+    data class PageInfo(val uniqueName: String,
+                        val fileName: String,
+                        val pageTitle: String,
+                        val additionalCssFiles: List<String>? = ArrayList(),
+                        val templateNamesForPage: List<String>? = ArrayList())
 
-    data class ResourceInfo(val uniqueName: String, val fileName: String)
+    data class ResourceInfo(val uniqueName: String,
+                            val fileNameInResourceDir: String,
+                            val fileName: String)
 
     data class DirectoryInfo(val name: String,
-                             val pages: List<PageInfo>,
-                             val resources: List<ResourceInfo>,
-                             val directories: List<DirectoryInfo>)
+                             val pages: List<PageInfo>? = ArrayList(),
+                             val resources: List<ResourceInfo>? = ArrayList(),
+                             val directories: List<DirectoryInfo>? = ArrayList())
 }
 

@@ -70,12 +70,12 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
     private fun validateDirectories(directory: SiteLayout.DirectoryInfo, directoryPathSoFar: String) {
         validateResourcesAndPages(directory.pages, directory.resources, directoryPathSoFar)
         checkForDuplicateDirectoryIssues(directory, directoryPathSoFar)
-        directory.directories.forEach { validateDirectories(it, directoryPathSoFar + File.separator) }
+        directory.directories?.forEach { validateDirectories(it, directoryPathSoFar + File.separator) }
     }
 
     private fun checkForDuplicateDirectoryIssues(directory: SiteLayout.DirectoryInfo, directoryPathSoFar: String) {
         val directoryNamesInDirectory: MutableSet<String> = HashSet()
-        directory.directories.forEach {
+        directory.directories?.forEach {
             if (!directoryNamesInDirectory.add(it.name))
                 listOfDuplicateDirectoriesWithinSameDirectory.add(Pair(it, directoryPathSoFar))
             if (it.name.isEmpty())
@@ -83,8 +83,8 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
         }
     }
 
-    private fun validateResourcesAndPages(pages: List<SiteLayout.PageInfo>,
-                                          resources: List<SiteLayout.ResourceInfo>,
+    private fun validateResourcesAndPages(pages: List<SiteLayout.PageInfo>?,
+                                          resources: List<SiteLayout.ResourceInfo>?,
                                           directoryPathSoFar: String) {
         val fileNamesInDirectory: MutableSet<String> = HashSet()
         validatePages(directoryPathSoFar, fileNamesInDirectory, pages)
@@ -92,8 +92,8 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
     }
 
     private fun validateResources(directoryPathSoFar: String, fileNamesInDirectory: MutableSet<String>,
-                                  resources: List<SiteLayout.ResourceInfo>) {
-        resources.forEach {
+                                  resources: List<SiteLayout.ResourceInfo>?) {
+        resources?.forEach {
             if (!fileNamesInDirectory.add(it.uniqueName))
                 listOfDuplicateFileNamesWithinSameDirectory.add(Pair(it.fileName, directoryPathSoFar))
             if (it.fileName.isEmpty())
@@ -104,15 +104,16 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
     }
 
     private fun validatePages(directoryPathSoFar: String, fileNamesInDirectory: MutableSet<String>,
-                              pages: List<SiteLayout.PageInfo>) {
-        pages.forEach {
+                              pages: List<SiteLayout.PageInfo>?) {
+        pages?.forEach {
             if (!fileNamesInDirectory.add(it.fileName))
                 listOfDuplicateFileNamesWithinSameDirectory.add(Pair(it.fileName, directoryPathSoFar))
             if (it.fileName.isEmpty())
                 listOfEmptyFileNames.add(Pair(it.fileName, directoryPathSoFar))
             if (!pageIdentifierNamesWithinSameProject.add(it.uniqueName))
                 listOfDuplicatePageIdentifierWithinEntireProject.add(Pair(it, directoryPathSoFar))
-            cssFilesFound.addAll(it.additionalCssFiles.map { css -> Triple(css, it, directoryPathSoFar) })
+            cssFilesFound.addAll(
+                    it.additionalCssFiles?.map { css -> Triple(css, it, directoryPathSoFar) } ?: ArrayList())
         }
     }
 }
