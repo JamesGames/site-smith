@@ -1,4 +1,4 @@
-package org.jamesgames.sitesmith.builder.buildersteps
+package org.jamesgames.sitesmith.builder.buildhelpers
 
 import java.io.File
 import java.nio.file.Files

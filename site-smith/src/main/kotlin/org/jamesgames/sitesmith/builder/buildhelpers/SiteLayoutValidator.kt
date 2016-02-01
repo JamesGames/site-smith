@@ -1,4 +1,4 @@
-package org.jamesgames.sitesmith.builder.buildersteps
+package org.jamesgames.sitesmith.builder.buildhelpers
 
 import org.jamesgames.sitesmith.builder.SiteLayout
 import java.io.File
