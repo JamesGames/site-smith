@@ -19,6 +19,9 @@ class Project(val projectDirectory: File, val siteLayout: File) {
     val htmlScriptDirectory: File
     val resourceDirectory: File
     val outputDirectory: File
+    val siteBuilder: SiteBuilder
+    val results: String
+        get() = siteBuilder.results
 
     init {
         if (!siteLayout.exists()) throw IllegalArgumentException("The site layout file, ${siteLayout.absolutePath}, does not exist")
@@ -33,10 +36,11 @@ class Project(val projectDirectory: File, val siteLayout: File) {
         if (!resourceDirectory.exists()) resourceDirectory.mkdir()
         outputDirectory = Paths.get(projectDirectory.toURI()).resolve(outputDirectoryName).toFile()
         if (!outputDirectory.exists()) outputDirectory.mkdir()
+        siteBuilder = SiteBuilder(siteLayout, htmlFunctionDirectory,
+                htmlScriptDirectory, resourceDirectory, outputDirectory)
     }
 
-    fun buildSite(): String = SiteBuilder(siteLayout, htmlFunctionDirectory,
-            htmlScriptDirectory, resourceDirectory, outputDirectory).buildSite()
+    fun buildSite(): Boolean = siteBuilder.buildSite()
 
 
 }

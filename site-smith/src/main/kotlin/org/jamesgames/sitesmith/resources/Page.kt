@@ -3,9 +3,6 @@ package org.jamesgames.sitesmith.resources
 import org.jamesgames.sitesmith.builder.SiteComponentDatabase
 import java.io.File
 import java.nio.file.Path
-import kotlin.collections.forEach
-import kotlin.collections.map
-import kotlin.text.appendln
 
 /**
  * @author James Murphy
@@ -37,7 +34,7 @@ class Page(private val file: File,
     fun writePage(componentDb: SiteComponentDatabase) {
         val pageData = StringBuilder()
         writePageData(componentDb, pageData)
-        file.writer().write(pageData.toString())
+        file.writer().use { it.write(pageData.toString()) }
     }
 
     private fun writePageData(componentDb: SiteComponentDatabase, pageData: StringBuilder) {

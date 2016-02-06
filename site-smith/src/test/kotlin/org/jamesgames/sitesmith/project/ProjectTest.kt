@@ -3,10 +3,6 @@ package org.jamesgames.sitesmith.project
 import org.jamesgames.sitesmith.builder.InvalidSiteLayoutException
 import org.junit.Test
 import java.io.File
-import kotlin.collections.isEmpty
-import kotlin.collections.listOf
-import kotlin.collections.map
-import kotlin.collections.reduce
 import kotlin.test.assertEquals
 
 /**
@@ -19,7 +15,7 @@ class ProjectTest {
     fun testBuildingRootOnlyLayout() {
         val layoutFile = this.javaClass.getResource("/test-project/onlyRootLayout.json").file
         val project = Project(File(projectDir), File(layoutFile))
-        project.buildSite()
+        assert(project.buildSite())
         val outputDir = project.outputDirectory
         assert(outputDir.exists())
         assert(outputDir.isDirectory)
@@ -37,7 +33,7 @@ class ProjectTest {
     fun testBuildingJustAPageLayout() {
         val layoutFile = this.javaClass.getResource("/test-project/justAPageLayout.json").file
         val project = Project(File(projectDir), File(layoutFile))
-        project.buildSite()
+        assert(project.buildSite())
         val outputDir = project.outputDirectory
         assert(outputDir.exists())
         assert(outputDir.isDirectory)
@@ -51,7 +47,7 @@ class ProjectTest {
     fun testBuildingPageAndResourceLayout() {
         val layoutFile = this.javaClass.getResource("/test-project/pageWithResourcesFileLayout.json").file
         val project = Project(File(projectDir), File(layoutFile))
-        project.buildSite()
+        assert(project.buildSite())
         val outputDir = project.outputDirectory
         assert(outputDir.exists())
         assert(outputDir.isDirectory)

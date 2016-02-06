@@ -11,10 +11,6 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
-import kotlin.collections.firstOrNull
-import kotlin.collections.forEach
-import kotlin.collections.joinToString
-import kotlin.collections.map
 
 /**
  * @author James Murphy
@@ -28,11 +24,14 @@ class SiteBuilder(private val siteLayoutFile: File,
     private val successString: String = "Project generated successfully in: " +
             System.lineSeparator() + outputDirectory.absoluteFile
     private val failureString: String = "Project generation failed"
+    private val buildNotAttempted: String = "Build not attempted yet"
     private val componentDatabase: SiteComponentDatabase =
             SiteComponentDatabase(htmlFunctionDirectory, htmlScriptDirectory)
+    public var results: String = buildNotAttempted
+        private set
 
 
-    fun buildSite(): String {
+    fun buildSite(): Boolean {
         clearOutputDirectory()
         val siteLayout = readSiteLayout()
         componentDatabase.populateDatabase()
@@ -46,17 +45,22 @@ class SiteBuilder(private val siteLayoutFile: File,
         }
         val failedBuildHelper = buildHelpers.firstOrNull { !it.buildHelperPassed() }
         if (failedBuildHelper != null) {
-            return arrayOf(failedBuildHelper.getErrorMessages(),
+            results = arrayOf(failedBuildHelper.getErrorMessages(),
                     failedBuildHelper.getWarningMessages(),
                     failureString).joinToString { System.lineSeparator() }
+            return false;
         }
 
         componentDatabase.writePages()
-        return joinBuilderHelperWarnings(buildHelpers) + System.lineSeparator() + successString
+        results = joinBuilderHelperWarnings(buildHelpers) + successString
+        return true;
     }
 
     private fun joinBuilderHelperWarnings(buildHelpers: List<BuildHelper>): String =
-            buildHelpers.map { it.getErrorMessages() }.joinToString { System.lineSeparator() }
+            buildHelpers.map { it.getErrorMessages() }
+                    .filter { it.length > 0 }
+                    .joinToString(System.lineSeparator())
+                    .let { if (it.length == 0) "" else it + System.lineSeparator() }
 
     private fun clearOutputDirectory() {
         // Have to remove all files from directories first

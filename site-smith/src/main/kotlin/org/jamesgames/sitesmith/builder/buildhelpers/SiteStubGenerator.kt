@@ -8,13 +8,13 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
-import kotlin.collections.forEach
 
 /**
  * @author James Murphy
  */
 internal class SiteStubGenerator(private val siteLayout: SiteLayout, private val componentDb: SiteComponentDatabase,
                                  private val outputDirectory: File, private val resourceDirectory: File) : BuildHelper {
+
     override fun applyBuildAction() {
         createStubsAndDirectories(siteLayout.root, "")
     }

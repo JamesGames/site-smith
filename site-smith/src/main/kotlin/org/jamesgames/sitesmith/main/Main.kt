@@ -1,12 +1,8 @@
 package org.jamesgames.sitesmith.main
 
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.apache.commons.cli.*
-import org.jamesgames.sitesmith.builder.SiteLayout
 import org.jamesgames.sitesmith.project.Project
 import java.io.File
-import kotlin.collections.listOf
 
 /**
  * @author James Murphy
@@ -38,7 +34,10 @@ class Main {
             try {
                 val line = parser.parse(options, args);
                 System.out.println(try {
-                    Project(File(line.getOptionValue(projectDirOption)), File(line.getOptionValue(siteLayoutOption))).buildSite()
+                    var project = Project(File(line.getOptionValue(projectDirOption)),
+                            File(line.getOptionValue(siteLayoutOption)))
+                    project.buildSite()
+                    System.out.println(project.results);
                 } catch(exceptionFromProject: Exception) {
                     "Issue during site creation: " + exceptionFromProject.toString()
                     throw exceptionFromProject

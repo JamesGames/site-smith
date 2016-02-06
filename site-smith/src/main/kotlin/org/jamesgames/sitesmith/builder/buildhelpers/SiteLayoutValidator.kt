@@ -3,9 +3,6 @@ package org.jamesgames.sitesmith.builder.buildhelpers
 import org.jamesgames.sitesmith.builder.SiteLayout
 import java.io.File
 import java.util.*
-import kotlin.collections.*
-import kotlin.text.appendln
-import kotlin.text.isEmpty
 
 /**
  * @author James Murphy
@@ -24,27 +21,30 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
     private val listOfEmptyFileNames: MutableList<Pair<String, String>> = ArrayList()
     private var specifiedCssFilesThatDoNotExist: List<Triple<String, SiteLayout.PageInfo, String>> = ArrayList()
 
-    override fun getErrorMessages(): String = StringBuilder().appendln(listOfDuplicateResourcesNamesWithinEntireProject
-            .map { "Duplicate resource id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
-            .joinToString { System.lineSeparator() }).
-            appendln(listOfDuplicateDirectoriesWithinSameDirectory
-                    .map { "Duplicate directory name in directory: ${it.first.name}, duplicate found in: ${it.second}" }
-                    .joinToString { System.lineSeparator() }).
-            appendln(listOfDuplicatePageIdentifierWithinEntireProject
-                    .map { "Duplicate page id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
-                    .joinToString { System.lineSeparator() }).
-            appendln(listOfDuplicateFileNamesWithinSameDirectory
-                    .map { "Duplicate file name in directory: ${it.first}, duplicate found in: ${it.second}" }
-                    .joinToString { System.lineSeparator() }).
-            appendln(listOfEmptyDirectoryNames
-                    .map { "Empty directory name, found in: ${it.second}" }
-                    .joinToString { System.lineSeparator() }).
-            appendln(listOfEmptyFileNames
-                    .map { "Empty file name, found in: ${it.second}" }
-                    .joinToString { System.lineSeparator() }).
-            appendln(specifiedCssFilesThatDoNotExist
-                    .map { "Css file with the unique resource id of ${it.first} not found, page that used file: ${it.third}${it.second.fileName}" }
-                    .joinToString { System.lineSeparator() }).toString()
+    override fun getErrorMessages(): String =
+            arrayListOf((listOfDuplicateResourcesNamesWithinEntireProject
+                    .map { "Duplicate resource id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
+                    .joinToString { System.lineSeparator() }),
+                    (listOfDuplicateDirectoriesWithinSameDirectory
+                            .map { "Duplicate directory name in directory: ${it.first.name}, duplicate found in: ${it.second}" }
+                            .joinToString { System.lineSeparator() }),
+                    (listOfDuplicatePageIdentifierWithinEntireProject
+                            .map { "Duplicate page id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
+                            .joinToString { System.lineSeparator() }),
+                    (listOfDuplicateFileNamesWithinSameDirectory
+                            .map { "Duplicate file name in directory: ${it.first}, duplicate found in: ${it.second}" }
+                            .joinToString { System.lineSeparator() }),
+                    (listOfEmptyDirectoryNames
+                            .map { "Empty directory name, found in: ${it.second}" }
+                            .joinToString { System.lineSeparator() }),
+                    (listOfEmptyFileNames
+                            .map { "Empty file name, found in: ${it.second}" }
+                            .joinToString { System.lineSeparator() }),
+                    (specifiedCssFilesThatDoNotExist
+                            .map { "Css file with the unique resource id of ${it.first} not found, page that used file: ${it.third}${it.second.fileName}" }
+                            .joinToString { System.lineSeparator() }))
+                    .filter { it.length > 0 }
+                    .joinToString { System.lineSeparator() }
 
     override fun applyBuildAction() {
         clearErrorLists()
