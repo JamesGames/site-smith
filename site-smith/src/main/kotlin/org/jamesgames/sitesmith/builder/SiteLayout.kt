@@ -6,7 +6,8 @@ import java.util.*
 /**
  * @author James Murphy
  */
-internal class SiteLayout(val root: SiteLayout.DirectoryInfo) {
+internal class SiteLayout(val root: SiteLayout.DirectoryInfo,
+                          val globalCssFileName: String?) {
     data class PageInfo(val uniqueName: String,
                         val fileName: String,
                         val pageTitle: String,
@@ -14,8 +15,8 @@ internal class SiteLayout(val root: SiteLayout.DirectoryInfo) {
                         val templateNamesForPage: List<String>? = ArrayList())
 
     data class ResourceInfo(val uniqueName: String,
-                            val fileNameInResourceDir: String,
-                            val fileName: String)
+                            val fileName: String,
+                            val fileNameInResourceDir: String = fileName)
 
     data class DirectoryInfo(val name: String,
                              val pages: List<PageInfo>? = ArrayList(),

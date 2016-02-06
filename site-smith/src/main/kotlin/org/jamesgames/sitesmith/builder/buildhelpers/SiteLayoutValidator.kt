@@ -19,7 +19,7 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
     private val listOfDuplicateFileNamesWithinSameDirectory: MutableList<Pair<String, String>> = ArrayList()
     private val listOfEmptyDirectoryNames: MutableList<Pair<SiteLayout.DirectoryInfo, String>> = ArrayList()
     private val listOfEmptyFileNames: MutableList<Pair<String, String>> = ArrayList()
-    private var specifiedCssFilesThatDoNotExist: List<Triple<String, SiteLayout.PageInfo, String>> = ArrayList()
+    private var listOfSpecifiedCssFilesThatDoNotExist: MutableList<Triple<String, SiteLayout.PageInfo, String>> = ArrayList()
 
     override fun getErrorMessages(): String =
             arrayListOf((listOfDuplicateResourcesNamesWithinEntireProject
@@ -40,7 +40,7 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
                     (listOfEmptyFileNames
                             .map { "Empty file name, found in: ${it.second}" }
                             .joinToString { System.lineSeparator() }),
-                    (specifiedCssFilesThatDoNotExist
+                    (listOfSpecifiedCssFilesThatDoNotExist
                             .map { "Css file with the unique resource id of ${it.first} not found, page that used file: ${it.third}${it.second.fileName}" }
                             .joinToString { System.lineSeparator() }))
                     .filter { it.length > 0 }
@@ -54,8 +54,8 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
     }
 
     private fun findSpecifiedCssFilesThatDoNotExist() {
-        specifiedCssFilesThatDoNotExist =
-                cssFilesFound.filterNot { resourceIdentifierNamesWithinSameProject.contains(it.first) }.toList()
+        listOfSpecifiedCssFilesThatDoNotExist.addAll(cssFilesFound
+                .filterNot { resourceIdentifierNamesWithinSameProject.contains(it.first) })
     }
 
     private fun clearErrorLists() {
@@ -65,6 +65,7 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
         listOfDuplicateFileNamesWithinSameDirectory.clear()
         listOfEmptyDirectoryNames.clear()
         listOfEmptyFileNames.clear()
+        listOfSpecifiedCssFilesThatDoNotExist.clear()
     }
 
     private fun validateDirectories(directory: SiteLayout.DirectoryInfo, directoryPathSoFar: String) {

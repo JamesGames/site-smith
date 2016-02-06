@@ -8,13 +8,13 @@ import org.jamesgames.sitesmith.sitecomponents.HtmlFunctionArgument
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.collections.forEach
 
 /**
  * @author James Murphy
  */
 class SiteComponentDatabase(private val htmlFunctionDirectory: File,
-                            private val htmlScriptDirectory: File) {
+                            private val htmlScriptDirectory: File,
+                            public val globalCssFileName: String) {
 
     companion object {
         const private val htmlFunctionSourceExtension = ".hf"
@@ -25,7 +25,7 @@ class SiteComponentDatabase(private val htmlFunctionDirectory: File,
     private val htmlScriptMap: HtmlScriptMap = HtmlScriptMap()
     private val resourceMap: ResourceMap = ResourceMap()
 
-    fun populateDatabase() {
+    init {
         fillFunctionMap()
         fillScriptMap()
     }

@@ -10,7 +10,6 @@ import org.jamesgames.sitesmith.resources.Page
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.*
 
 /**
  * @author James Murphy
@@ -21,12 +20,15 @@ class SiteBuilder(private val siteLayoutFile: File,
                   private val resourceDirectory: File,
                   private val outputDirectory: File) {
 
+    companion object {
+        public val globalCssFileName = "global-style.css"
+    }
+
     private val successString: String = "Project generated successfully in: " +
             System.lineSeparator() + outputDirectory.absoluteFile
     private val failureString: String = "Project generation failed"
     private val buildNotAttempted: String = "Build not attempted yet"
-    private val componentDatabase: SiteComponentDatabase =
-            SiteComponentDatabase(htmlFunctionDirectory, htmlScriptDirectory)
+
     public var results: String = buildNotAttempted
         private set
 
@@ -34,26 +36,46 @@ class SiteBuilder(private val siteLayoutFile: File,
     fun buildSite(): Boolean {
         clearOutputDirectory()
         val siteLayout = readSiteLayout()
-        componentDatabase.populateDatabase()
+        val componentDatabase = SiteComponentDatabase(
+                htmlFunctionDirectory,
+                htmlScriptDirectory,
+                siteLayout.globalCssFileName ?: globalCssFileName)
 
-        val buildHelpers: MutableList<BuildHelper> = ArrayList()
-        buildHelpers.add(ResourceDirectoryValidator(resourceDirectory, Page.siteWideCssFileName))
-        buildHelpers.add(SiteLayoutValidator(siteLayout))
-        buildHelpers.add(SiteStubGenerator(siteLayout, componentDatabase, outputDirectory, resourceDirectory))
-        buildHelpers.forEach {
-            it.applyBuildAction()
-        }
-        val failedBuildHelper = buildHelpers.firstOrNull { !it.buildHelperPassed() }
-        if (failedBuildHelper != null) {
-            results = arrayOf(failedBuildHelper.getErrorMessages(),
-                    failedBuildHelper.getWarningMessages(),
-                    failureString).joinToString { System.lineSeparator() }
+        val buildHelpers = executedBuildHelpers(componentDatabase, siteLayout)
+        val potentialFailedBuildHelper = potentialFailedBuildHelper(buildHelpers)
+        if (potentialFailedBuildHelper != null) {
+            recordFailResults(potentialFailedBuildHelper)
             return false;
         }
 
         componentDatabase.writePages()
-        results = joinBuilderHelperWarnings(buildHelpers) + successString
+
+        recordSuccessResults(buildHelpers)
         return true;
+    }
+
+    private fun executedBuildHelpers(componentDatabase: SiteComponentDatabase, siteLayout: SiteLayout): MutableList<BuildHelper> {
+        val buildHelpers: MutableList<BuildHelper> = arrayListOf(
+                ResourceDirectoryValidator(resourceDirectory, componentDatabase.globalCssFileName),
+                SiteLayoutValidator(siteLayout),
+                SiteStubGenerator(siteLayout, componentDatabase, outputDirectory, resourceDirectory))
+        buildHelpers.forEach {
+            it.applyBuildAction()
+        }
+        return buildHelpers
+    }
+
+    private fun potentialFailedBuildHelper(buildHelpers: MutableList<BuildHelper>) =
+            buildHelpers.firstOrNull { !it.buildHelperPassed() }
+
+    private fun recordFailResults(failedBuildHelper: BuildHelper) {
+        results = arrayOf(failedBuildHelper.getErrorMessages(),
+                failedBuildHelper.getWarningMessages(),
+                failureString).joinToString { System.lineSeparator() }
+    }
+
+    private fun recordSuccessResults(buildHelpers: MutableList<BuildHelper>) {
+        results = joinBuilderHelperWarnings(buildHelpers) + successString
     }
 
     private fun joinBuilderHelperWarnings(buildHelpers: List<BuildHelper>): String =

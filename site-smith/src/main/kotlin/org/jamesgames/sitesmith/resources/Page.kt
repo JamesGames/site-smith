@@ -14,7 +14,6 @@ class Page(private val file: File,
            private val htmlScriptNames: List<String>) : Resource {
 
     companion object {
-        val siteWideCssFileName = "global-style.css"
         private val docType = "<!DOCTYPE html>"
         private val htmlOpen = "<html>"
         private val headOpen = "<head>"
@@ -52,8 +51,8 @@ class Page(private val file: File,
 
         pageData.appendln(headOpen)
         pageData.appendln("$titleOpen$pageTitle$titleClose")
-        if (componentDb.doesResourceExist(siteWideCssFileName)) {
-            val pathToCssFile = componentDb.getRelativeResourcePath(siteWideCssFileName, this)
+        if (componentDb.doesResourceExist(componentDb.globalCssFileName)) {
+            val pathToCssFile = componentDb.getRelativeResourcePath(componentDb.globalCssFileName, this)
             pageData.appendln("$cssLinkStart$pathToCssFile$cssLinkEnd")
         }
         additionalCssFiles.map { "$cssLinkStart$it$cssLinkEnd" }.forEach { pageData.appendln(it) }
