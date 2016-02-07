@@ -1,0 +1,60 @@
+{
+  "globalCssFileName": "customGlobal.css",
+  "root": {
+    "name": "root",
+    "pages": [
+      {
+        "uniqueName": "Home Page",
+        "fileName": "index.html",
+        "pageTitle": "Home Page",
+        "additionalCssFiles": [
+          "additionalCssFile.css"
+        ]
+      }
+    ],
+    "resources": [
+      {
+        "uniqueName": "homePageResource1",
+        "fileNameInResourceDir": "resource1.txt",
+        "fileName": "homeResource1.txt"
+      },
+      {
+        "uniqueName": "homePageResource2",
+        "fileNameInResourceDir": "resource2.txt",
+        "fileName": "homeResource2.txt"
+      }
+    ],
+    "directories": [
+      {
+        "name": "css",
+        "resources": [
+          {
+            "fileName": "additionalCssFile.css"
+          },
+          {
+            "fileName": "customGlobal.css"
+          }
+        ]
+      },
+      {
+        "name": "subDirectory",
+        "pages": [
+          {
+            "fileName": "a_page_in_a_sub_directory.html",
+            "pageTitle": "A page in a subdirectory, a super example"
+          },
+          {
+            "uniqueName": "subdirectory_index",
+            "fileName": "index.html",
+            "pageTitle": "the index page for the sub dir"
+          }
+        ],
+        "resources": [
+          {
+            "fileName": "resource2.txt"
+          }
+        ]
+      }
+    ]
+  }
+}

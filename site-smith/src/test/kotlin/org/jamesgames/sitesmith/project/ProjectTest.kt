@@ -68,4 +68,27 @@ class ProjectTest {
                         .map { expectedFileNames.contains(it.name) }
                         .reduce { a: Boolean, b: Boolean -> a && b }
     }
+
+    @Test
+    fun testMultipleDirectoriesLayout() {
+        val layoutFile = this.javaClass.getResource("/test-project/multipleDirectoriesLayout.json").file
+        val project = Project(File(projectDir), File(layoutFile))
+        assert(project.buildSite())
+        val outputDir = project.outputDirectory
+        assert(outputDir.exists())
+        assert(outputDir.isDirectory)
+        val files = outputDir.listFiles()
+        assert(fileNamesWithinDirMatch(
+                listOf("index.html", "homeResource2.txt", "homeResource1.txt", "css", "subDirectory"),
+                files))
+        val cssDirFiles = files.filter { it.isDirectory && it.name.equals("css") }.first().listFiles()
+        assert(fileNamesWithinDirMatch(
+                listOf("customGlobal.css", "additionalCssFile.css"),
+                cssDirFiles))
+        val subDirFiles = files.filter { it.isDirectory && it.name.equals("subDirectory") }.first().listFiles()
+        assert(fileNamesWithinDirMatch(
+                listOf("a_page_in_a_sub_directory.html", "index.html", "resource2.txt"),
+                subDirFiles))
+    }
+
 }

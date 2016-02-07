@@ -31,14 +31,14 @@ internal class SiteStubGenerator(private val siteLayout: SiteLayout, private val
     private fun createStubPages(pages: List<SiteLayout.PageInfo>?, directoryPathSoFar: String) {
         pages?.forEach {
             val path = Files.createFile(Paths.get(outputDirectory.absolutePath, directoryPathSoFar, it.fileName))
-            componentDb.recordResource(Page(path.toFile(), it.uniqueName, it.pageTitle,
+            componentDb.recordResource(Page(path.toFile(), it.uniqueName ?: it.fileName, it.pageTitle,
                     it.additionalCssFiles ?: ArrayList(), it.templateNamesForPage ?: ArrayList()))
         }
     }
 
     private fun copyResources(resources: List<SiteLayout.ResourceInfo>?, directoryPathSoFar: String) {
         resources?.forEach {
-            val fileNameInResourceDir = it.fileNameInResourceDir
+            val fileNameInResourceDir: String = it.fileNameInResourceDir ?: it.fileName
             val fileToCopyFrom = Files.walk(Paths.get(resourceDirectory.toURI()))
                     .map { it.toFile() }
                     .filter { it != resourceDirectory }
@@ -48,7 +48,7 @@ internal class SiteStubGenerator(private val siteLayout: SiteLayout, private val
                     .get()
             val fileToCopyTo = Paths.get(outputDirectory.toURI()).resolve(directoryPathSoFar).resolve(it.fileName)
             Files.copy(fileToCopyFrom, fileToCopyTo)
-            componentDb.recordResource(SiteFile(fileToCopyTo.toFile(), it.uniqueName))
+            componentDb.recordResource(SiteFile(fileToCopyTo.toFile(), it.uniqueName ?: it.fileName))
         }
     }
 }

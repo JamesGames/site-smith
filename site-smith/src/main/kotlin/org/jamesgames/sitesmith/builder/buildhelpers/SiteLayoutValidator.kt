@@ -95,11 +95,11 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
     private fun validateResources(directoryPathSoFar: String, fileNamesInDirectory: MutableSet<String>,
                                   resources: List<SiteLayout.ResourceInfo>?) {
         resources?.forEach {
-            if (!fileNamesInDirectory.add(it.uniqueName))
+            if (!fileNamesInDirectory.add(it.uniqueName ?: it.fileName))
                 listOfDuplicateFileNamesWithinSameDirectory.add(Pair(it.fileName, directoryPathSoFar))
             if (it.fileName.isEmpty())
                 listOfEmptyFileNames.add(Pair(it.fileName, directoryPathSoFar))
-            if (!resourceIdentifierNamesWithinSameProject.add(it.uniqueName))
+            if (!resourceIdentifierNamesWithinSameProject.add(it.uniqueName ?: it.fileName))
                 listOfDuplicateResourcesNamesWithinEntireProject.add(Pair(it, directoryPathSoFar))
         }
     }
@@ -111,7 +111,7 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
                 listOfDuplicateFileNamesWithinSameDirectory.add(Pair(it.fileName, directoryPathSoFar))
             if (it.fileName.isEmpty())
                 listOfEmptyFileNames.add(Pair(it.fileName, directoryPathSoFar))
-            if (!pageIdentifierNamesWithinSameProject.add(it.uniqueName))
+            if (!pageIdentifierNamesWithinSameProject.add(it.uniqueName ?: it.fileName))
                 listOfDuplicatePageIdentifierWithinEntireProject.add(Pair(it, directoryPathSoFar))
             cssFilesFound.addAll(
                     it.additionalCssFiles?.map { css -> Triple(css, it, directoryPathSoFar) } ?: ArrayList())
