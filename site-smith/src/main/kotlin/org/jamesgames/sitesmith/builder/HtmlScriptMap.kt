@@ -1,6 +1,5 @@
 package org.jamesgames.sitesmith.builder
 
-import org.jamesgames.sitesmith.resources.Page
 import org.jamesgames.sitesmith.sitecomponents.HtmlScript
 import java.util.*
 
@@ -18,10 +17,6 @@ internal class HtmlScriptMap {
 
     fun clearMap() {
         nameToScript.clear();
-    }
-
-    fun executeHtmlScript(scriptName: String, page: Page, componentDb: SiteComponentDatabase, stringBuilder: StringBuilder) {
-        getHtmlScript(scriptName).appendHtml(page, componentDb, stringBuilder)
     }
 }
 

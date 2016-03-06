@@ -4,7 +4,7 @@ import org.jamesgames.sitesmith.builder.parsers.HtmlFunctionParser
 import org.jamesgames.sitesmith.builder.parsers.HtmlScriptParser
 import org.jamesgames.sitesmith.resources.Page
 import org.jamesgames.sitesmith.resources.Resource
-import org.jamesgames.sitesmith.sitecomponents.HtmlFunctionArgument
+import org.jamesgames.sitesmith.textfunctions.TextScript
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -14,7 +14,7 @@ import java.nio.file.Paths
  */
 class SiteComponentDatabase(private val htmlFunctionDirectory: File,
                             private val htmlScriptDirectory: File,
-                            public val globalCssFileName: String) {
+                            val globalCssFileName: String) {
 
     companion object {
         const private val htmlFunctionSourceExtension = ".hf"
@@ -41,15 +41,17 @@ class SiteComponentDatabase(private val htmlFunctionDirectory: File,
     fun doesResourceExist(name: String): Boolean =
             resourceMap.doesResourceExist(name)
 
-    fun callFunction(name: String, page: Page, arguments: List<HtmlFunctionArgument>, stringBuilder: StringBuilder) =
-            htmlFunctionMap.callFunction(name, page, arguments, this, stringBuilder)
+    fun appendHtmlFromScript(scriptName: String, page: Page, stringBuilder: StringBuilder) =
+            stringBuilder.append (TextScript.executeScript(
+                    { s: String ->
+                        page.getPath().relativize(Paths.get(getRelativeResourcePath(
+                                s, page))).toString()
+                    },
+                    htmlScriptMap.getHtmlScript(scriptName).scriptText));
 
-    fun appendHtmlFromScript(scriptName: String, page: Page, stringBuilder: StringBuilder) {
-        htmlScriptMap.executeHtmlScript(scriptName, page, this, stringBuilder)
-    }
 
     private fun fillFunctionMap() {
-        htmlScriptMap.clearMap()
+        htmlFunctionMap.clearMap()
         Files.walk(Paths.get(htmlFunctionDirectory.toURI()))
                 .filter { it.endsWith(htmlFunctionSourceExtension) }
                 .map { HtmlFunctionParser(it.toFile()) }
@@ -57,10 +59,12 @@ class SiteComponentDatabase(private val htmlFunctionDirectory: File,
                 .forEach { htmlFunctionMap.addHtmlFunction(it) }
     }
 
-    private fun fillScriptMap() =
-            Files.walk(Paths.get(htmlScriptDirectory.toURI()))
-                    .filter { it.endsWith(htmlScriptSourceExtension) }
-                    .map { HtmlScriptParser(it.toFile()) }
-                    .map { it.getHtmlScript() }
-                    .forEach { htmlScriptMap.addHtmlScript(it) }
+    private fun fillScriptMap() {
+        htmlScriptMap.clearMap()
+        Files.walk(Paths.get(htmlScriptDirectory.toURI()))
+                .filter { it.endsWith(htmlScriptSourceExtension) }
+                .map { HtmlScriptParser(it.toFile()) }
+                .map { it.getHtmlScript() }
+                .forEach { htmlScriptMap.addHtmlScript(it) }
+    }
 }

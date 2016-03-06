@@ -6,7 +6,6 @@ import org.jamesgames.sitesmith.builder.buildhelpers.BuildHelper
 import org.jamesgames.sitesmith.builder.buildhelpers.ResourceDirectoryValidator
 import org.jamesgames.sitesmith.builder.buildhelpers.SiteLayoutValidator
 import org.jamesgames.sitesmith.builder.buildhelpers.SiteStubGenerator
-import org.jamesgames.sitesmith.resources.Page
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -21,7 +20,7 @@ class SiteBuilder(private val siteLayoutFile: File,
                   private val outputDirectory: File) {
 
     companion object {
-        public val globalCssFileName = "global-style.css"
+        val globalCssFileName = "global-style.css"
     }
 
     private val successString: String = "Project generated successfully in: " +
@@ -29,7 +28,7 @@ class SiteBuilder(private val siteLayoutFile: File,
     private val failureString: String = "Project generation failed"
     private val buildNotAttempted: String = "Build not attempted yet"
 
-    public var results: String = buildNotAttempted
+    var results: String = buildNotAttempted
         private set
 
 

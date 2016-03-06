@@ -15,7 +15,7 @@ class Main {
                 "Project page: github.com/jamesgames/site-smith${System.lineSeparator()}${System.lineSeparator()}" +
                 "Options:"
 
-        @JvmStatic public fun main(args: Array<String>) {
+        @JvmStatic fun main(args: Array<String>) {
             val options = Options();
             options.addOption(Option.builder(projectDirOption)
                     .longOpt("project-directory")
