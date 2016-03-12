@@ -3,6 +3,7 @@ package org.jamesgames.sitesmith.project
 import org.jamesgames.sitesmith.builder.InvalidSiteLayoutException
 import org.junit.Test
 import java.io.File
+import java.nio.file.Files
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -113,6 +114,24 @@ class ProjectTest {
         assertTrue(fileNamesWithinDirMatch(
                 listOf("resource2.txt"),
                 dirB))
+    }
+
+    @Test
+    fun testPageContentLayout() {
+        val layoutFile = this.javaClass.getResource("/test-project/pageContentLayout.json").file
+        val project = Project(File(projectDir), File(layoutFile))
+        assertTrue(project.buildSite())
+        val outputDir = project.outputDirectory
+        assertTrue(outputDir.exists())
+        assertTrue(outputDir.isDirectory)
+        val files = outputDir.listFiles()
+        assertTrue(fileNamesWithinDirMatch(
+                listOf("index.html"),
+                files))
+        val pageFile = files[0]
+        val pageContent = String(Files.readAllBytes(pageFile.toPath()))
+        assertTrue(pageContent.contains("<h1>Hello bob</h1>\n<h1>Hello bill</h1>\n<h1>Hello ben</h1>${System.lineSeparator()}" +
+                "<p>$$\$FunctionArgument$$$</p>${System.lineSeparator()}"));
     }
 
 }

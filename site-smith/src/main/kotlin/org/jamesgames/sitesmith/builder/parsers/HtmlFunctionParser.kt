@@ -19,13 +19,15 @@ internal class HtmlFunctionParser(private val htmlFunctionSourceFile: File) {
 
     fun getHtmlFunction(): HtmlFunction {
         val name = com.google.common.io.Files.getNameWithoutExtension(htmlFunctionSourceFile.name)
-
         val text = com.google.common.io.Files.toString(
                 Paths.get(htmlFunctionSourceFile.toURI()).toFile(),
                 Charsets.UTF_8)
-        if (TextFunction.isFunctionTextInValidFormat(text)) {
-            throw HtmlFunctionParseException(name, "Function is in an invalid format. Format should be:" +
-                    System.lineSeparator() + formatAndExample);
+        try {
+            if (!TextFunction.isFunctionTextInValidFormat(text))
+                throw HtmlFunctionParseException(name, "Function is in an invalid format. Format should be:" +
+                        System.lineSeparator() + formatAndExample);
+        } catch (e: Exception) {
+            throw HtmlFunctionParseException(name, "Function error:${System.lineSeparator()}${e.message}");
         }
         return HtmlFunction(name, text)
     }

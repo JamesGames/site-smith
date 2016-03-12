@@ -23,9 +23,12 @@ internal class HtmlScriptParser(private val htmlScriptSourceFile: File) {
         val text = com.google.common.io.Files.toString(
                 Paths.get(htmlScriptSourceFile.toURI()).toFile(),
                 Charsets.UTF_8)
-        if (TextScript.isScriptInValidFormat(text)) {
-            throw HtmlScriptParseException(name, "Script is in an invalid format. Format should be:" +
-                    System.lineSeparator() + HtmlScriptParser.formatAndExample);
+        try {
+            if (!TextScript.isScriptInValidFormat(text))
+                throw HtmlScriptParseException(name, "Script is in an invalid format. Format should be:" +
+                        System.lineSeparator() + HtmlScriptParser.formatAndExample);
+        } catch (e: Exception) {
+            throw HtmlScriptParseException(name, "Function error:${System.lineSeparator()}${e.message}");
         }
         return HtmlScript(name, text);
     }

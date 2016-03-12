@@ -17,8 +17,8 @@ class SiteComponentDatabase(private val htmlFunctionDirectory: File,
                             val globalCssFileName: String) {
 
     companion object {
-        const private val htmlFunctionSourceExtension = ".hf"
-        const private val htmlScriptSourceExtension = ".hs"
+        const private val htmlFunctionSourceExtension = ".clj"
+        const private val htmlScriptSourceExtension = ".clj"
     }
 
     private val htmlFunctionMap: HtmlFunctionMap = HtmlFunctionMap()
@@ -53,8 +53,11 @@ class SiteComponentDatabase(private val htmlFunctionDirectory: File,
     private fun fillFunctionMap() {
         htmlFunctionMap.clearMap()
         Files.walk(Paths.get(htmlFunctionDirectory.toURI()))
-                .filter { it.endsWith(htmlFunctionSourceExtension) }
-                .map { HtmlFunctionParser(it.toFile()) }
+                .map { it.toFile() }
+                .filter { it != htmlFunctionDirectory }
+                .filter { it.isFile }
+                .filter { it.name.endsWith(htmlFunctionSourceExtension) }
+                .map { HtmlFunctionParser(it) }
                 .map { it.getHtmlFunction() }
                 .forEach { htmlFunctionMap.addHtmlFunction(it) }
     }
@@ -62,8 +65,11 @@ class SiteComponentDatabase(private val htmlFunctionDirectory: File,
     private fun fillScriptMap() {
         htmlScriptMap.clearMap()
         Files.walk(Paths.get(htmlScriptDirectory.toURI()))
-                .filter { it.endsWith(htmlScriptSourceExtension) }
-                .map { HtmlScriptParser(it.toFile()) }
+                .map { it.toFile() }
+                .filter { it != htmlScriptDirectory }
+                .filter { it.isFile }
+                .filter { it.name.endsWith(htmlScriptSourceExtension) }
+                .map { HtmlScriptParser(it) }
                 .map { it.getHtmlScript() }
                 .forEach { htmlScriptMap.addHtmlScript(it) }
     }

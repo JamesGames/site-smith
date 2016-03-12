@@ -5,5 +5,5 @@ package org.jamesgames.sitesmith.sitecomponents
  */
 class HtmlFunctionParseException : RuntimeException {
     constructor(functionName: String, errorMsg: String) :
-    super("Failed to parse Html function $functionName. $errorMsg")
+    super("Failed to parse Html Function: $functionName. $errorMsg")
 }

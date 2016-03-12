@@ -2,6 +2,9 @@ package org.jamesgames.sitesmith.resources
 
 import org.jamesgames.sitesmith.builder.SiteComponentDatabase
 import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
+import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 
 /**
@@ -16,7 +19,7 @@ class Page(private val file: File,
     companion object {
         private val docType = "<!DOCTYPE html>"
         private val htmlOpen = "<html>"
-        private val headOpen = "<head>"
+        private val headOpen = "<head><meta charset=\"UTF-8\">"
         private val titleOpen = "<title>"
         private val titleClose = "</title>"
         private val cssLinkStart = "<link rel=\"stylesheet\" href=\""
@@ -33,7 +36,7 @@ class Page(private val file: File,
     fun writePage(componentDb: SiteComponentDatabase) {
         val pageData = StringBuilder()
         writePageData(componentDb, pageData)
-        file.writer().use { it.write(pageData.toString()) }
+        OutputStreamWriter(FileOutputStream(file), StandardCharsets.UTF_8).use { it.write(pageData.toString()); it.close()}
     }
 
     private fun writePageData(componentDb: SiteComponentDatabase, pageData: StringBuilder) {
@@ -61,7 +64,7 @@ class Page(private val file: File,
 
     private fun writePageBody(pageData: StringBuilder, componentDb: SiteComponentDatabase) {
         pageData.appendln(bodyOpen)
-        htmlScriptNames.map { componentDb.appendHtmlFromScript(uniqueName, this, pageData) }.forEach { pageData.appendln(it) }
+        htmlScriptNames.forEach { componentDb.appendHtmlFromScript(it, this, pageData) }
         pageData.appendln(bodyClose)
     }
 

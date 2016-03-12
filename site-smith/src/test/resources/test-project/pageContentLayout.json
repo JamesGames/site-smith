@@ -1,0 +1,15 @@
+{
+  "root": {
+    "name": "root",
+    "pages": [
+      {
+        "uniqueName": "testPage",
+        "fileName": "index.html",
+        "pageTitle": "random test page",
+        "templateNamesForPage": [
+          "exampleScript"
+        ]
+      }
+    ]
+  }
+}
