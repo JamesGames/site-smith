@@ -1,0 +1,25 @@
+{
+  "specifyResourcesByDirectory": true,
+  "root": {
+    "name": "root",
+    "pages": [
+      {
+        "uniqueName": "homePage",
+        "fileName": "index.html",
+        "pageTitle": "MyHomePage"
+      }
+    ],
+    "directories": [
+      {
+        "name": "directoryA",
+        "pages": [
+          {
+            "uniqueName": "directoryAPage",
+            "fileName": "index.html",
+            "pageTitle": "directoryAPage"
+          }
+        ]
+      }
+    ]
+  }
+}

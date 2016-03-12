@@ -9,9 +9,17 @@ import java.util.*
  */
 internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHelper {
 
+    companion object {
+        const private val resourcesSpecifiedByDirectoryLayoutText = "Layout description has specified where " +
+                "to locate resource files by both the by-directory root option and by specifying details of the " +
+                "resource files individually throughout the layout. Choose one or the other."
+    }
+
     private val resourceIdentifierNamesWithinSameProject: MutableSet<String> = HashSet()
     private val pageIdentifierNamesWithinSameProject: MutableSet<String> = HashSet()
     private val cssFilesFound: MutableList<Triple<String, SiteLayout.PageInfo, String>> = ArrayList()
+    // For use when specifying resource files by resource directory layout
+    private val resourceFileNamesWithinSameProject: MutableSet<String> = HashSet()
 
     private val listOfDuplicateResourcesNamesWithinEntireProject: MutableList<Pair<SiteLayout.ResourceInfo, String>> = ArrayList()
     private val listOfDuplicateDirectoriesWithinSameDirectory: MutableList<Pair<SiteLayout.DirectoryInfo, String>> = ArrayList()
@@ -20,34 +28,46 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
     private val listOfEmptyDirectoryNames: MutableList<Pair<SiteLayout.DirectoryInfo, String>> = ArrayList()
     private val listOfEmptyFileNames: MutableList<Pair<String, String>> = ArrayList()
     private var listOfSpecifiedCssFilesThatDoNotExist: MutableList<Triple<String, SiteLayout.PageInfo, String>> = ArrayList()
+    private var resourcesSpecifiedByBothDirectoryLayoutAndLayoutFile: Boolean = false;
+    // For use when specifying resource files by resource directory layout
+    private val listOfDuplicateResourcesFileNamesWithinEntireProject: MutableList<Pair<SiteLayout.ResourceInfo, String>> = ArrayList()
 
-    override fun getErrorMessages(): String =
-            arrayListOf((listOfDuplicateResourcesNamesWithinEntireProject
-                    .map { "Duplicate resource id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
-                    .joinToString { System.lineSeparator() }),
-                    (listOfDuplicateDirectoriesWithinSameDirectory
-                            .map { "Duplicate directory name in directory: ${it.first.name}, duplicate found in: ${it.second}" }
-                            .joinToString { System.lineSeparator() }),
-                    (listOfDuplicatePageIdentifierWithinEntireProject
-                            .map { "Duplicate page id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
-                            .joinToString { System.lineSeparator() }),
-                    (listOfDuplicateFileNamesWithinSameDirectory
-                            .map { "Duplicate file name in directory: ${it.first}, duplicate found in: ${it.second}" }
-                            .joinToString { System.lineSeparator() }),
-                    (listOfEmptyDirectoryNames
-                            .map { "Empty directory name, found in: ${it.second}" }
-                            .joinToString { System.lineSeparator() }),
-                    (listOfEmptyFileNames
-                            .map { "Empty file name, found in: ${it.second}" }
-                            .joinToString { System.lineSeparator() }),
-                    (listOfSpecifiedCssFilesThatDoNotExist
-                            .map { "Css file with the unique resource id of ${it.first} not found, page that used file: ${it.third}${it.second.fileName}" }
-                            .joinToString { System.lineSeparator() }))
-                    .filter { it.length > 0 }
+    override fun getErrorMessages(): String {
+        val errors: ArrayList<String> = arrayListOf((listOfDuplicateResourcesNamesWithinEntireProject
+                .map { "Duplicate resource id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
+                .joinToString { System.lineSeparator() }),
+                (listOfDuplicateDirectoriesWithinSameDirectory
+                        .map { "Duplicate directory name in directory: ${it.first.name}, duplicate found in: ${it.second}" }
+                        .joinToString { System.lineSeparator() }),
+                (listOfDuplicatePageIdentifierWithinEntireProject
+                        .map { "Duplicate page id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
+                        .joinToString { System.lineSeparator() }),
+                (listOfDuplicateFileNamesWithinSameDirectory
+                        .map { "Duplicate file name in directory: ${it.first}, duplicate found in: ${it.second}" }
+                        .joinToString { System.lineSeparator() }),
+                (listOfEmptyDirectoryNames
+                        .map { "Empty directory name, found in: ${it.second}" }
+                        .joinToString { System.lineSeparator() }),
+                (listOfEmptyFileNames
+                        .map { "Empty file name, found in: ${it.second}" }
+                        .joinToString { System.lineSeparator() }),
+                (listOfSpecifiedCssFilesThatDoNotExist
+                        .map { "Css file with the unique resource id of ${it.first} not found, page that used file: ${it.third}${it.second.fileName}" }
+                        .joinToString { System.lineSeparator() }))
+
+        if (resourcesSpecifiedByBothDirectoryLayoutAndLayoutFile) {
+            errors.add(System.lineSeparator() + resourcesSpecifiedByDirectoryLayoutText + System.lineSeparator())
+            listOfDuplicateResourcesFileNamesWithinEntireProject
+                    .map { "Duplicate resource file name in project: ${it.first.fileName}, duplicate found in: ${it.second}" }
                     .joinToString { System.lineSeparator() }
+        }
+
+        return errors.filter { it.length > 0 }
+                .joinToString { System.lineSeparator() }
+    }
 
     override fun applyBuildAction() {
-        clearErrorLists()
+        clearLists()
         cssFilesFound.clear()
         validateDirectories(siteLayout.root, File.separator);
         findSpecifiedCssFilesThatDoNotExist()
@@ -58,7 +78,7 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
                 .filterNot { resourceIdentifierNamesWithinSameProject.contains(it.first) })
     }
 
-    private fun clearErrorLists() {
+    private fun clearLists() {
         listOfDuplicateResourcesNamesWithinEntireProject.clear()
         listOfDuplicateDirectoriesWithinSameDirectory.clear()
         listOfDuplicatePageIdentifierWithinEntireProject.clear()
@@ -66,6 +86,8 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
         listOfEmptyDirectoryNames.clear()
         listOfEmptyFileNames.clear()
         listOfSpecifiedCssFilesThatDoNotExist.clear()
+        resourceIdentifierNamesWithinSameProject.clear()
+        resourceFileNamesWithinSameProject.clear()
     }
 
     private fun validateDirectories(directory: SiteLayout.DirectoryInfo, directoryPathSoFar: String) {
@@ -95,8 +117,12 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
     private fun validateResources(directoryPathSoFar: String, fileNamesInDirectory: MutableSet<String>,
                                   resources: List<SiteLayout.ResourceInfo>?) {
         resources?.forEach {
+            if (siteLayout.specifyResourcesByDirectory)
+                resourcesSpecifiedByBothDirectoryLayoutAndLayoutFile = true;
             if (!fileNamesInDirectory.add(it.uniqueName ?: it.fileName))
                 listOfDuplicateFileNamesWithinSameDirectory.add(Pair(it.fileName, directoryPathSoFar))
+            if (!resourceFileNamesWithinSameProject.add(it.fileName))
+                listOfDuplicateResourcesFileNamesWithinEntireProject.add(Pair(it, directoryPathSoFar))
             if (it.fileName.isEmpty())
                 listOfEmptyFileNames.add(Pair(it.fileName, directoryPathSoFar))
             if (!resourceIdentifierNamesWithinSameProject.add(it.uniqueName ?: it.fileName))

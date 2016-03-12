@@ -17,7 +17,10 @@ internal class ResourceDirectoryValidator(private val resourceDirectory: File,
     override fun applyBuildAction() {
         resourceFilesWithDuplicateUniqueFileNames.clear()
         val uniqueFileNames: MutableSet<String> = HashSet()
-        Files.walk(resourceDirectory.toPath()).map { it.toFile() }.forEach {
+        Files.walk(resourceDirectory.toPath())
+                .map { it.toFile() }
+                .filter { it.isFile }
+                .forEach {
             if (!uniqueFileNames.add(it.name))
                 resourceFilesWithDuplicateUniqueFileNames.add(it)
             if (!cssStyleFileFound)

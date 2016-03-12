@@ -17,13 +17,18 @@ internal class SiteStubGenerator(private val siteLayout: SiteLayout, private val
 
     override fun applyBuildAction() {
         createStubsAndDirectories(siteLayout.root, "")
+        if (siteLayout.specifyResourcesByDirectory)
+            copyResourcesDirectoryAsIsFromResourceDirectory()
     }
 
     private fun createStubsAndDirectories(directory: SiteLayout.DirectoryInfo, directoryPathSoFar: String) {
         createStubPages(directory.pages, directoryPathSoFar)
-        copyResources(directory.resources, directoryPathSoFar)
+        if (!siteLayout.specifyResourcesByDirectory)
+            copyResources(directory.resources, directoryPathSoFar)
         directory.directories?.forEach {
-            Files.createDirectory(Paths.get(outputDirectory.absolutePath, directoryPathSoFar, it.name))
+            val directoryToMakeIfNeeded = Paths.get(outputDirectory.absolutePath, directoryPathSoFar, it.name)
+            if (!directoryToMakeIfNeeded.toFile().exists())
+                Files.createDirectory(directoryToMakeIfNeeded)
             createStubsAndDirectories(it, directoryPathSoFar + it.name + File.separator)
         }
     }
@@ -51,4 +56,21 @@ internal class SiteStubGenerator(private val siteLayout: SiteLayout, private val
             componentDb.recordResource(SiteFile(fileToCopyTo.toFile(), it.uniqueName ?: it.fileName))
         }
     }
+
+    private fun copyResourcesDirectoryAsIsFromResourceDirectory() {
+        Files.walk(Paths.get(resourceDirectory.toURI()))
+                .map { it.toFile() }
+                .filter { it != resourceDirectory }
+                .forEach {
+                    val relativeResourcePath = resourceDirectory.toPath().relativize(it.toPath())
+                    val outputPath = outputDirectory.toPath().resolve(relativeResourcePath)
+                    val outputPathFile = outputPath.toFile()
+                    if (!outputPathFile.exists())
+                        Files.copy(it.toPath(), outputPath)
+                    if (outputPathFile.isFile)
+                        componentDb.recordResource(SiteFile(outputPathFile, outputPathFile.name))
+                }
+    }
+
+
 }
