@@ -23,7 +23,7 @@
 
 
 
-(def startOfResourceReference "resource.")
+(def startOfResourceReference "resource:")
 (defn- resource-name-args-to-path
   [^Function name-to-path-func arguments]
   (reduce

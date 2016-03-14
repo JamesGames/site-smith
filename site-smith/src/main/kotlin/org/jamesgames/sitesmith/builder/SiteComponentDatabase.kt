@@ -42,12 +42,15 @@ class SiteComponentDatabase(private val htmlFunctionDirectory: File,
             resourceMap.doesResourceExist(name)
 
     fun appendHtmlFromScript(scriptName: String, page: Page, stringBuilder: StringBuilder) =
-            stringBuilder.append (TextScript.executeScript(
-                    { s: String ->
-                        page.getPath().relativize(Paths.get(getRelativeResourcePath(
-                                s, page))).toString()
-                    },
-                    htmlScriptMap.getHtmlScript(scriptName).scriptText));
+            try {
+                stringBuilder.append (TextScript.executeScript(
+                        { s: String ->
+                            resourceMap.getRelativeResourcePath(s, page)
+                        },
+                        htmlScriptMap.getHtmlScript(scriptName).scriptText))
+            } catch (e: Exception) {
+                throw ScriptExecutionException(page.getUniqueName(), scriptName, e.message + "")
+            }
 
 
     private fun fillFunctionMap() {

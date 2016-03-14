@@ -3,9 +3,6 @@ package org.jamesgames.sitesmith.builder
 import org.jamesgames.sitesmith.resources.Page
 import org.jamesgames.sitesmith.resources.Resource
 import java.util.*
-import kotlin.collections.filter
-import kotlin.collections.map
-import kotlin.collections.toList
 
 /**
  * @author James Murphy
@@ -19,7 +16,8 @@ internal class ResourceMap {
 
     fun getRelativeResourcePath(name: String, relativeTo: Page): String {
         val resource = nameToResource[name] ?: throw UndefinedResourceException(name)
-        return relativeTo.getPath().relativize(resource.getPath()).normalize().toString()
+        // https://github.com/fhd/clostache/issues/43 replacing slash type as work around
+        return relativeTo.getPath().toFile().parentFile.toPath().relativize(resource.getPath()).normalize().toString().replace('\\', '/')
     }
 
     fun getPages(): List<Page> {
