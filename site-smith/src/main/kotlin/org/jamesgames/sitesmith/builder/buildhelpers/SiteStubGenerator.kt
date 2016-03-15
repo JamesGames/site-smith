@@ -37,7 +37,7 @@ internal class SiteStubGenerator(private val siteLayout: SiteLayout, private val
         pages?.forEach {
             val path = Files.createFile(Paths.get(outputDirectory.absolutePath, directoryPathSoFar, it.fileName))
             componentDb.recordResource(Page(path.toFile(), it.uniqueName ?: it.fileName, it.pageTitle,
-                    it.additionalCssFiles ?: ArrayList(), it.templateNamesForPage ?: ArrayList()))
+                    it.additionalCssFiles ?: ArrayList(), it.textScriptsForPage ?: ArrayList()))
         }
     }
 

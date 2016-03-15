@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 /**
  * @author James Murphy
  */
-class TextScriptTest {
+class TextScriptInterfaceTest {
 
     val largeHelloFunction = "([x](str \"# Hello {{x}}\")[(str \"markdown\")])"
     val multipleLargeHelloNamesFunction = "([names](str " +
@@ -43,9 +43,9 @@ class TextScriptTest {
     val testScriptWithHelloWorldLargeCall = "($helloLargeWorldCall)"
     val helloLargeWorldExpectedOutput = "<h1>Hello large world</h1>${System.lineSeparator()}"
 
-    val nonHtmlFunctionCall = "(str \"not an html function but still okay\" (System/lineSeparator))"
-    val testScriptWithNonHtmlFunction = "($nonHtmlFunctionCall)"
-    val nonHtmlFunctionCallExpectedOutput = "not an html function but still okay${System.lineSeparator()}"
+    val nonTextFunctionCall = "(str \"not an text function but still okay\" (System/lineSeparator))"
+    val testScriptWithNonTextFunction = "($nonTextFunctionCall)"
+    val nonTextFunctionCallExpectedOutput = "not an text function but still okay${System.lineSeparator()}"
 
     val helloVariousLargeNamesFuncName = "hello-large-names"
     val helloVariousLargeNamesCall = "($helloVariousLargeNamesFuncName [\"bob\" \"bill\" \"ben\"])"
@@ -57,20 +57,20 @@ class TextScriptTest {
     val testScriptWithFuncWithNonLiteralArg = "($helloWorldNonLiteralArg)"
     val helloWorldNonLiteralArgExpectedOutput = "Hello world2${System.lineSeparator()}"
 
-    val htmlFunctionPassingFuncName = "function-that-accepts-a-function"
-    val htmlFuncPassingFuncAsArg = "($htmlFunctionPassingFuncName #(str \"$$$\" % \"$$$\"))"
-    val testScriptWithFuncCallPassingFunc = "($htmlFuncPassingFuncAsArg)"
+    val textFunctionPassingFuncName = "function-that-accepts-a-function"
+    val textFuncPassingFuncAsArg = "($textFunctionPassingFuncName #(str \"$$$\" % \"$$$\"))"
+    val testScriptWithFuncCallPassingFunc = "($textFuncPassingFuncAsArg)"
     val funcCallPassingFuncExpectedOutput = "$$\$FunctionArgument$$$${System.lineSeparator()}"
 
     val testScriptWithMultipleFunctions = "(" + helloNoArgsCall +
             helloWorldArgsCall +
             helloLargeWorldCall +
-            nonHtmlFunctionCall +
+            nonTextFunctionCall +
             helloVariousLargeNamesCall + ")"
     val multipleFuncsExpectedOutput = helloNoArgsExpectedOutput +
             helloWorldFuncExpectedOutput +
             helloLargeWorldExpectedOutput +
-            nonHtmlFunctionCallExpectedOutput +
+            nonTextFunctionCallExpectedOutput +
             helloVariousLargeNamesExpectedOutput
 
 
@@ -80,27 +80,27 @@ class TextScriptTest {
 
 
     init {
-        TextFunction.defineFunction(helloLargeWorldFuncName, largeHelloFunction);
-        TextFunction.defineFunction(helloSomeStringArgFuncName, helloFunctionWhereArgIsString);
-        TextFunction.defineFunction(helloNoArgsFuncName, helloNoArgsFunction);
-        TextFunction.defineFunction(helloVariousLargeNamesFuncName, multipleLargeHelloNamesFunction);
-        TextFunction.defineFunction(htmlFunctionPassingFuncName, functionWithFunctionCallForArg);
+        TextFunctionInterface.defineFunction(helloLargeWorldFuncName, largeHelloFunction);
+        TextFunctionInterface.defineFunction(helloSomeStringArgFuncName, helloFunctionWhereArgIsString);
+        TextFunctionInterface.defineFunction(helloNoArgsFuncName, helloNoArgsFunction);
+        TextFunctionInterface.defineFunction(helloVariousLargeNamesFuncName, multipleLargeHelloNamesFunction);
+        TextFunctionInterface.defineFunction(textFunctionPassingFuncName, functionWithFunctionCallForArg);
     }
 
 
     @Test
     fun testIsScriptInValidFormat() {
-        assertEquals(true, TextScript.isScriptInValidFormat(emptyTestScript))
-        assertEquals(true, TextScript.isScriptInValidFormat(testScriptWithFunctionWithNoArgs))
-        assertEquals(true, TextScript.isScriptInValidFormat(testScriptWithFunctionWithArgs))
-        assertEquals(true, TextScript.isScriptInValidFormat(testScriptWithHelloWorldLargeCall))
-        assertEquals(true, TextScript.isScriptInValidFormat(testScriptWithNonHtmlFunction))
-        assertEquals(true, TextScript.isScriptInValidFormat(testScriptWithVariousLargeNames))
-        assertEquals(true, TextScript.isScriptInValidFormat(testScriptWithFuncWithNonLiteralArg))
-        assertEquals(true, TextScript.isScriptInValidFormat(testScriptWithFuncCallPassingFunc))
-        assertEquals(true, TextScript.isScriptInValidFormat(testScriptWithMultipleFunctions))
-        assertEquals(false, TextScript.isScriptInValidFormat(scriptWhereFunctionNameIsAString))
-        assertEquals(false, TextScript.isScriptInValidFormat(scriptWithVectorNotLists))
+        assertEquals(true, TextScriptInterface.isScriptInValidFormat(emptyTestScript))
+        assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptWithFunctionWithNoArgs))
+        assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptWithFunctionWithArgs))
+        assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptWithHelloWorldLargeCall))
+        assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptWithNonTextFunction))
+        assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptWithVariousLargeNames))
+        assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptWithFuncWithNonLiteralArg))
+        assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptWithFuncCallPassingFunc))
+        assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptWithMultipleFunctions))
+        assertEquals(false, TextScriptInterface.isScriptInValidFormat(scriptWhereFunctionNameIsAString))
+        assertEquals(false, TextScriptInterface.isScriptInValidFormat(scriptWithVectorNotLists))
     }
 
     @Test
@@ -108,22 +108,22 @@ class TextScriptTest {
         val resourceConverter = { s: String -> s }
 
         assertEquals(emptyTestExpectedOutput,
-                TextScript.executeScript(resourceConverter, emptyTestScript));
+                TextScriptInterface.executeScript(resourceConverter, emptyTestScript));
         assertEquals(helloNoArgsExpectedOutput,
-                TextScript.executeScript(resourceConverter, testScriptWithFunctionWithNoArgs));
+                TextScriptInterface.executeScript(resourceConverter, testScriptWithFunctionWithNoArgs));
         assertEquals(helloWorldFuncExpectedOutput,
-                TextScript.executeScript(resourceConverter, testScriptWithFunctionWithArgs));
+                TextScriptInterface.executeScript(resourceConverter, testScriptWithFunctionWithArgs));
         assertEquals(helloLargeWorldExpectedOutput,
-                TextScript.executeScript(resourceConverter, testScriptWithHelloWorldLargeCall));
-        assertEquals(nonHtmlFunctionCallExpectedOutput,
-                TextScript.executeScript(resourceConverter, testScriptWithNonHtmlFunction));
+                TextScriptInterface.executeScript(resourceConverter, testScriptWithHelloWorldLargeCall));
+        assertEquals(nonTextFunctionCallExpectedOutput,
+                TextScriptInterface.executeScript(resourceConverter, testScriptWithNonTextFunction));
         assertEquals(helloVariousLargeNamesExpectedOutput,
-                TextScript.executeScript(resourceConverter, testScriptWithVariousLargeNames));
+                TextScriptInterface.executeScript(resourceConverter, testScriptWithVariousLargeNames));
         assertEquals(helloWorldNonLiteralArgExpectedOutput,
-                TextScript.executeScript(resourceConverter, testScriptWithFuncWithNonLiteralArg));
+                TextScriptInterface.executeScript(resourceConverter, testScriptWithFuncWithNonLiteralArg));
         assertEquals(funcCallPassingFuncExpectedOutput,
-                TextScript.executeScript(resourceConverter, testScriptWithFuncCallPassingFunc));
+                TextScriptInterface.executeScript(resourceConverter, testScriptWithFuncCallPassingFunc));
         assertEquals(multipleFuncsExpectedOutput,
-                TextScript.executeScript(resourceConverter, testScriptWithMultipleFunctions))
+                TextScriptInterface.executeScript(resourceConverter, testScriptWithMultipleFunctions))
     }
 }

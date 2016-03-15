@@ -9,14 +9,14 @@ import java.nio.file.Paths
  */
 class Project(val projectDirectory: File, val siteLayout: File) {
     companion object {
-        const private val htmlFunctionDirectoryName = "html-functions"
-        const private val htmlScriptDirectoryName = "scripts"
+        const private val textFunctionDirectoryName = "functions"
+        const private val textScriptDirectoryName = "scripts"
         const private val resourceDirectoryName = "resources"
         const private val outputDirectoryName = "output"
     }
 
-    val htmlFunctionDirectory: File
-    val htmlScriptDirectory: File
+    val textFunctionDirectory: File
+    val textScriptDirectory: File
     val resourceDirectory: File
     val outputDirectory: File
     val siteBuilder: SiteBuilder
@@ -28,16 +28,16 @@ class Project(val projectDirectory: File, val siteLayout: File) {
         if (!siteLayout.isFile) throw IllegalArgumentException("The site layout file, ${siteLayout.absolutePath}, is not a file")
         if (!projectDirectory.exists()) throw IllegalArgumentException("The project directory specified, ${projectDirectory.absolutePath}, does not exist")
         if (!projectDirectory.isDirectory) throw IllegalArgumentException("The project directory specified, ${projectDirectory.absolutePath}, is not a directory")
-        htmlFunctionDirectory = Paths.get(projectDirectory.toURI()).resolve(htmlFunctionDirectoryName).toFile()
-        if (!htmlFunctionDirectory.exists()) htmlFunctionDirectory.mkdir()
-        htmlScriptDirectory = Paths.get(projectDirectory.toURI()).resolve(htmlScriptDirectoryName).toFile()
-        if (!htmlScriptDirectory.exists()) htmlScriptDirectory.mkdir()
+        textFunctionDirectory = Paths.get(projectDirectory.toURI()).resolve(textFunctionDirectoryName).toFile()
+        if (!textFunctionDirectory.exists()) textFunctionDirectory.mkdir()
+        textScriptDirectory = Paths.get(projectDirectory.toURI()).resolve(textScriptDirectoryName).toFile()
+        if (!textScriptDirectory.exists()) textScriptDirectory.mkdir()
         resourceDirectory = Paths.get(projectDirectory.toURI()).resolve(resourceDirectoryName).toFile()
         if (!resourceDirectory.exists()) resourceDirectory.mkdir()
         outputDirectory = Paths.get(projectDirectory.toURI()).resolve(outputDirectoryName).toFile()
         if (!outputDirectory.exists()) outputDirectory.mkdir()
-        siteBuilder = SiteBuilder(siteLayout, htmlFunctionDirectory,
-                htmlScriptDirectory, resourceDirectory, outputDirectory)
+        siteBuilder = SiteBuilder(siteLayout, textFunctionDirectory,
+                textScriptDirectory, resourceDirectory, outputDirectory)
     }
 
     fun buildSite(): Boolean = siteBuilder.buildSite()

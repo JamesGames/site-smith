@@ -6,7 +6,7 @@
         "uniqueName": "testPage",
         "fileName": "index.html",
         "pageTitle": "random test page",
-        "templateNamesForPage": [
+        "textScriptsForPage": [
           "exampleScript"
         ]
       }

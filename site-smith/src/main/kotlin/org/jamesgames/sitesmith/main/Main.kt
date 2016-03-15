@@ -21,7 +21,7 @@ class Main {
                     .longOpt("project-directory")
                     .required()
                     .hasArg()
-                    .desc("The directory containing the project's file such as the resources, html scripts and functions directories (auto-created if needed)")
+                    .desc("The directory containing the project's file such as the resources, text scripts and functions directories (auto-created if needed)")
                     .build())
             options.addOption(Option.builder(siteLayoutOption)
                     .longOpt("site-layout")

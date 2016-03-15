@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * @author James Murphy
  */
-public class TextFunction {
+public class TextFunctionInterface {
 
     static {
         try {
@@ -24,6 +24,6 @@ public class TextFunction {
 
     public static void defineFunction(String functionName, String functionText) {
         RT.var("org.jamesgames.sitesmith.text.TextFunction",
-                "define-html-function").invoke(functionName, functionText);
+                "define-text-function").invoke(functionName, functionText);
     }
 }

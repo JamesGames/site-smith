@@ -14,7 +14,7 @@ class Page(private val file: File,
            private val uniqueName: String,
            private val pageTitle: String,
            private val additionalCssFiles: List<String>,
-           private val htmlScriptNames: List<String>) : Resource {
+           private val textScriptNames: List<String>) : Resource {
 
     companion object {
         private val docType = "<!DOCTYPE html>"
@@ -64,7 +64,7 @@ class Page(private val file: File,
 
     private fun writePageBody(pageData: StringBuilder, componentDb: SiteComponentDatabase) {
         pageData.appendln(bodyOpen)
-        htmlScriptNames.forEach { componentDb.appendHtmlFromScript(it, this, pageData) }
+        textScriptNames.forEach { componentDb.appendTextFromScript(it, this, pageData) }
         pageData.appendln(bodyClose)
     }
 

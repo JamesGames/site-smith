@@ -14,8 +14,8 @@ import java.nio.file.Paths
  * @author James Murphy
  */
 class SiteBuilder(private val siteLayoutFile: File,
-                  private val htmlFunctionDirectory: File,
-                  private val htmlScriptDirectory: File,
+                  private val textFunctionDirectory: File,
+                  private val textScriptDirectory: File,
                   private val resourceDirectory: File,
                   private val outputDirectory: File) {
 
@@ -36,8 +36,8 @@ class SiteBuilder(private val siteLayoutFile: File,
         clearOutputDirectory()
         val siteLayout = readSiteLayout()
         val componentDatabase = SiteComponentDatabase(
-                htmlFunctionDirectory,
-                htmlScriptDirectory,
+                textFunctionDirectory,
+                textScriptDirectory,
                 siteLayout.globalCssFileName ?: globalCssFileName)
 
         val buildHelpers = executedBuildHelpers(componentDatabase, siteLayout)

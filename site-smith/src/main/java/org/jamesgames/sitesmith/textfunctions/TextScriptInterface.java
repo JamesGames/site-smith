@@ -8,7 +8,7 @@ import java.util.function.Function;
 /**
  * @author James Murphy
  */
-public class TextScript {
+public class TextScriptInterface {
     static {
         try {
             RT.loadResourceScript("clojure/TextScript.clj");

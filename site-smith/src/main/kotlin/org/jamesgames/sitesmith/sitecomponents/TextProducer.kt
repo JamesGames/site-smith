@@ -6,7 +6,7 @@ import org.jamesgames.sitesmith.resources.Page
 /**
  * @author James Murphy
  */
-interface HtmlProducer {
-    fun appendHtml(page: Page, componentDb: SiteComponentDatabase, stringBuilder: StringBuilder);
+interface TextProducer {
+    fun appendText(page: Page, componentDb: SiteComponentDatabase, stringBuilder: StringBuilder);
 }
 

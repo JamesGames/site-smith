@@ -32,21 +32,21 @@
                  (conj %1 %2)))
     [] arguments))
 
-(defn- invoke-html-function
+(defn- invoke-text-function
   [^Function name-to-path-func [function-name & function-args]]
   (let [function-to-call (resolve (symbol (str 'project-functions "/" function-name)))
         function-args-evaluated (map eval function-args)
         converted-arguments (resource-name-args-to-path name-to-path-func function-args-evaluated)]
     (function-to-call converted-arguments)))
 
-(defn- is-html-function?
+(defn- is-text-function?
   [function-name]
   (resolve (symbol (str 'project-functions "/" function-name))))
 
 (defn- invoke-function
   [^Function name-to-path-func function-expression]
-  (if (is-html-function? (script-function-name function-expression))
-    (invoke-html-function name-to-path-func function-expression)
+  (if (is-text-function? (script-function-name function-expression))
+    (invoke-text-function name-to-path-func function-expression)
     (eval function-expression)))
 
 (defn- execute-script

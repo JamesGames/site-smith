@@ -1,10 +1,10 @@
 package org.jamesgames.sitesmith.builder
 
-import org.jamesgames.sitesmith.builder.parsers.HtmlFunctionParser
-import org.jamesgames.sitesmith.builder.parsers.HtmlScriptParser
+import org.jamesgames.sitesmith.builder.parsers.TextFunctionParser
+import org.jamesgames.sitesmith.builder.parsers.TextScriptParser
 import org.jamesgames.sitesmith.resources.Page
 import org.jamesgames.sitesmith.resources.Resource
-import org.jamesgames.sitesmith.textfunctions.TextScript
+import org.jamesgames.sitesmith.textfunctions.TextScriptInterface
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -12,17 +12,17 @@ import java.nio.file.Paths
 /**
  * @author James Murphy
  */
-class SiteComponentDatabase(private val htmlFunctionDirectory: File,
-                            private val htmlScriptDirectory: File,
+class SiteComponentDatabase(private val textFunctionDirectory: File,
+                            private val textScriptDirectory: File,
                             val globalCssFileName: String) {
 
     companion object {
-        const private val htmlFunctionSourceExtension = ".clj"
-        const private val htmlScriptSourceExtension = ".clj"
+        const private val textFunctionSourceExtension = ".clj"
+        const private val textScriptSourceExtension = ".clj"
     }
 
-    private val htmlFunctionMap: HtmlFunctionMap = HtmlFunctionMap()
-    private val htmlScriptMap: HtmlScriptMap = HtmlScriptMap()
+    private val textFunctionMap: TextFunctionMap = TextFunctionMap()
+    private val textScriptMap: TextScriptMap = TextScriptMap()
     private val resourceMap: ResourceMap = ResourceMap()
 
     init {
@@ -41,39 +41,39 @@ class SiteComponentDatabase(private val htmlFunctionDirectory: File,
     fun doesResourceExist(name: String): Boolean =
             resourceMap.doesResourceExist(name)
 
-    fun appendHtmlFromScript(scriptName: String, page: Page, stringBuilder: StringBuilder) =
+    fun appendTextFromScript(scriptName: String, page: Page, stringBuilder: StringBuilder) =
             try {
-                stringBuilder.append (TextScript.executeScript(
+                stringBuilder.append (TextScriptInterface.executeScript(
                         { s: String ->
                             resourceMap.getRelativeResourcePath(s, page)
                         },
-                        htmlScriptMap.getHtmlScript(scriptName).scriptText))
+                        textScriptMap.getTextScript(scriptName).scriptText))
             } catch (e: Exception) {
                 throw ScriptExecutionException(page.getUniqueName(), scriptName, e.message + "")
             }
 
 
     private fun fillFunctionMap() {
-        htmlFunctionMap.clearMap()
-        Files.walk(Paths.get(htmlFunctionDirectory.toURI()))
+        textFunctionMap.clearMap()
+        Files.walk(Paths.get(textFunctionDirectory.toURI()))
                 .map { it.toFile() }
-                .filter { it != htmlFunctionDirectory }
+                .filter { it != textFunctionDirectory }
                 .filter { it.isFile }
-                .filter { it.name.endsWith(htmlFunctionSourceExtension) }
-                .map { HtmlFunctionParser(it) }
-                .map { it.getHtmlFunction() }
-                .forEach { htmlFunctionMap.addHtmlFunction(it) }
+                .filter { it.name.endsWith(textFunctionSourceExtension) }
+                .map { TextFunctionParser(it) }
+                .map { it.getTextFunction() }
+                .forEach { textFunctionMap.addTextFunction(it) }
     }
 
     private fun fillScriptMap() {
-        htmlScriptMap.clearMap()
-        Files.walk(Paths.get(htmlScriptDirectory.toURI()))
+        textScriptMap.clearMap()
+        Files.walk(Paths.get(textScriptDirectory.toURI()))
                 .map { it.toFile() }
-                .filter { it != htmlScriptDirectory }
+                .filter { it != textScriptDirectory }
                 .filter { it.isFile }
-                .filter { it.name.endsWith(htmlScriptSourceExtension) }
-                .map { HtmlScriptParser(it) }
-                .map { it.getHtmlScript() }
-                .forEach { htmlScriptMap.addHtmlScript(it) }
+                .filter { it.name.endsWith(textScriptSourceExtension) }
+                .map { TextScriptParser(it) }
+                .map { it.getTextScript() }
+                .forEach { textScriptMap.addTextScript(it) }
     }
 }

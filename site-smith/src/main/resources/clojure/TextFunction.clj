@@ -61,7 +61,7 @@
         ^String rendered-text (render function-body argument-map)]
     (str (applyOptions rendered-text function) (System/lineSeparator))))
 
-(defn- define-html-function
+(defn- define-text-function
   "Defines a function based off of the text supplied that can be called by the user html-scripts.
   Assumed format of a list with a vector of parameter names and an evaluable string expression and
   an optional vector of options"
