@@ -18,7 +18,7 @@ class TextScriptInterfaceTest {
             "# Hello {{.}}" + System.lineSeparator() + System.lineSeparator() +
             "{{/names}}\"" +
             ")[\"markdown\"])"
-    val helloFunctionWhereArgIsString = "([\"x\"](str \"Hello {{x}}\"))"
+    val helloFunctionWhereArgIsString = "([x](str \"Hello {{x}}\"))"
     val helloNoArgsFunction = "([](str \"Hello, look no arguments\"))"
     val functionWithFunctionCallForArg = "([aFunction](str " +
             "\"{{#aFunction}}FunctionArgument{{/aFunction}}\"" +
@@ -62,6 +62,12 @@ class TextScriptInterfaceTest {
     val testScriptWithFuncCallPassingFunc = "($textFuncPassingFuncAsArg)"
     val funcCallPassingFuncExpectedOutput = "$$\$FunctionArgument$$$${System.lineSeparator()}"
 
+    val textFunctionPassesClojureValue = "([x y](str x \"{{y}}\"))"
+    val textFunctionPassesClojureValueName = "accepts-clojure-value-function"
+    val textFunctionPassesClojureValueCall = "($textFunctionPassesClojureValueName 42 (str \"test\" 42))"
+    val testScriptForFuncPassesClojureValue = "($textFunctionPassesClojureValueCall)"
+    val testScriptPassesClojureValueExpectedOutput = "42test42${System.lineSeparator()}"
+
     val testScriptWithMultipleFunctions = "(" + helloNoArgsCall +
             helloWorldArgsCall +
             helloLargeWorldCall +
@@ -85,6 +91,7 @@ class TextScriptInterfaceTest {
         TextFunctionInterface.defineFunction(helloNoArgsFuncName, helloNoArgsFunction);
         TextFunctionInterface.defineFunction(helloVariousLargeNamesFuncName, multipleLargeHelloNamesFunction);
         TextFunctionInterface.defineFunction(textFunctionPassingFuncName, functionWithFunctionCallForArg);
+        TextFunctionInterface.defineFunction(textFunctionPassesClojureValueName, textFunctionPassesClojureValue);
     }
 
 
@@ -99,6 +106,8 @@ class TextScriptInterfaceTest {
         assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptWithFuncWithNonLiteralArg))
         assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptWithFuncCallPassingFunc))
         assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptWithMultipleFunctions))
+        assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptForFuncPassesClojureValue))
+
         assertEquals(false, TextScriptInterface.isScriptInValidFormat(scriptWhereFunctionNameIsAString))
         assertEquals(false, TextScriptInterface.isScriptInValidFormat(scriptWithVectorNotLists))
     }
@@ -125,5 +134,7 @@ class TextScriptInterfaceTest {
                 TextScriptInterface.executeScript(resourceConverter, testScriptWithFuncCallPassingFunc));
         assertEquals(multipleFuncsExpectedOutput,
                 TextScriptInterface.executeScript(resourceConverter, testScriptWithMultipleFunctions))
+        assertEquals(testScriptPassesClojureValueExpectedOutput,
+                TextScriptInterface.executeScript(resourceConverter, testScriptForFuncPassesClojureValue))
     }
 }

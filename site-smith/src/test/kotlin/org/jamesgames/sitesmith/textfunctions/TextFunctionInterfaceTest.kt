@@ -19,7 +19,6 @@ class TextFunctionInterfaceTest {
     val paramsWithEmptyBody = "([x]())";
     val paramsWithEmptyBodyAndEmptyOptions = "([x]()[])";
     val fullValidExample = "([x](str \"Hello {{x}}\")[\"markdown\"])";
-    val paramsCanBeStrings = "([\"x\"](str \"test\"))";
     val multipleLargeHelloNamesFunction = "([names](str " +
             "\"{{#names}}" +
             "# Hello {{.}}" +
@@ -30,7 +29,8 @@ class TextFunctionInterfaceTest {
     val invalidFormatNoEnclosingList = "[x](str \"Hello {{x}}\")[\"markdown\"])";
     val invalidFormatParamsNotVector = "((x)(str \"Hello {{x}}\")[\"markdown\"])";
     val invalidFormatOptionsNotVector = "((x)(str \"Hello {{x}}\")(\"markdown\"))";
-    val paramsCantBeCollections = "([(\"x\")](str \"test\"))";
+    val paramsCantBeCollections = "([(x)](str \"test\"))";
+    val paramsCantBeStrings = "([\"x\"](str \"test\"))";
 
     @Test
     fun testValidFunctionFormat() {
@@ -43,10 +43,10 @@ class TextFunctionInterfaceTest {
         assertEquals(true, TextFunctionInterface.isFunctionTextInValidFormat(paramsWithEmptyBody));
         assertEquals(true, TextFunctionInterface.isFunctionTextInValidFormat(paramsWithEmptyBodyAndEmptyOptions));
         assertEquals(true, TextFunctionInterface.isFunctionTextInValidFormat(fullValidExample));
-        assertEquals(true, TextFunctionInterface.isFunctionTextInValidFormat(paramsCanBeStrings));
         assertEquals(true, TextFunctionInterface.isFunctionTextInValidFormat(multipleLargeHelloNamesFunction));
         assertEquals(true, TextFunctionInterface.isFunctionTextInValidFormat(emptyParamsButWithBodyAndSymbolAsOption));
 
+        assertEquals(false, TextFunctionInterface.isFunctionTextInValidFormat(paramsCantBeStrings));
         assertEquals(false, TextFunctionInterface.isFunctionTextInValidFormat(invalidFormatNoEnclosingList));
         assertEquals(false, TextFunctionInterface.isFunctionTextInValidFormat(invalidFormatParamsNotVector));
         assertEquals(false, TextFunctionInterface.isFunctionTextInValidFormat(invalidFormatOptionsNotVector));

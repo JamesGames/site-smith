@@ -31,8 +31,8 @@
     (and
       (list? function)
       (or (= 2 element-count) (= 3 element-count))
-      ;; 1st element is a vector of strings (the params)
-      (and (vector? params) (every? (complement coll?) params))
+      ;; 1st element is a vector of symbols
+      (and (vector? params) (every? (complement coll?) params) (every? (complement string?) params))
       (list? func-body)
       ;; 3rd element if exists is vector of strings
       (if (not (nil? options))
@@ -53,16 +53,21 @@
     function-result
     (map eval (function-options function))))
 
+(defn- make-let
+  [params arguments body]
+  (list 'let (into [] (apply concat (map vector params arguments))) body))
+
 (defn- render-text
   "Returns a string after applying the arguments to the template from the text expression"
   [function arguments]
-  (let [function-body (eval (function-func-body function))
-        argument-map (zipmap (map keyword (function-params function)) arguments)
-        ^String rendered-text (render function-body argument-map)]
+  (let [params (function-params function)
+        function-body-evaled (eval (make-let params arguments (function-func-body function)))
+        argument-map-for-template-engine (zipmap (map keyword params) arguments)
+        ^String rendered-text (render function-body-evaled argument-map-for-template-engine)]
     (str (applyOptions rendered-text function) (System/lineSeparator))))
 
 (defn- define-text-function
-  "Defines a function based off of the text supplied that can be called by the user html-scripts.
+  "Defines a function based off of the text supplied that can be called by the user text scripts.
   Assumed format of a list with a vector of parameter names and an evaluable string expression and
   an optional vector of options"
   [function-name function-text]
