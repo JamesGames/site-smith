@@ -124,14 +124,24 @@ class ProjectTest {
         val outputDir = project.outputDirectory
         assertTrue(outputDir.exists())
         assertTrue(outputDir.isDirectory)
-        val files = outputDir.listFiles()
+
+        var files = outputDir.listFiles()
+        assertTrue(fileNamesWithinDirMatch(
+                listOf("index.html", "subDir"),
+                files))
+        val testPage1File = files.filter { it.name.equals("index.html") }.first()
+        val testPage1pageContent = String(Files.readAllBytes(testPage1File.toPath()))
+        assertTrue(testPage1pageContent.contains("<h1>Hello bob</h1>\n<h1>Hello bill</h1>\n<h1>Hello ben</h1>" +
+                "${System.lineSeparator()}<p>$$\$FunctionArgument$$$</p>${System.lineSeparator()}" +
+                "<a href=\"subDir/\">Relative link to test page 2</a>${System.lineSeparator()}"));
+
+        val subDir = files.filter { it.isDirectory && it.name.equals("subDir") }.first().listFiles()
         assertTrue(fileNamesWithinDirMatch(
                 listOf("index.html"),
-                files))
-        val pageFile = files[0]
-        val pageContent = String(Files.readAllBytes(pageFile.toPath()))
-        assertTrue(pageContent.contains("<h1>Hello bob</h1>\n<h1>Hello bill</h1>\n<h1>Hello ben</h1>${System.lineSeparator()}" +
-                "<p>$$\$FunctionArgument$$$</p>${System.lineSeparator()}"));
+                subDir))
+        val testPage2File = subDir.filter { it.name.equals("index.html") }.first()
+        val testPage2PageContent = String(Files.readAllBytes(testPage2File.toPath()))
+        assertTrue(testPage2PageContent.contains("<a href=\"../\">Relative link to test page 1</a>${System.lineSeparator()}"));
     }
 
 }

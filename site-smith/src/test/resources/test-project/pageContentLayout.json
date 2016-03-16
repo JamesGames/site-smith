@@ -10,6 +10,21 @@
           "exampleScript"
         ]
       }
+    ],
+    "directories": [
+      {
+        "name": "subDir",
+        "pages": [
+          {
+            "uniqueName": "testPage2",
+            "fileName": "index.html",
+            "pageTitle": "random test page",
+            "textScriptsForPage": [
+              "exampleScript2"
+            ]
+          }
+        ]
+      }
     ]
   }
 }
