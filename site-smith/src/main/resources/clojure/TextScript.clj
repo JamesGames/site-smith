@@ -1,5 +1,6 @@
 (ns org.jamesgames.sitesmith.text.TextScript
-  (:use [clojure.string :only [starts-with?]])
+  (:use [clojure.string :only [starts-with?]]
+        [clojure.walk])
   (:import (java.util.function Function)))
 
 
@@ -22,15 +23,12 @@
          (or (every? symbol? (map script-function-name script))))))
 
 
-
 (def startOfResourceReference "resource:")
 (defn- resource-name-args-to-path
   [^Function name-to-path-func arguments]
-  (reduce
-    #(identity (if (starts-with? %2 startOfResourceReference)
-                 (conj %1 (.apply name-to-path-func (subs %2 (count startOfResourceReference))))
-                 (conj %1 %2)))
-    [] arguments))
+  (postwalk #(if (starts-with? % startOfResourceReference)
+               (conj (.apply name-to-path-func (subs % (count startOfResourceReference))))
+               (conj %)) arguments))
 
 (defn- invoke-text-function
   [^Function name-to-path-func [function-name & function-args]]
