@@ -1,6 +1,6 @@
 (ns org.jamesgames.sitesmith.text.TextFunction
   (:use clostache.parser)
-  (:import (org.pegdown PegDownProcessor)))
+  (:import (org.pegdown PegDownProcessor Extensions)))
 
 (defn- function-string-to-clojure-structure
   [function]
@@ -43,7 +43,14 @@
 
 
 (def markdown-option "markdown")
-(def optionToAction {(keyword markdown-option) #(.markdownToHtml (PegDownProcessor.) %)})
+(def markdown-extensions (int (bit-or Extensions/ABBREVIATIONS
+                                      Extensions/AUTOLINKS
+                                      Extensions/TABLES
+                                      Extensions/DEFINITIONS
+                                      Extensions/FENCED_CODE_BLOCKS
+                                      Extensions/STRIKETHROUGH
+                                      Extensions/ANCHORLINKS)))
+(def optionToAction {(keyword markdown-option) #(.markdownToHtml (PegDownProcessor. markdown-extensions) %)})
 (defn- applyOptions
   [function-result function]
   (reduce
