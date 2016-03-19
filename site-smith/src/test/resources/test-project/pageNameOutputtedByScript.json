@@ -1,0 +1,30 @@
+{
+  "root": {
+    "name": "root",
+    "pages": [
+      {
+        "uniqueName": "testPage",
+        "fileName": "index.html",
+        "pageTitle": "random test page",
+        "textScriptsForPage": [
+          "scriptThatOutputsItsPage"
+        ]
+      }
+    ],
+    "directories": [
+      {
+        "name": "subDir",
+        "pages": [
+          {
+            "uniqueName": "testPage2",
+            "fileName": "index.html",
+            "pageTitle": "random test page",
+            "textScriptsForPage": [
+              "scriptThatOutputsItsPage"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

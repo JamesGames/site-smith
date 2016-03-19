@@ -43,10 +43,9 @@ class SiteComponentDatabase(private val textFunctionDirectory: File,
 
     fun appendTextFromScript(scriptName: String, page: Page, stringBuilder: StringBuilder) =
             try {
-                stringBuilder.append (TextScriptInterface.executeScript(
-                        { s: String ->
-                            resourceMap.getRelativeResourcePath(s, page)
-                        },
+                stringBuilder.append(TextScriptInterface.executeScript(
+                        page.getUniqueName(),
+                        { s: String -> resourceMap.getRelativeResourcePath(s, page) },
                         textScriptMap.getTextScript(scriptName).scriptText))
             } catch (e: Exception) {
                 throw ScriptExecutionException(page.getUniqueName(), scriptName, e.message + "")

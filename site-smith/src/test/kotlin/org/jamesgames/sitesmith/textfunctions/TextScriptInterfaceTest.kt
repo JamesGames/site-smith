@@ -41,7 +41,7 @@ class TextScriptInterfaceTest {
     val helloLargeWorldFuncName = "hello-large"
     val helloLargeWorldCall = "($helloLargeWorldFuncName \"large world\")"
     val testScriptWithHelloWorldLargeCall = "($helloLargeWorldCall)"
-    val helloLargeWorldExpectedOutput = "<h1>Hello large world</h1>${System.lineSeparator()}"
+    val helloLargeWorldExpectedOutput = "<h1><a href=\"#hello-large-world\" name=\"hello-large-world\">Hello large world</a></h1>${System.lineSeparator()}"
 
     val nonTextFunctionCall = "(str \"not an text function but still okay\" (System/lineSeparator))"
     val testScriptWithNonTextFunction = "($nonTextFunctionCall)"
@@ -51,8 +51,9 @@ class TextScriptInterfaceTest {
     val helloVariousLargeNamesCall = "($helloVariousLargeNamesFuncName [\"bob\" \"bill\" \"ben\"])"
     val testScriptWithVariousLargeNames = "($helloVariousLargeNamesCall)"
     // markdown converter Site Smith uses outputs just newline character, not the system newline string
-    val helloVariousLargeNamesExpectedOutput = "<h1>Hello bob</h1>\n<h1>Hello bill</h1>\n<h1>Hello ben</h1>${System.lineSeparator()}"
-
+    val helloVariousLargeNamesExpectedOutput = "<h1><a href=\"#hello-bob\" name=\"hello-bob\">Hello bob</a></h1>${System.lineSeparator()}" +
+            "<h1><a href=\"#hello-bill\" name=\"hello-bill\">Hello bill</a></h1>${System.lineSeparator()}" +
+            "<h1><a href=\"#hello-ben\" name=\"hello-ben\">Hello ben</a></h1>${System.lineSeparator()}"
     val helloWorldNonLiteralArg = "($helloSomeStringArgFuncName (str \"wor\" \"ld\" \"2\"))"
     val testScriptWithFuncWithNonLiteralArg = "($helloWorldNonLiteralArg)"
     val helloWorldNonLiteralArgExpectedOutput = "Hello world2${System.lineSeparator()}"
@@ -84,6 +85,9 @@ class TextScriptInterfaceTest {
     val scriptWhereFunctionNameIsAString = "((\"func1\" \"arg1\"))"
     val scriptWithVectorNotLists = "([func1 \"arg1\"])"
 
+    // page name
+    val pageNameNotRelevantForTest = "N/A"
+
 
     init {
         TextFunctionInterface.defineFunction(helloLargeWorldFuncName, largeHelloFunction);
@@ -93,6 +97,9 @@ class TextScriptInterfaceTest {
         TextFunctionInterface.defineFunction(textFunctionPassingFuncName, functionWithFunctionCallForArg);
         TextFunctionInterface.defineFunction(textFunctionPassesClojureValueName, textFunctionPassesClojureValue);
     }
+
+    fun makeAllNewLinesEqual(input: String) =
+            input.replace(System.lineSeparator(), "\n");
 
 
     @Test
@@ -116,25 +123,35 @@ class TextScriptInterfaceTest {
     fun testInvokeTextFunctions() {
         val resourceConverter = { s: String -> s }
 
-        assertEquals(emptyTestExpectedOutput,
-                TextScriptInterface.executeScript(resourceConverter, emptyTestScript));
-        assertEquals(helloNoArgsExpectedOutput,
-                TextScriptInterface.executeScript(resourceConverter, testScriptWithFunctionWithNoArgs));
-        assertEquals(helloWorldFuncExpectedOutput,
-                TextScriptInterface.executeScript(resourceConverter, testScriptWithFunctionWithArgs));
-        assertEquals(helloLargeWorldExpectedOutput,
-                TextScriptInterface.executeScript(resourceConverter, testScriptWithHelloWorldLargeCall));
-        assertEquals(nonTextFunctionCallExpectedOutput,
-                TextScriptInterface.executeScript(resourceConverter, testScriptWithNonTextFunction));
-        assertEquals(helloVariousLargeNamesExpectedOutput,
-                TextScriptInterface.executeScript(resourceConverter, testScriptWithVariousLargeNames));
-        assertEquals(helloWorldNonLiteralArgExpectedOutput,
-                TextScriptInterface.executeScript(resourceConverter, testScriptWithFuncWithNonLiteralArg));
-        assertEquals(funcCallPassingFuncExpectedOutput,
-                TextScriptInterface.executeScript(resourceConverter, testScriptWithFuncCallPassingFunc));
-        assertEquals(multipleFuncsExpectedOutput,
-                TextScriptInterface.executeScript(resourceConverter, testScriptWithMultipleFunctions))
-        assertEquals(testScriptPassesClojureValueExpectedOutput,
-                TextScriptInterface.executeScript(resourceConverter, testScriptForFuncPassesClojureValue))
+        assertEquals(makeAllNewLinesEqual(emptyTestExpectedOutput),
+                makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
+                        resourceConverter, emptyTestScript)))
+        assertEquals(makeAllNewLinesEqual(helloNoArgsExpectedOutput),
+                makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
+                        resourceConverter, testScriptWithFunctionWithNoArgs)))
+        assertEquals(makeAllNewLinesEqual(helloWorldFuncExpectedOutput),
+                makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
+                        resourceConverter, testScriptWithFunctionWithArgs)))
+        assertEquals(makeAllNewLinesEqual(helloLargeWorldExpectedOutput),
+                makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
+                        resourceConverter, testScriptWithHelloWorldLargeCall)))
+        assertEquals(makeAllNewLinesEqual(nonTextFunctionCallExpectedOutput),
+                makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
+                        resourceConverter, testScriptWithNonTextFunction)))
+        assertEquals(makeAllNewLinesEqual(helloVariousLargeNamesExpectedOutput),
+                makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
+                        resourceConverter, testScriptWithVariousLargeNames)))
+        assertEquals(makeAllNewLinesEqual(helloWorldNonLiteralArgExpectedOutput),
+                makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
+                        resourceConverter, testScriptWithFuncWithNonLiteralArg)))
+        assertEquals(makeAllNewLinesEqual(funcCallPassingFuncExpectedOutput),
+                makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
+                        resourceConverter, testScriptWithFuncCallPassingFunc)))
+        assertEquals(makeAllNewLinesEqual(multipleFuncsExpectedOutput),
+                makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
+                        resourceConverter, testScriptWithMultipleFunctions)))
+        assertEquals(makeAllNewLinesEqual(testScriptPassesClojureValueExpectedOutput),
+                makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
+                        resourceConverter, testScriptForFuncPassesClojureValue)))
     }
 }

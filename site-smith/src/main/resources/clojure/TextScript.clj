@@ -27,8 +27,8 @@
 (defn- resource-name-args-to-path
   [^Function name-to-path-func arguments]
   (postwalk #(if (starts-with? % startOfResourceReference)
-               (conj (.apply name-to-path-func (subs % (count startOfResourceReference))))
-               (conj %)) arguments))
+              (conj (.apply name-to-path-func (subs % (count startOfResourceReference))))
+              (conj %)) arguments))
 
 (defn- invoke-text-function
   [^Function name-to-path-func [function-name & function-args]]
@@ -41,15 +41,19 @@
   [function-name]
   (resolve (symbol (str 'project-functions "/" function-name))))
 
+(declare ^:dynamic *unique-name-of-page*)
+
 (defn- invoke-function
-  [^Function name-to-path-func function-expression]
-  (if (is-text-function? (script-function-name function-expression))
-    (invoke-text-function name-to-path-func function-expression)
-    (eval function-expression)))
+  [calling-page-name ^Function name-to-path-func function-expression]
+  (binding [*ns* (find-ns 'org.jamesgames.sitesmith.text.TextScript)
+            *unique-name-of-page* calling-page-name]
+    (if (is-text-function? (script-function-name function-expression))
+      (invoke-text-function name-to-path-func function-expression)
+      (eval function-expression))))
 
 (defn- execute-script
   "Takes in a list of html-function calls to execute"
-  [^Function name-to-path-func script-text]
-  (reduce str (map (partial invoke-function name-to-path-func)
+  [calling-page-name ^Function name-to-path-func script-text]
+  (reduce str (map (partial invoke-function calling-page-name name-to-path-func)
                    (script-text-to-clojure-structure script-text))))
 

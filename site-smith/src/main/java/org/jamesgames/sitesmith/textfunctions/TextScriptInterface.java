@@ -22,9 +22,10 @@ public class TextScriptInterface {
                 "is-script-in-valid-format?").invoke(scriptText);
     }
 
-    public static String executeScript(Function<String, String> resourceNameToRelativePath,
-            String scriptText) {
+    public static String executeScript(String uniqueNameOfPageExecutingScript,
+            Function<String, String> resourceNameToRelativePath, String scriptText) {
         return RT.var("org.jamesgames.sitesmith.text.TextScript",
-                "execute-script").invoke(resourceNameToRelativePath, scriptText).toString();
+                "execute-script").invoke(uniqueNameOfPageExecutingScript,
+                resourceNameToRelativePath, scriptText).toString();
     }
 }
