@@ -163,3 +163,5 @@ Site Smith uses [Maven](https://maven.apache.org/) to build. Run maven in the ro
 Credits
 -------
 - James Murphy - JamesGames.Org(at)gmail(dot)com
+
+![](example/site-smith-how-to-project/resources/logo/site-smith-badge.png)
