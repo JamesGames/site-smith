@@ -1,5 +1,6 @@
 package org.jamesgames.sitesmith.builder.buildhelpers
 
+import org.jamesgames.sitesmith.resources.Resource
 import java.io.File
 import java.nio.file.Files
 import java.util.*
@@ -16,7 +17,7 @@ internal class ResourceDirectoryValidator(private val resourceDirectory: File,
 
     override fun applyBuildAction() {
         cssStyleFileNamesNotFound.clear()
-        cssStyleFileNamesNotFound.addAll(cssStyleFileNames)
+        cssStyleFileNamesNotFound.addAll(cssStyleFileNames.filterNot { it.startsWith(Resource.startOfExternalFile) })
         resourceFilesWithDuplicateUniqueFileNames.clear()
 
         val uniqueFileNames: MutableSet<String> = HashSet()
@@ -39,7 +40,6 @@ internal class ResourceDirectoryValidator(private val resourceDirectory: File,
                     "Css file not found: $it${System.lineSeparator()}"
                 }
         )
-        val flattened = errors.flatten()
         return errors.flatten().joinToString(System.lineSeparator())
     }
 

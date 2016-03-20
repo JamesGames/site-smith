@@ -54,10 +54,14 @@ class Page(private val file: File,
 
         pageData.appendln(headOpen)
         pageData.appendln("$titleOpen$pageTitle$titleClose")
-        pageData.append(componentDb.globalCssFileNames
+        pageData.append(arrayListOf(componentDb.globalCssFileNames, additionalCssFiles).flatten()
                 .filter { componentDb.doesResourceExist(it) }
-                .map { "$cssLinkStart${componentDb.getRelativeResourcePath(it, this)}$cssLinkEnd${System.lineSeparator()}" })
-        pageData.append(additionalCssFiles.map { "$cssLinkStart$it$cssLinkEnd${System.lineSeparator()}" })
+                .map {
+                    if (it.startsWith(Resource.startOfExternalFile))
+                        it.substring(Resource.startOfExternalFile.length)
+                    else
+                        cssLinkStart + componentDb.getRelativeResourcePath(it, this) + cssLinkEnd + System.lineSeparator()
+                }.joinToString(""))
         pageData.appendln(headClose)
     }
 
