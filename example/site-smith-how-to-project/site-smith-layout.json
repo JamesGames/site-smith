@@ -1,0 +1,57 @@
+{
+  "specifyResourcesByDirectory": true,
+  "root": {
+    "name": "root",
+    "pages": [
+      {
+        "uniqueName": "homePage",
+        "fileName": "index.html",
+        "pageTitle": "Home Page",
+        "textScriptsForPage": [
+          "header", "home-page", "footer"
+        ]
+      }
+    ],
+    "directories": [
+      {
+        "name": "how_to_use",
+        "pages": [
+          {
+            "uniqueName": "howToPage",
+            "fileName": "index.html",
+            "pageTitle": "How to use Site-Smith",
+            "textScriptsForPage": [
+              "header", "how-to-use", "footer"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "source_code",
+        "pages": [
+          {
+            "uniqueName": "sourceCodePage",
+            "fileName": "index.html",
+            "pageTitle": "Source code for Site-Smith",
+            "textScriptsForPage": [
+              "header", "source-code", "footer"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "contact",
+        "pages": [
+          {
+            "uniqueName": "contactPage",
+            "fileName": "index.html",
+            "pageTitle": "About Site-Smith",
+            "textScriptsForPage": [
+              "header", "contact", "footer"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

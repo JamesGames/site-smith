@@ -27,7 +27,7 @@ what scripts are used to generate a page, and various other options.
           {
             "uniqueName": "howToPage",
             "fileName": "index.html",
-            "pageTitle": "Some Other Page",
+            "pageTitle": "How to use Site Smith",
             "textScriptsForPage": ["header", "howToPageScript", "footer"]
           }
     ```
