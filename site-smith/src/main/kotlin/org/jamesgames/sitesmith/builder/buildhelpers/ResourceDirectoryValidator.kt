@@ -9,32 +9,38 @@ import java.util.*
  * @author James Murphy
  */
 internal class ResourceDirectoryValidator(private val resourceDirectory: File,
-                                          private val cssStyleFileName: String) : BuildHelper {
+                                          private val cssStyleFileNames: Set<String>) : BuildHelper {
 
     private val resourceFilesWithDuplicateUniqueFileNames: MutableList<File> = ArrayList()
-    private var cssStyleFileFound: Boolean = false;
+    private val cssStyleFileNamesNotFound: HashSet<String> = HashSet()
 
     override fun applyBuildAction() {
+        cssStyleFileNamesNotFound.clear()
+        cssStyleFileNamesNotFound.addAll(cssStyleFileNames)
         resourceFilesWithDuplicateUniqueFileNames.clear()
+
         val uniqueFileNames: MutableSet<String> = HashSet()
         Files.walk(resourceDirectory.toPath())
                 .map { it.toFile() }
                 .filter { it.isFile }
                 .forEach {
-            if (!uniqueFileNames.add(it.name))
-                resourceFilesWithDuplicateUniqueFileNames.add(it)
-            if (!cssStyleFileFound)
-                cssStyleFileFound = it.name.equals(cssStyleFileName)
-        }
+                    if (!uniqueFileNames.add(it.name))
+                        resourceFilesWithDuplicateUniqueFileNames.add(it)
+                    cssStyleFileNamesNotFound.remove(it.name)
+                }
     }
 
-    override fun getErrorMessages(): String =
-            resourceFilesWithDuplicateUniqueFileNames.map {
-                "Resource file with duplicate unique name in resource directory: ${it.absolutePath}"
-            }.joinToString { System.lineSeparator() }
-
-    override fun getWarningMessages(): String {
-        return if (!cssStyleFileFound) "No site wide css style file found under the name: $cssStyleFileName" else ""
+    override fun getErrorMessages(): String {
+        val errors: List<List<String>> = arrayListOf(
+                resourceFilesWithDuplicateUniqueFileNames.map {
+                    "Resource file with duplicate unique name in resource directory: ${it.absolutePath}${System.lineSeparator()}"
+                },
+                cssStyleFileNamesNotFound.map {
+                    "Css file not found: $it${System.lineSeparator()}"
+                }
+        )
+        val flattened = errors.flatten()
+        return errors.flatten().joinToString(System.lineSeparator())
     }
 
 }

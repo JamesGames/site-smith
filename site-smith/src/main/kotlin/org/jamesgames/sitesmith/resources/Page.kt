@@ -36,7 +36,7 @@ class Page(private val file: File,
     fun writePage(componentDb: SiteComponentDatabase) {
         val pageData = StringBuilder()
         writePageData(componentDb, pageData)
-        OutputStreamWriter(FileOutputStream(file), StandardCharsets.UTF_8).use { it.write(pageData.toString()); it.close()}
+        OutputStreamWriter(FileOutputStream(file), StandardCharsets.UTF_8).use { it.write(pageData.toString()); it.close() }
     }
 
     private fun writePageData(componentDb: SiteComponentDatabase, pageData: StringBuilder) {
@@ -54,11 +54,10 @@ class Page(private val file: File,
 
         pageData.appendln(headOpen)
         pageData.appendln("$titleOpen$pageTitle$titleClose")
-        if (componentDb.doesResourceExist(componentDb.globalCssFileName)) {
-            val pathToCssFile = componentDb.getRelativeResourcePath(componentDb.globalCssFileName, this)
-            pageData.appendln("$cssLinkStart$pathToCssFile$cssLinkEnd")
-        }
-        additionalCssFiles.map { "$cssLinkStart$it$cssLinkEnd" }.forEach { pageData.appendln(it) }
+        pageData.append(componentDb.globalCssFileNames
+                .filter { componentDb.doesResourceExist(it) }
+                .map { "$cssLinkStart${componentDb.getRelativeResourcePath(it, this)}$cssLinkEnd${System.lineSeparator()}" })
+        pageData.append(additionalCssFiles.map { "$cssLinkStart$it$cssLinkEnd${System.lineSeparator()}" })
         pageData.appendln(headClose)
     }
 

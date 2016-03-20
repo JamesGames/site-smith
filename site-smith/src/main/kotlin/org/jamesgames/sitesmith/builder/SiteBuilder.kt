@@ -9,6 +9,7 @@ import org.jamesgames.sitesmith.builder.buildhelpers.SiteStubGenerator
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.*
 
 /**
  * @author James Murphy
@@ -18,10 +19,6 @@ class SiteBuilder(private val siteLayoutFile: File,
                   private val textScriptDirectory: File,
                   private val resourceDirectory: File,
                   private val outputDirectory: File) {
-
-    companion object {
-        val globalCssFileName = "global-style.css"
-    }
 
     private val successString: String = "Project generated successfully in: " +
             System.lineSeparator() + outputDirectory.absoluteFile
@@ -38,7 +35,7 @@ class SiteBuilder(private val siteLayoutFile: File,
         val componentDatabase = SiteComponentDatabase(
                 textFunctionDirectory,
                 textScriptDirectory,
-                siteLayout.globalCssFileName ?: globalCssFileName)
+                siteLayout.globalCssFileNames ?: arrayListOf())
 
         val buildHelpers = executedBuildHelpers(componentDatabase, siteLayout)
         val potentialFailedBuildHelper = potentialFailedBuildHelper(buildHelpers)
@@ -55,7 +52,7 @@ class SiteBuilder(private val siteLayoutFile: File,
 
     private fun executedBuildHelpers(componentDatabase: SiteComponentDatabase, siteLayout: SiteLayout): MutableList<BuildHelper> {
         val buildHelpers: MutableList<BuildHelper> = arrayListOf(
-                ResourceDirectoryValidator(resourceDirectory, componentDatabase.globalCssFileName),
+                ResourceDirectoryValidator(resourceDirectory, HashSet(componentDatabase.globalCssFileNames)),
                 SiteLayoutValidator(siteLayout),
                 SiteStubGenerator(siteLayout, componentDatabase, outputDirectory, resourceDirectory))
         buildHelpers.forEach {
@@ -70,7 +67,7 @@ class SiteBuilder(private val siteLayoutFile: File,
     private fun recordFailResults(failedBuildHelper: BuildHelper) {
         results = arrayOf(failedBuildHelper.getErrorMessages(),
                 failedBuildHelper.getWarningMessages(),
-                failureString).joinToString { System.lineSeparator() }
+                failureString).joinToString (System.lineSeparator())
     }
 
     private fun recordSuccessResults(buildHelpers: MutableList<BuildHelper>) {

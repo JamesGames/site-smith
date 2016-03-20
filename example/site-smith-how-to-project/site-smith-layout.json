@@ -1,5 +1,6 @@
 {
   "specifyResourcesByDirectory": true,
+  "globalCssFileNames": ["global-style.css"],
   "root": {
     "name": "root",
     "pages": [

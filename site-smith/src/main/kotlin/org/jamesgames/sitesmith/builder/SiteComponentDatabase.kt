@@ -14,7 +14,7 @@ import java.nio.file.Paths
  */
 class SiteComponentDatabase(private val textFunctionDirectory: File,
                             private val textScriptDirectory: File,
-                            val globalCssFileName: String) {
+                            val globalCssFileNames: List<String>) {
 
     companion object {
         const private val textFunctionSourceExtension = ".clj"

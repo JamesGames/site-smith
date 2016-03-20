@@ -33,37 +33,29 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
     private val listOfDuplicateResourcesFileNamesWithinEntireProject: MutableList<Pair<SiteLayout.ResourceInfo, String>> = ArrayList()
 
     override fun getErrorMessages(): String {
-        val errors: ArrayList<String> = arrayListOf((listOfDuplicateResourcesNamesWithinEntireProject
-                .map { "Duplicate resource id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
-                .joinToString { System.lineSeparator() }),
-                (listOfDuplicateDirectoriesWithinSameDirectory
-                        .map { "Duplicate directory name in directory: ${it.first.name}, duplicate found in: ${it.second}" }
-                        .joinToString { System.lineSeparator() }),
-                (listOfDuplicatePageIdentifierWithinEntireProject
-                        .map { "Duplicate page id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}" }
-                        .joinToString { System.lineSeparator() }),
-                (listOfDuplicateFileNamesWithinSameDirectory
-                        .map { "Duplicate file name in directory: ${it.first}, duplicate found in: ${it.second}" }
-                        .joinToString { System.lineSeparator() }),
-                (listOfEmptyDirectoryNames
-                        .map { "Empty directory name, found in: ${it.second}" }
-                        .joinToString { System.lineSeparator() }),
-                (listOfEmptyFileNames
-                        .map { "Empty file name, found in: ${it.second}" }
-                        .joinToString { System.lineSeparator() }),
-                (listOfSpecifiedCssFilesThatDoNotExist
-                        .map { "Css file with the unique resource id of ${it.first} not found, page that used file: ${it.third}${it.second.fileName}" }
-                        .joinToString { System.lineSeparator() }))
+        val errors: MutableList<List<String>> = arrayListOf(
+                listOfDuplicateResourcesNamesWithinEntireProject
+                        .map { "Duplicate resource id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}${System.lineSeparator()}" },
+                listOfDuplicateDirectoriesWithinSameDirectory
+                        .map { "Duplicate directory name in directory: ${it.first.name}, duplicate found in: ${it.second}${System.lineSeparator()}" },
+                listOfDuplicatePageIdentifierWithinEntireProject
+                        .map { "Duplicate page id in project: ${it.first.uniqueName}, duplicate found in: ${it.second}${System.lineSeparator()}" },
+                listOfDuplicateFileNamesWithinSameDirectory
+                        .map { "Duplicate file name in directory: ${it.first}, duplicate found in: ${it.second}${System.lineSeparator()}" },
+                listOfEmptyDirectoryNames
+                        .map { "Empty directory name, found in: ${it.second}${System.lineSeparator()}" },
+                listOfEmptyFileNames
+                        .map { "Empty file name, found in: ${it.second}${System.lineSeparator()}" },
+                listOfSpecifiedCssFilesThatDoNotExist
+                        .map { "Css file with the unique resource id of ${it.first} not found, page that used file: ${it.third}${it.second.fileName}${System.lineSeparator()}" })
 
         if (resourcesSpecifiedByBothDirectoryLayoutAndLayoutFile) {
-            errors.add(System.lineSeparator() + resourcesSpecifiedByDirectoryLayoutText + System.lineSeparator())
-            listOfDuplicateResourcesFileNamesWithinEntireProject
-                    .map { "Duplicate resource file name in project: ${it.first.fileName}, duplicate found in: ${it.second}" }
-                    .joinToString { System.lineSeparator() }
+            errors.add(arrayListOf(resourcesSpecifiedByDirectoryLayoutText + System.lineSeparator()))
+            errors.add(listOfDuplicateResourcesFileNamesWithinEntireProject
+                    .map { "Duplicate resource file name in project: ${it.first.fileName}, duplicate found in: ${it.second}${System.lineSeparator()}" })
         }
 
-        return errors.filter { it.length > 0 }
-                .joinToString { System.lineSeparator() }
+        return errors.flatten().joinToString("")
     }
 
     override fun applyBuildAction() {

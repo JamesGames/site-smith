@@ -1,5 +1,5 @@
 {
-  "globalCssFileName": "customGlobal.css",
+  "globalCssFileNames": ["customGlobal.css"],
   "root": {
     "name": "root",
     "pages": [

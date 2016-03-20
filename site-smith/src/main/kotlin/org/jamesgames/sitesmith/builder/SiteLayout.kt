@@ -7,7 +7,7 @@ import java.util.*
  * @author James Murphy
  */
 internal class SiteLayout(val root: SiteLayout.DirectoryInfo,
-                          val globalCssFileName: String?,
+                          val globalCssFileNames: List<String>? = ArrayList(),
                           val specifyResourcesByDirectory: Boolean) {
 
     data class PageInfo(val fileName: String,
