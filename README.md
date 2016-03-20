@@ -1,3 +1,5 @@
+![](example/site-smith-how-to-project/resources/logo/site-smith-logo.png)
+
 Site Smith
 ==========
 
