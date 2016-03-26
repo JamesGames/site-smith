@@ -9,15 +9,11 @@ import java.util.*
 /**
  * @author James Murphy
  */
-internal class ResourceDirectoryValidator(private val resourceDirectory: File,
-                                          private val cssStyleFileNames: Set<String>) : BuildHelper {
+internal class ResourceDirectoryValidator(private val resourceDirectory: File) : BuildHelper {
 
     private val resourceFilesWithDuplicateUniqueFileNames: MutableList<File> = ArrayList()
-    private val cssStyleFileNamesNotFound: HashSet<String> = HashSet()
 
     override fun applyBuildAction() {
-        cssStyleFileNamesNotFound.clear()
-        cssStyleFileNamesNotFound.addAll(cssStyleFileNames.filterNot { it.startsWith(Resource.startOfExternalFile) })
         resourceFilesWithDuplicateUniqueFileNames.clear()
 
         val uniqueFileNames: MutableSet<String> = HashSet()
@@ -27,7 +23,6 @@ internal class ResourceDirectoryValidator(private val resourceDirectory: File,
                 .forEach {
                     if (!uniqueFileNames.add(it.name))
                         resourceFilesWithDuplicateUniqueFileNames.add(it)
-                    cssStyleFileNamesNotFound.remove(it.name)
                 }
     }
 
@@ -35,9 +30,6 @@ internal class ResourceDirectoryValidator(private val resourceDirectory: File,
         val errors: List<List<String>> = arrayListOf(
                 resourceFilesWithDuplicateUniqueFileNames.map {
                     "Resource file with duplicate unique name in resource directory: ${it.absolutePath}${System.lineSeparator()}"
-                },
-                cssStyleFileNamesNotFound.map {
-                    "Css file not found: $it${System.lineSeparator()}"
                 }
         )
         return errors.flatten().joinToString(System.lineSeparator())

@@ -52,7 +52,7 @@ class SiteBuilder(private val siteLayoutFile: File,
 
     private fun executedBuildHelpers(componentDatabase: SiteComponentDatabase, siteLayout: SiteLayout): MutableList<BuildHelper> {
         val buildHelpers: MutableList<BuildHelper> = arrayListOf(
-                ResourceDirectoryValidator(resourceDirectory, HashSet(componentDatabase.globalCssFileNames)),
+                ResourceDirectoryValidator(resourceDirectory),
                 SiteLayoutValidator(siteLayout),
                 SiteStubGenerator(siteLayout, componentDatabase, outputDirectory, resourceDirectory))
         buildHelpers.forEach {

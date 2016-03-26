@@ -1,6 +1,7 @@
 package org.jamesgames.sitesmith.builder.buildhelpers
 
 import org.jamesgames.sitesmith.builder.SiteLayout
+import org.jamesgames.sitesmith.resources.Resource
 import java.io.File
 import java.util.*
 
@@ -67,7 +68,8 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
 
     private fun findSpecifiedCssFilesThatDoNotExist() {
         listOfSpecifiedCssFilesThatDoNotExist.addAll(cssFilesFound
-                .filterNot { resourceIdentifierNamesWithinSameProject.contains(it.first) })
+                .filterNot { resourceIdentifierNamesWithinSameProject.contains(it.first) }
+                .filter { it.first.contains(Resource.startOfExternalFile) })
     }
 
     private fun clearLists() {

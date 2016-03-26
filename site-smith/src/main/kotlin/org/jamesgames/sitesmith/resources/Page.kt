@@ -26,8 +26,10 @@ class Page(private val file: File,
         private val titleOpen = "<title>"
         private val titleClose = "</title>"
         private val cssLinkStart = "<link rel=\"stylesheet\" href=\""
+        private val cssTextType = " type=\"text/css\" "
         private val faviconStart = "<link rel=\"icon\" type=\"image/png\" href=\""
-        private val tagClose = "\">"
+        private val tagEnd = ">"
+        private val tagAndQuoteEnd = "\">"
         private val headClose = "</head>"
         private val bodyOpen = "<body>"
         private val bodyClose = "</body>"
@@ -59,15 +61,15 @@ class Page(private val file: File,
         pageData.appendln(headOpen)
         pageData.appendln("$titleOpen$pageTitle$titleClose")
         pageData.append(arrayListOf(componentDb.globalCssFileNames, additionalCssFiles).flatten()
-                .filter { componentDb.doesResourceExist(it) }
                 .map {
                     if (it.startsWith(Resource.startOfExternalFile))
-                        it.substring(Resource.startOfExternalFile.length)
-                    else
-                        cssLinkStart + componentDb.getRelativeResourcePath(it, this) + tagClose + System.lineSeparator()
+                        cssLinkStart + it.substring(Resource.startOfExternalFile.length) + "\"" + cssTextType + tagEnd + System.lineSeparator()
+                    else if (componentDb.doesResourceExist(it))
+                        cssLinkStart + componentDb.getRelativeResourcePath(it, this) + tagAndQuoteEnd + System.lineSeparator()
+                    else ""
                 }.joinToString(""))
         if (extraAttributes.containsKey(faviconKey)) {
-            pageData.appendln(faviconStart + componentDb.getRelativeResourcePath(extraAttributes[faviconKey]!!, this) + tagClose + System.lineSeparator())
+            pageData.appendln(faviconStart + componentDb.getRelativeResourcePath(extraAttributes[faviconKey]!!, this) + tagAndQuoteEnd)
         }
         pageData.appendln(headClose)
     }
