@@ -89,12 +89,15 @@ class SiteBuilder(private val siteLayoutFile: File,
                     Files.deleteIfExists(it)
                 }
         // Now will be able to delete all empty directories
-        // (Is there a way to delete a directory with the JCL that has files?)
-        Files.walk(Paths.get(outputDirectory.toURI()))
-                .filter { it.toFile() != outputDirectory }
-                .forEach {
-                    Files.deleteIfExists(it)
-                }
+        deleteDirectoriesPostOrderTraversal(outputDirectory, outputDirectory)
+    }
+
+    private fun deleteDirectoriesPostOrderTraversal(root: File, toTraverse: File) {
+        toTraverse.listFiles()
+                .filter { it.isDirectory }
+                .forEach { deleteDirectoriesPostOrderTraversal(root, it) }
+        if (toTraverse != root)
+            Files.deleteIfExists(toTraverse.toPath())
     }
 
     private fun readSiteLayout(): SiteLayout {
