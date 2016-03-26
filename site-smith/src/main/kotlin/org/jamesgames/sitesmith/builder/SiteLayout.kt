@@ -8,7 +8,8 @@ import java.util.*
  */
 internal class SiteLayout(val root: SiteLayout.DirectoryInfo,
                           val globalCssFileNames: List<String>? = ArrayList(),
-                          val specifyResourcesByDirectory: Boolean) {
+                          val specifyResourcesByDirectory: Boolean,
+                          val favicon: String?) {
 
     data class PageInfo(val fileName: String,
                         val uniqueName: String? = fileName,
