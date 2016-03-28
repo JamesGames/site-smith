@@ -14,6 +14,7 @@ internal class SiteLayout(val root: SiteLayout.DirectoryInfo,
     data class PageInfo(val fileName: String,
                         val uniqueName: String? = fileName,
                         val pageTitle: String,
+                        val clientScripts: List<String>? = ArrayList(),
                         val additionalCssFiles: List<String>? = ArrayList(),
                         val textScriptsForPage: List<String>? = ArrayList())
 

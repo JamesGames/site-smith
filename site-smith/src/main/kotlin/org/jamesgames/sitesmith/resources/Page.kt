@@ -15,10 +15,11 @@ class Page(private val file: File,
            private val pageTitle: String,
            private val additionalCssFiles: List<String>,
            private val textScriptNames: List<String>,
-           private val extraAttributes: Map<String, String>) : Resource {
+           private val extraAttributes: Map<String, Any>) : Resource {
 
     companion object {
         val faviconKey = "favicon"
+        val clientScriptsKey = "clientScripts"
 
         private val docType = "<!DOCTYPE html>"
         private val htmlOpen = "<html>"
@@ -28,6 +29,8 @@ class Page(private val file: File,
         private val cssLinkStart = "<link rel=\"stylesheet\" href=\""
         private val cssTextType = " type=\"text/css\" "
         private val faviconStart = "<link rel=\"icon\" type=\"image/png\" href=\""
+        private val scriptStart = "<script src=\""
+        private val scriptEnd = "\"></script>"
         private val tagEnd = ">"
         private val tagAndQuoteEnd = "\">"
         private val headClose = "</head>"
@@ -65,11 +68,21 @@ class Page(private val file: File,
                     if (it.startsWith(Resource.startOfExternalFile))
                         cssLinkStart + it.substring(Resource.startOfExternalFile.length) + "\"" + cssTextType + tagEnd + System.lineSeparator()
                     else if (componentDb.doesResourceExist(it))
-                        cssLinkStart + componentDb.getRelativeResourcePath(it, this) + tagAndQuoteEnd + System.lineSeparator()
+                        cssLinkStart + componentDb.getRelativeResourcePath(it, this) + "\"" + cssTextType + tagEnd + System.lineSeparator()
                     else ""
                 }.joinToString(""))
+        if (extraAttributes.containsKey(clientScriptsKey)) {
+            pageData.append(arrayListOf(extraAttributes[clientScriptsKey] as List<String>).flatten()
+                    .map {
+                        if (it.startsWith(Resource.startOfExternalFile))
+                            scriptStart + it.substring(Resource.startOfExternalFile.length) + scriptEnd + System.lineSeparator()
+                        else if (componentDb.doesResourceExist(it))
+                            scriptStart + componentDb.getRelativeResourcePath(it, this) + scriptEnd + System.lineSeparator()
+                        else ""
+                    }.joinToString(""))
+        }
         if (extraAttributes.containsKey(faviconKey)) {
-            pageData.appendln(faviconStart + componentDb.getRelativeResourcePath(extraAttributes[faviconKey]!!, this) + tagAndQuoteEnd)
+            pageData.appendln(faviconStart + componentDb.getRelativeResourcePath(extraAttributes[faviconKey] as String, this) + tagAndQuoteEnd)
         }
         pageData.appendln(headClose)
     }

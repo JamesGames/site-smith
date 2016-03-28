@@ -36,9 +36,11 @@ internal class SiteStubGenerator(private val siteLayout: SiteLayout, private val
     private fun createStubPages(pages: List<SiteLayout.PageInfo>?, directoryPathSoFar: String) {
         pages?.forEach {
             val path = Files.createFile(Paths.get(outputDirectory.absolutePath, directoryPathSoFar, it.fileName))
-            val extraPageAttributes: MutableMap<String, String> = HashMap()
+            val extraPageAttributes: MutableMap<String, Any> = HashMap()
             if (siteLayout.favicon != null)
                 extraPageAttributes.put(Page.faviconKey, siteLayout.favicon)
+            if (it.clientScripts != null)
+                extraPageAttributes.put(Page.clientScriptsKey, it.clientScripts)
             componentDb.recordResource(Page(path.toFile(), it.uniqueName ?: it.fileName, it.pageTitle,
                     it.additionalCssFiles ?: ArrayList(), it.textScriptsForPage ?: ArrayList(), extraPageAttributes))
         }
