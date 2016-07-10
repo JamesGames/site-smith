@@ -6,6 +6,7 @@ import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
+import java.util.*
 
 /**
  * @author James Murphy
@@ -13,14 +14,10 @@ import java.nio.file.Path
 class Page(private val file: File,
            private val uniqueName: String,
            private val pageTitle: String,
-           private val additionalCssFiles: List<String>,
            private val textScriptNames: List<String>,
-           private val extraAttributes: Map<String, Any>) : Resource {
+           private val optionalPageAttributes: OptionalPageAttributes) : Resource {
 
     companion object {
-        val faviconKey = "favicon"
-        val clientScriptsKey = "clientScripts"
-
         private val docType = "<!DOCTYPE html>"
         private val htmlOpen = "<html>"
         private val headOpen = "<head><meta charset=\"UTF-8\">"
@@ -63,7 +60,9 @@ class Page(private val file: File,
 
         pageData.appendln(headOpen)
         pageData.appendln("$titleOpen$pageTitle$titleClose")
-        pageData.append(arrayListOf(componentDb.globalCssFileNames, additionalCssFiles).flatten()
+
+        optionalPageAttributes.additionalCssFiles?.let {
+            pageData.append(arrayListOf(componentDb.globalCssFileNames, it).flatten()
                 .map {
                     if (it.startsWith(Resource.startOfExternalFile))
                         cssLinkStart + it.substring(Resource.startOfExternalFile.length) + "\"" + cssTextType + tagEnd + System.lineSeparator()
@@ -71,9 +70,9 @@ class Page(private val file: File,
                         cssLinkStart + componentDb.getRelativeResourcePath(it, this) + "\"" + cssTextType + tagEnd + System.lineSeparator()
                     else ""
                 }.joinToString(""))
-        if (extraAttributes.containsKey(clientScriptsKey)) {
-            pageData.append(arrayListOf(extraAttributes[clientScriptsKey] as List<String>).flatten()
-                    .map {
+        }
+        optionalPageAttributes.clientScripts?.let {
+            pageData.append(it.map {
                         if (it.startsWith(Resource.startOfExternalFile))
                             scriptStart + it.substring(Resource.startOfExternalFile.length) + scriptEnd + System.lineSeparator()
                         else if (componentDb.doesResourceExist(it))
@@ -81,9 +80,10 @@ class Page(private val file: File,
                         else ""
                     }.joinToString(""))
         }
-        if (extraAttributes.containsKey(faviconKey)) {
-            pageData.appendln(faviconStart + componentDb.getRelativeResourcePath(extraAttributes[faviconKey] as String, this) + tagAndQuoteEnd)
-        }
+        optionalPageAttributes.favicon?.let {
+            pageData.appendln(faviconStart + componentDb.getRelativeResourcePath(optionalPageAttributes.favicon, this) + tagAndQuoteEnd)
+    }
+
         pageData.appendln(headClose)
     }
 

@@ -3,6 +3,7 @@ package org.jamesgames.sitesmith.builder.buildhelpers
 import org.jamesgames.sitesmith.builder.SiteComponentDatabase
 import org.jamesgames.sitesmith.builder.SiteLayout
 import org.jamesgames.sitesmith.resources.Page
+import org.jamesgames.sitesmith.resources.OptionalPageAttributes
 import org.jamesgames.sitesmith.resources.SiteFile
 import java.io.File
 import java.nio.file.Files
@@ -36,13 +37,9 @@ internal class SiteStubGenerator(private val siteLayout: SiteLayout, private val
     private fun createStubPages(pages: List<SiteLayout.PageInfo>?, directoryPathSoFar: String) {
         pages?.forEach {
             val path = Files.createFile(Paths.get(outputDirectory.absolutePath, directoryPathSoFar, it.fileName))
-            val extraPageAttributes: MutableMap<String, Any> = HashMap()
-            if (siteLayout.favicon != null)
-                extraPageAttributes.put(Page.faviconKey, siteLayout.favicon)
-            if (it.clientScripts != null)
-                extraPageAttributes.put(Page.clientScriptsKey, it.clientScripts)
+            val optionalPageAttributes = OptionalPageAttributes(siteLayout.favicon, it.clientScripts, it.additionalCssFiles)
             componentDb.recordResource(Page(path.toFile(), it.uniqueName ?: it.fileName, it.pageTitle,
-                    it.additionalCssFiles ?: ArrayList(), it.textScriptsForPage ?: ArrayList(), extraPageAttributes))
+                    it.textScriptsForPage ?: ArrayList(), optionalPageAttributes))
         }
     }
 
