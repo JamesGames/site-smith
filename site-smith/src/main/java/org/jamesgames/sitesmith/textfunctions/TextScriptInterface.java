@@ -3,6 +3,7 @@ package org.jamesgames.sitesmith.textfunctions;
 import clojure.lang.RT;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.function.Function;
 
 /**
@@ -22,10 +23,13 @@ public class TextScriptInterface {
                 "is-script-in-valid-format?").invoke(scriptText);
     }
 
-    public static String executeScript(String uniqueNameOfPageExecutingScript,
-            Function<String, String> resourceNameToRelativePath, String scriptText) {
+    public static String executeScript(
+            String uniqueNameOfPageExecutingScript,
+            Function<String, String> resourceNameToRelativePath,
+            String scriptText,
+            HashSet<String> allResourceNames) {
         return RT.var("org.jamesgames.sitesmith.text.TextScript",
                 "execute-script").invoke(uniqueNameOfPageExecutingScript,
-                resourceNameToRelativePath, scriptText).toString();
+                resourceNameToRelativePath, scriptText, allResourceNames).toString();
     }
 }

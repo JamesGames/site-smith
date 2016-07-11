@@ -1,0 +1,27 @@
+{
+  "root": {
+    "name": "root",
+    "pages": [
+      {
+        "uniqueName": "testPage",
+        "fileName": "index.html",
+        "pageTitle": "random test page",
+        "textScriptsForPage": [
+          "scriptForQueryingResourceNames"
+        ]
+      }
+    ],
+    "resources": [
+      {
+        "uniqueName": "someResource1",
+        "fileNameInResourceDir": "resource1.txt",
+        "fileName": "homePageResourceFileA.txt"
+      },
+      {
+        "uniqueName": "someResource2",
+        "fileNameInResourceDir": "resource2.txt",
+        "fileName": "homePageResourceFileB.txt"
+      }
+    ]
+  }
+}

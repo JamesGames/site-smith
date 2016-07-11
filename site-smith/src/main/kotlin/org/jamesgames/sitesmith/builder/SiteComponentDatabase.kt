@@ -8,6 +8,7 @@ import org.jamesgames.sitesmith.textfunctions.TextScriptInterface
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.*
 
 /**
  * @author James Murphy
@@ -45,11 +46,14 @@ class SiteComponentDatabase(private val textFunctionDirectory: File,
             try {
                 stringBuilder.append(TextScriptInterface.executeScript(
                         page.getUniqueName(),
-                        { s: String -> resourceMap.getRelativeResourcePath(s, page) },
-                        textScriptMap.getTextScript(scriptName).scriptText))!!
+                        getResourceNameToPathFunction(page),
+                        textScriptMap.getTextScript(scriptName).scriptText,
+                        resourceMap.getAllResourceNames()))
             } catch (e: Exception) {
                 throw ScriptExecutionException(page.getUniqueName(), scriptName, e.message + "")
             }
+
+    fun getResourceNameToPathFunction(page: Page) = { s: String -> resourceMap.getRelativeResourcePath(s, page) }
 
 
     private fun fillFunctionMap() {

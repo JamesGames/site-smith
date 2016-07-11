@@ -42,18 +42,22 @@
   (resolve (symbol (str 'project-functions "/" function-name))))
 
 (declare ^:dynamic *unique-name-of-page*)
+(declare ^:dynamic ^Function *name-to-path-func*)
+(declare ^:dynamic *all-resource-names*)
 
 (defn- invoke-function
-  [calling-page-name ^Function name-to-path-func function-expression]
+  [calling-page-name ^Function name-to-path-func list-of-resource-names function-expression]
   (binding [*ns* (find-ns 'org.jamesgames.sitesmith.text.TextScript)
-            *unique-name-of-page* calling-page-name]
+            *unique-name-of-page* calling-page-name
+            *name-to-path-func* name-to-path-func
+            *all-resource-names* (into #{} list-of-resource-names)]
     (if (is-text-function? (script-function-name function-expression))
       (invoke-text-function name-to-path-func function-expression)
       (eval function-expression))))
 
 (defn- execute-script
   "Takes in a list of function calls to execute, these can be Site Smith text functions, or any function."
-  [calling-page-name ^Function name-to-path-func script-text]
-  (reduce str (map (partial invoke-function calling-page-name name-to-path-func)
+  [calling-page-name ^Function name-to-path-func script-text list-of-resource-names]
+  (reduce str (map (partial invoke-function calling-page-name name-to-path-func list-of-resource-names)
                    (script-text-to-clojure-structure script-text))))
 

@@ -5,6 +5,7 @@ package org.jamesgames.sitesmith.textfunctions
  */
 
 import org.junit.Test
+import java.util.*
 import kotlin.test.assertEquals
 
 /**
@@ -121,37 +122,38 @@ class TextScriptInterfaceTest {
 
     @Test
     fun testInvokeTextFunctions() {
-        val resourceConverter = { s: String -> s }
+        val resourceNameToPathConverter = { s: String -> s }
+        val namesList = HashSet<String>()
 
         assertEquals(makeAllNewLinesEqual(emptyTestExpectedOutput),
                 makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
-                        resourceConverter, emptyTestScript)))
+                        resourceNameToPathConverter, emptyTestScript, namesList)))
         assertEquals(makeAllNewLinesEqual(helloNoArgsExpectedOutput),
                 makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
-                        resourceConverter, testScriptWithFunctionWithNoArgs)))
+                        resourceNameToPathConverter, testScriptWithFunctionWithNoArgs, namesList)))
         assertEquals(makeAllNewLinesEqual(helloWorldFuncExpectedOutput),
                 makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
-                        resourceConverter, testScriptWithFunctionWithArgs)))
+                        resourceNameToPathConverter, testScriptWithFunctionWithArgs, namesList)))
         assertEquals(makeAllNewLinesEqual(helloLargeWorldExpectedOutput),
                 makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
-                        resourceConverter, testScriptWithHelloWorldLargeCall)))
+                        resourceNameToPathConverter, testScriptWithHelloWorldLargeCall, namesList)))
         assertEquals(makeAllNewLinesEqual(nonTextFunctionCallExpectedOutput),
                 makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
-                        resourceConverter, testScriptWithNonTextFunction)))
+                        resourceNameToPathConverter, testScriptWithNonTextFunction, namesList)))
         assertEquals(makeAllNewLinesEqual(helloVariousLargeNamesExpectedOutput),
                 makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
-                        resourceConverter, testScriptWithVariousLargeNames)))
+                        resourceNameToPathConverter, testScriptWithVariousLargeNames, namesList)))
         assertEquals(makeAllNewLinesEqual(helloWorldNonLiteralArgExpectedOutput),
                 makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
-                        resourceConverter, testScriptWithFuncWithNonLiteralArg)))
+                        resourceNameToPathConverter, testScriptWithFuncWithNonLiteralArg, namesList)))
         assertEquals(makeAllNewLinesEqual(funcCallPassingFuncExpectedOutput),
                 makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
-                        resourceConverter, testScriptWithFuncCallPassingFunc)))
+                        resourceNameToPathConverter, testScriptWithFuncCallPassingFunc, namesList)))
         assertEquals(makeAllNewLinesEqual(multipleFuncsExpectedOutput),
                 makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
-                        resourceConverter, testScriptWithMultipleFunctions)))
+                        resourceNameToPathConverter, testScriptWithMultipleFunctions, namesList)))
         assertEquals(makeAllNewLinesEqual(testScriptPassesClojureValueExpectedOutput),
                 makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
-                        resourceConverter, testScriptForFuncPassesClojureValue)))
+                        resourceNameToPathConverter, testScriptForFuncPassesClojureValue, namesList)))
     }
 }

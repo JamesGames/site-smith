@@ -30,9 +30,9 @@ internal class ResourceMap {
         }
     }
 
-    fun getPages(): List<Page> {
-        return nameToResource.filter { it.value is Page }.map { it.value as Page }.toList()
-    }
+    fun getPages(): List<Page> = nameToResource.filter { it.value is Page }.map { it.value as Page }.toList()
 
     fun doesResourceExist(name: String): Boolean = nameToResource.containsKey(name)
+
+    fun getAllResourceNames(): HashSet<String> = nameToResource.keys.toHashSet()
 }

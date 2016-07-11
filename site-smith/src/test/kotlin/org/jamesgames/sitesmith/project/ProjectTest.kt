@@ -11,8 +11,8 @@ import kotlin.test.assertTrue
  * @author James Murphy
  */
 class ProjectTest {
-    val projectDir = this.javaClass.getResource("/test-project").file
-    val projectResourceFilesCopiedDirectly = this.javaClass.getResource("/test-project-copy-resource-dir").file
+    val projectDir = this.javaClass.getResource("/test-project").file!!
+    val projectResourceFilesCopiedDirectly = this.javaClass.getResource("/test-project-copy-resource-dir").file!!
 
     val exampleScriptExpectedOutput = "<h1><a href=\"#hello-bob\" name=\"hello-bob\">Hello bob</a></h1>${System.lineSeparator()}" +
             "<h1><a href=\"#hello-bill\" name=\"hello-bill\">Hello bill</a></h1>${System.lineSeparator()}" +
@@ -167,6 +167,7 @@ class ProjectTest {
         val testPage1File = files.filter { it.name.equals("index.html") }.first()
         val testPage1pageContent = String(Files.readAllBytes(testPage1File.toPath()))
         assertTrue(testPage1pageContent.contains("testPage"))
+        assertTrue(!testPage1pageContent.contains("testPage2"))
 
         val subDir = files.filter { it.isDirectory && it.name.equals("subDir") }.first().listFiles()
         assertTrue(fileNamesWithinDirMatch(
@@ -175,6 +176,28 @@ class ProjectTest {
         val testPage2File = subDir.filter { it.name.equals("index.html") }.first()
         val testPage2PageContent = String(Files.readAllBytes(testPage2File.toPath()))
         assertTrue(testPage2PageContent.contains("testPage2"))
+
+    }
+
+    @Test
+    fun testResourceNameQuerying() {
+        val layoutFile = this.javaClass.getResource("/test-project/resourceNameQueryingTestLayout.json").file
+        val project = Project(File(projectDir), File(layoutFile))
+        assertTrue(project.buildSite())
+        val outputDir = project.outputDirectory
+        assertTrue(outputDir.exists())
+        assertTrue(outputDir.isDirectory)
+
+        var files = outputDir.listFiles()
+        assertTrue(fileNamesWithinDirMatch(
+                listOf("index.html", "homePageResourceFileA.txt", "homePageResourceFileB.txt"),
+                files))
+        val testPage1File = files.filter { it.name.equals("index.html") }.first()
+        val testPage1pageContent = String(Files.readAllBytes(testPage1File.toPath()))
+        assertTrue(testPage1pageContent.contains("resource names containing 'Resource' count: 2"))
+        assertTrue(testPage1pageContent.contains("someResource1"))
+        assertTrue(testPage1pageContent.contains("someResource2"))
+        assertTrue(testPage1pageContent.contains("testPage"))
     }
 
 }
