@@ -25,9 +25,9 @@ internal class TextFunctionParser(private val textFunctionSourceFile: File) {
         try {
             if (!TextFunctionInterface.isFunctionTextInValidFormat(text))
                 throw TextFunctionParseException(name, "Function is in an invalid format. Format should be:" +
-                        System.lineSeparator() + formatAndExample);
+                        System.lineSeparator() + formatAndExample)
         } catch (e: Exception) {
-            throw TextFunctionParseException(name, "Function error:${System.lineSeparator()}${e.message}");
+            throw TextFunctionParseException(name, "Function error:${System.lineSeparator()}${e.message}")
         }
         return TextFunction(name, text)
     }

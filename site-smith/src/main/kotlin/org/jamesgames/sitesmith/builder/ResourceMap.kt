@@ -11,7 +11,7 @@ internal class ResourceMap {
     private val nameToResource: HashMap<String, Resource> = HashMap()
 
     fun addResource(name: String, resource: Resource) {
-        nameToResource.put(name, resource);
+        nameToResource.put(name, resource)
     }
 
     fun getRelativeResourcePath(name: String, relativeTo: Page): String {

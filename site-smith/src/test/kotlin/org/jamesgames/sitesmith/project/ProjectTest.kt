@@ -21,7 +21,7 @@ class ProjectTest {
             "<a href=\"subDir/\">Relative link to test page 2</a>${System.lineSeparator()}"
 
     fun makeAllNewLinesEqual(input: String) =
-            input.replace(System.lineSeparator(), "\n");
+            input.replace(System.lineSeparator(), "\n")
 
     @Test
     fun testBuildingRootOnlyLayout() {
@@ -148,7 +148,7 @@ class ProjectTest {
                 subDir))
         val testPage2File = subDir.filter { it.name.equals("index.html") }.first()
         val testPage2PageContent = String(Files.readAllBytes(testPage2File.toPath()))
-        assertTrue(testPage2PageContent.contains("<a href=\"../\">Relative link to test page 1</a>${System.lineSeparator()}"));
+        assertTrue(testPage2PageContent.contains("<a href=\"../\">Relative link to test page 1</a>${System.lineSeparator()}"))
     }
 
     @Test
@@ -166,7 +166,7 @@ class ProjectTest {
                 files))
         val testPage1File = files.filter { it.name.equals("index.html") }.first()
         val testPage1pageContent = String(Files.readAllBytes(testPage1File.toPath()))
-        assertTrue(testPage1pageContent.contains("testPage"));
+        assertTrue(testPage1pageContent.contains("testPage"))
 
         val subDir = files.filter { it.isDirectory && it.name.equals("subDir") }.first().listFiles()
         assertTrue(fileNamesWithinDirMatch(
@@ -174,7 +174,7 @@ class ProjectTest {
                 subDir))
         val testPage2File = subDir.filter { it.name.equals("index.html") }.first()
         val testPage2PageContent = String(Files.readAllBytes(testPage2File.toPath()))
-        assertTrue(testPage2PageContent.contains("testPage2"));
+        assertTrue(testPage2PageContent.contains("testPage2"))
     }
 
 }

@@ -22,7 +22,7 @@ class TextScriptInterfaceTest {
     val helloNoArgsFunction = "([](str \"Hello, look no arguments\"))"
     val functionWithFunctionCallForArg = "([aFunction](str " +
             "\"{{#aFunction}}FunctionArgument{{/aFunction}}\"" +
-            "))";
+            "))"
 
     // valid
     val emptyTestScript = "()"
@@ -90,16 +90,16 @@ class TextScriptInterfaceTest {
 
 
     init {
-        TextFunctionInterface.defineFunction(helloLargeWorldFuncName, largeHelloFunction);
-        TextFunctionInterface.defineFunction(helloSomeStringArgFuncName, helloFunctionWhereArgIsString);
-        TextFunctionInterface.defineFunction(helloNoArgsFuncName, helloNoArgsFunction);
-        TextFunctionInterface.defineFunction(helloVariousLargeNamesFuncName, multipleLargeHelloNamesFunction);
-        TextFunctionInterface.defineFunction(textFunctionPassingFuncName, functionWithFunctionCallForArg);
-        TextFunctionInterface.defineFunction(textFunctionPassesClojureValueName, textFunctionPassesClojureValue);
+        TextFunctionInterface.defineFunction(helloLargeWorldFuncName, largeHelloFunction)
+        TextFunctionInterface.defineFunction(helloSomeStringArgFuncName, helloFunctionWhereArgIsString)
+        TextFunctionInterface.defineFunction(helloNoArgsFuncName, helloNoArgsFunction)
+        TextFunctionInterface.defineFunction(helloVariousLargeNamesFuncName, multipleLargeHelloNamesFunction)
+        TextFunctionInterface.defineFunction(textFunctionPassingFuncName, functionWithFunctionCallForArg)
+        TextFunctionInterface.defineFunction(textFunctionPassesClojureValueName, textFunctionPassesClojureValue)
     }
 
     fun makeAllNewLinesEqual(input: String) =
-            input.replace(System.lineSeparator(), "\n");
+            input.replace(System.lineSeparator(), "\n")
 
 
     @Test

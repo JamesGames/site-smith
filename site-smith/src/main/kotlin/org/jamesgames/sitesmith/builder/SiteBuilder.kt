@@ -41,13 +41,13 @@ class SiteBuilder(private val siteLayoutFile: File,
         val potentialFailedBuildHelper = potentialFailedBuildHelper(buildHelpers)
         if (potentialFailedBuildHelper != null) {
             recordFailResults(potentialFailedBuildHelper)
-            return false;
+            return false
         }
 
         componentDatabase.writePages()
 
         recordSuccessResults(buildHelpers)
-        return true;
+        return true
     }
 
     private fun executedBuildHelpers(componentDatabase: SiteComponentDatabase, siteLayout: SiteLayout): MutableList<BuildHelper> {

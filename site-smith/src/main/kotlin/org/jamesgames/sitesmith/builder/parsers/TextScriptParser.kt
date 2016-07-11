@@ -26,11 +26,11 @@ internal class TextScriptParser(private val textScriptSourceFile: File) {
         try {
             if (!TextScriptInterface.isScriptInValidFormat(text))
                 throw TextScriptParseException(name, "Script is in an invalid format. Format should be:" +
-                        System.lineSeparator() + TextScriptParser.formatAndExample);
+                        System.lineSeparator() + TextScriptParser.formatAndExample)
         } catch (e: Exception) {
-            throw TextScriptParseException(name, "Function error:${System.lineSeparator()}${e.message}");
+            throw TextScriptParseException(name, "Function error:${System.lineSeparator()}${e.message}")
         }
-        return TextScript(name, text);
+        return TextScript(name, text)
     }
 
 }

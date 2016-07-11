@@ -16,7 +16,7 @@ class Main {
                 "Options:"
 
         @JvmStatic fun main(args: Array<String>) {
-            val options = Options();
+            val options = Options()
             options.addOption(Option.builder(projectDirOption)
                     .longOpt("project-directory")
                     .required()
@@ -32,12 +32,12 @@ class Main {
 
             val parser = DefaultParser()
             try {
-                val line = parser.parse(options, args);
+                val line = parser.parse(options, args)
                 System.out.println(try {
                     var project = Project(File(line.getOptionValue(projectDirOption)),
                             File(line.getOptionValue(siteLayoutOption)))
                     project.buildSite()
-                    System.out.println(project.results);
+                    System.out.println(project.results)
                 } catch(exceptionFromProject: Exception) {
                     "Issue during site creation: " + exceptionFromProject.toString()
                     throw exceptionFromProject

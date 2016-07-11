@@ -29,7 +29,7 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
     private val listOfEmptyDirectoryNames: MutableList<Pair<SiteLayout.DirectoryInfo, String>> = ArrayList()
     private val listOfEmptyFileNames: MutableList<Pair<String, String>> = ArrayList()
     private var listOfSpecifiedCssFilesThatDoNotExist: MutableList<Triple<String, SiteLayout.PageInfo, String>> = ArrayList()
-    private var resourcesSpecifiedByBothDirectoryLayoutAndLayoutFile: Boolean = false;
+    private var resourcesSpecifiedByBothDirectoryLayoutAndLayoutFile: Boolean = false
     // For use when specifying resource files by resource directory layout
     private val listOfDuplicateResourcesFileNamesWithinEntireProject: MutableList<Pair<SiteLayout.ResourceInfo, String>> = ArrayList()
 
@@ -62,7 +62,7 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
     override fun applyBuildAction() {
         clearLists()
         cssFilesFound.clear()
-        validateDirectories(siteLayout.root, File.separator);
+        validateDirectories(siteLayout.root, File.separator)
         findSpecifiedCssFilesThatDoNotExist()
     }
 
@@ -112,7 +112,7 @@ internal class SiteLayoutValidator(private val siteLayout: SiteLayout) : BuildHe
                                   resources: List<SiteLayout.ResourceInfo>?) {
         resources?.forEach {
             if (siteLayout.specifyResourcesByDirectory)
-                resourcesSpecifiedByBothDirectoryLayoutAndLayoutFile = true;
+                resourcesSpecifiedByBothDirectoryLayoutAndLayoutFile = true
             if (!fileNamesInDirectory.add(it.uniqueName ?: it.fileName))
                 listOfDuplicateFileNamesWithinSameDirectory.add(Pair(it.fileName, directoryPathSoFar))
             if (!resourceFileNamesWithinSameProject.add(it.fileName))

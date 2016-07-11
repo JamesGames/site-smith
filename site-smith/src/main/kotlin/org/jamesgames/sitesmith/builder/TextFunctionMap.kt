@@ -11,13 +11,13 @@ internal class TextFunctionMap {
     private val nameToFunction: HashMap<String, TextFunction> = HashMap()
 
     fun addTextFunction(function: TextFunction) {
-        nameToFunction.put(function.name, function);
+        nameToFunction.put(function.name, function)
         TextFunctionInterface.defineFunction(
                 function.name,
                 function.functionText)
     }
 
     fun clearMap() {
-        nameToFunction.clear();
+        nameToFunction.clear()
     }
 }

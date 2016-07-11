@@ -10,13 +10,13 @@ internal class TextScriptMap {
     private val nameToScript: HashMap<String, TextScript> = HashMap()
 
     fun addTextScript(script: TextScript) {
-        nameToScript.put(script.name, script);
+        nameToScript.put(script.name, script)
     }
 
     fun getTextScript(name: String): TextScript = nameToScript[name] ?: throw UndefinedTextScriptException(name)
 
     fun clearMap() {
-        nameToScript.clear();
+        nameToScript.clear()
     }
 }
 
