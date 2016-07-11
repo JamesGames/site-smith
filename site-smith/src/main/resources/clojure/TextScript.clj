@@ -52,7 +52,7 @@
       (eval function-expression))))
 
 (defn- execute-script
-  "Takes in a list of html-function calls to execute"
+  "Takes in a list of function calls to execute, these can be Site Smith text functions, or any function."
   [calling-page-name ^Function name-to-path-func script-text]
   (reduce str (map (partial invoke-function calling-page-name name-to-path-func)
                    (script-text-to-clojure-structure script-text))))

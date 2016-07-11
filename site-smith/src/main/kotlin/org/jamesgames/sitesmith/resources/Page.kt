@@ -6,7 +6,6 @@ import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
-import java.util.*
 
 /**
  * @author James Murphy
@@ -61,31 +60,42 @@ class Page(private val file: File,
         pageData.appendln(headOpen)
         pageData.appendln("$titleOpen$pageTitle$titleClose")
 
+        writeCssTags(componentDb, componentDb.globalCssFileNames, pageData)
         optionalPageAttributes.additionalCssFiles?.let {
-            pageData.append(arrayListOf(componentDb.globalCssFileNames, it).flatten()
-                .map {
-                    if (it.startsWith(Resource.startOfExternalFile))
-                        cssLinkStart + it.substring(Resource.startOfExternalFile.length) + "\"" + cssTextType + tagEnd + System.lineSeparator()
-                    else if (componentDb.doesResourceExist(it))
-                        cssLinkStart + componentDb.getRelativeResourcePath(it, this) + "\"" + cssTextType + tagEnd + System.lineSeparator()
-                    else ""
-                }.joinToString(""))
+            writeCssTags(componentDb, it, pageData)
         }
         optionalPageAttributes.clientScripts?.let {
-            pageData.append(it.map {
-                        if (it.startsWith(Resource.startOfExternalFile))
-                            scriptStart + it.substring(Resource.startOfExternalFile.length) + scriptEnd + System.lineSeparator()
-                        else if (componentDb.doesResourceExist(it))
-                            scriptStart + componentDb.getRelativeResourcePath(it, this) + scriptEnd + System.lineSeparator()
-                        else ""
-                    }.joinToString(""))
+            writeScriptTags(componentDb, it, pageData)
         }
         optionalPageAttributes.favicon?.let {
-            pageData.appendln(faviconStart + componentDb.getRelativeResourcePath(optionalPageAttributes.favicon, this) + tagAndQuoteEnd)
-    }
+            writeFaviconTag(componentDb, optionalPageAttributes.favicon, pageData)
+        }
 
         pageData.appendln(headClose)
     }
+
+    private fun writeCssTags(componentDb: SiteComponentDatabase, it: List<String>, pageData: StringBuilder): StringBuilder? {
+        return pageData.append(it.map {
+            if (it.startsWith(Resource.startOfExternalFile))
+                cssLinkStart + it.substring(Resource.startOfExternalFile.length) + "\"" + cssTextType + tagEnd + System.lineSeparator()
+            else if (componentDb.doesResourceExist(it))
+                cssLinkStart + componentDb.getRelativeResourcePath(it, this) + "\"" + cssTextType + tagEnd + System.lineSeparator()
+            else ""
+        }.joinToString(""))
+    }
+
+    private fun writeScriptTags(componentDb: SiteComponentDatabase, it: List<String>, pageData: StringBuilder): StringBuilder? {
+        return pageData.append(it.map {
+            if (it.startsWith(Resource.startOfExternalFile))
+                scriptStart + it.substring(Resource.startOfExternalFile.length) + scriptEnd + System.lineSeparator()
+            else if (componentDb.doesResourceExist(it))
+                scriptStart + componentDb.getRelativeResourcePath(it, this) + scriptEnd + System.lineSeparator()
+            else ""
+        }.joinToString(""))
+    }
+
+    private fun writeFaviconTag(componentDb: SiteComponentDatabase, favicon: String, pageData: StringBuilder) =
+            pageData.appendln(faviconStart + componentDb.getRelativeResourcePath(favicon, this) + tagAndQuoteEnd)
 
     private fun writePageBody(pageData: StringBuilder, componentDb: SiteComponentDatabase) {
         pageData.appendln(bodyOpen)

@@ -46,7 +46,7 @@ class SiteComponentDatabase(private val textFunctionDirectory: File,
                 stringBuilder.append(TextScriptInterface.executeScript(
                         page.getUniqueName(),
                         { s: String -> resourceMap.getRelativeResourcePath(s, page) },
-                        textScriptMap.getTextScript(scriptName).scriptText))
+                        textScriptMap.getTextScript(scriptName).scriptText))!!
             } catch (e: Exception) {
                 throw ScriptExecutionException(page.getUniqueName(), scriptName, e.message + "")
             }
