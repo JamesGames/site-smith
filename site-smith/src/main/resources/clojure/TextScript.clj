@@ -1,6 +1,7 @@
 (ns org.jamesgames.sitesmith.text.TextScript
   (:use [clojure.string :only [starts-with?]]
-        [clojure.walk])
+        [clojure.walk :only [postwalk]])
+  (:require [org.jamesgames.sitesmith.text.Util :as util])
   (:import (java.util.function Function)))
 
 
@@ -41,16 +42,14 @@
   [function-name]
   (resolve (symbol (str 'project-functions "/" function-name))))
 
-(declare ^:dynamic *unique-name-of-page*)
-(declare ^:dynamic ^Function *name-to-path-func*)
-(declare ^:dynamic *all-resource-names*)
-
 (defn- invoke-function
   [calling-page-name ^Function name-to-path-func list-of-resource-names function-expression]
   (binding [*ns* (find-ns 'org.jamesgames.sitesmith.text.TextScript)
-            *unique-name-of-page* calling-page-name
-            *name-to-path-func* name-to-path-func
-            *all-resource-names* (into #{} list-of-resource-names)]
+            ;; Following binds enable the util functions to work
+            ;; which are only used by scripts executing
+            util/*unique-name-of-page* calling-page-name
+            util/*name-to-path-func* name-to-path-func
+            util/*all-resource-names* (into #{} list-of-resource-names)]
     (if (is-text-function? (script-function-name function-expression))
       (invoke-text-function name-to-path-func function-expression)
       (eval function-expression))))
@@ -60,4 +59,6 @@
   [calling-page-name ^Function name-to-path-func script-text list-of-resource-names]
   (reduce str (map (partial invoke-function calling-page-name name-to-path-func list-of-resource-names)
                    (script-text-to-clojure-structure script-text))))
+
+
 

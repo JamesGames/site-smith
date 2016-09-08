@@ -12,6 +12,7 @@ import java.util.function.Function;
 public class TextScriptInterface {
     static {
         try {
+            RT.loadResourceScript("clojure/Util.clj");
             RT.loadResourceScript("clojure/TextScript.clj");
         } catch (IOException e) {
             throw new IllegalStateException("Runtime loading of Clojure TextScript failed.");

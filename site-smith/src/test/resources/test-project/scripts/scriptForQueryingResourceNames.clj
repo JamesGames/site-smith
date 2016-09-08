@@ -1,10 +1,5 @@
 (
-  (str *all-resource-names*)
+  (str util/*all-resource-names*)
   (str "resource names containing 'Resource' count: "
-       (reduce
-         #(if (.contains %2 "Resource")
-           (+ %1 1)
-           %1)
-         0
-         *all-resource-names*))
+       (count (util/get-resource-file-names #(.contains % "Resource"))))
   )
