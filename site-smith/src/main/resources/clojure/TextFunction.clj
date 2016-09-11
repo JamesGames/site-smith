@@ -79,9 +79,9 @@
   an optional vector of options"
   [function-name function-text]
   (let [function (function-string-to-clojure-structure function-text)]
-    (intern (create-ns 'project-functions)
+    (intern (create-ns 'func)
             (symbol function-name)
-            (fn [arguments] (render-text function arguments)))))
+            (fn [& arguments] (render-text function arguments)))))
 
 
 

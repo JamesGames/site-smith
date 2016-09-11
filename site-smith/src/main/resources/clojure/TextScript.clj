@@ -23,42 +23,27 @@
          ;; function names must be symbols
          (or (every? symbol? (map script-function-name script))))))
 
-
 (def startOfResourceReference "resource:")
-(defn- resource-name-args-to-path
-  [^Function name-to-path-func arguments]
+(defn- resolve-str-shortcuts
+  "Resolves string shortcuts. For example the string literal 'resource:SomeName' would be replaced with
+  the relative file path of the named resource"
+  [^Function name-to-path-func code]
   (postwalk #(if (starts-with? % startOfResourceReference)
               (conj (.apply name-to-path-func (subs % (count startOfResourceReference))))
-              (conj %)) arguments))
-
-(defn- invoke-text-function
-  [^Function name-to-path-func [function-name & function-args]]
-  (let [function-to-call (resolve (symbol (str 'project-functions "/" function-name)))
-        function-args-evaluated (map eval function-args)
-        converted-arguments (resource-name-args-to-path name-to-path-func function-args-evaluated)]
-    (function-to-call converted-arguments)))
-
-(defn- is-text-function?
-  [function-name]
-  (resolve (symbol (str 'project-functions "/" function-name))))
-
-(defn- invoke-function
-  [calling-page-name ^Function name-to-path-func list-of-resource-names function-expression]
-  (binding [*ns* (find-ns 'org.jamesgames.sitesmith.text.TextScript)
-            ;; Following binds enable the util functions to work
-            ;; which are only used by scripts executing
-            util/*unique-name-of-page* calling-page-name
-            util/*name-to-path-func* name-to-path-func
-            util/*all-resource-names* (into #{} list-of-resource-names)]
-    (if (is-text-function? (script-function-name function-expression))
-      (invoke-text-function name-to-path-func function-expression)
-      (eval function-expression))))
+              (conj %)) code))
 
 (defn- execute-script
   "Takes in a list of function calls to execute, these can be Site Smith text functions, or any function."
   [calling-page-name ^Function name-to-path-func script-text list-of-resource-names]
-  (reduce str (map (partial invoke-function calling-page-name name-to-path-func list-of-resource-names)
-                   (script-text-to-clojure-structure script-text))))
+  (binding [*ns* (find-ns 'org.jamesgames.sitesmith.text.TextScript)
+            ;; Following binds enable the util functions to work
+            ;; The util functions are used by site smith scripts and functions
+            util/*unique-name-of-page* calling-page-name
+            util/*name-to-path-func* name-to-path-func
+            util/*all-resource-names* (into #{} list-of-resource-names)]
+    (let [script-structure (script-text-to-clojure-structure script-text)
+          script-structure-with-str-resolves (resolve-str-shortcuts name-to-path-func script-structure)]
+      (reduce str (map (partial eval) script-structure-with-str-resolves)))))
 
 
 

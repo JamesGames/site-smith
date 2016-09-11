@@ -1,2 +1,2 @@
 (
-  (contact-page-begin))
+  (func/contact-page-begin))
