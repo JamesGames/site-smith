@@ -15,13 +15,15 @@
 
 (defn- is-script-in-valid-format?
   [script-text]
-  (let [script (script-text-to-clojure-structure script-text)]
-    (and (list? script)
-         (every? list? script)
-         ;; No empty calls
-         (every? #(< 0 (count %)) script)
+  (let [script-text-in-list (str "(" script-text ")")
+        script (script-text-to-clojure-structure script-text-in-list)]
+    (let [is-list (list? script)
+          is-series-of-func-calls (every? list? script)
+         ;; No empty calls/lists
+          funcs-are-not-empty-lists (every? #(< 0 (count %)) script)
          ;; function names must be symbols
-         (or (every? symbol? (map script-function-name script))))))
+         func-names-are-symbols (or (every? symbol? (map script-function-name script)))]
+      (and is-list is-series-of-func-calls funcs-are-not-empty-lists func-names-are-symbols))))
 
 (def startOfResourceReference "resource:")
 (defn- resolve-str-shortcuts
@@ -41,7 +43,8 @@
             util/*unique-name-of-page* calling-page-name
             util/*name-to-path-func* name-to-path-func
             util/*all-resource-names* (into #{} list-of-resource-names)]
-    (let [script-structure (script-text-to-clojure-structure script-text)
+    (let [script-text-in-list (str "(" script-text ")")
+          script-structure (script-text-to-clojure-structure script-text-in-list)
           script-structure-with-str-resolves (resolve-str-shortcuts name-to-path-func script-structure)]
       (reduce str (map (partial eval) script-structure-with-str-resolves)))))
 

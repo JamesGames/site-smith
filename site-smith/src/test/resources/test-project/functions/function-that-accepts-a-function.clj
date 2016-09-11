@@ -1,1 +1,1 @@
-([aFunction] (str "<p>{{#aFunction}}FunctionArgument{{/aFunction}}</p>"))
+[aFunction] (str "<p>{{#aFunction}}FunctionArgument{{/aFunction}}</p>")

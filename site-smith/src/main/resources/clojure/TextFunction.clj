@@ -22,8 +22,9 @@
   "Determines if a function is in a valid format, which is a list of two or three elements,
   a vector of parameter names, a list (that should be a string expression but is not checked),
   and then an optional vector that would contain names of options"
-  [function]
-  (let [function (function-string-to-clojure-structure function)
+  [function-text]
+  (let [function-text-in-list (str "(" function-text ")")
+        function (function-string-to-clojure-structure function-text-in-list)
         element-count (count function)
         params (function-params function)
         func-body (function-func-body function)
@@ -78,7 +79,8 @@
   Assumed format of a list with a vector of parameter names and an evaluable string expression and
   an optional vector of options"
   [function-name function-text]
-  (let [function (function-string-to-clojure-structure function-text)]
+  (let [function-text-in-list (str "(" function-text ")")
+        function (function-string-to-clojure-structure function-text-in-list)]
     (intern (create-ns 'func)
             (symbol function-name)
             (fn [& arguments] (render-text function arguments)))))

@@ -11,27 +11,26 @@ import kotlin.test.assertEquals
 class TextFunctionInterfaceTest {
 
     // Valid
-    val completelyEmptyFunction = "([]())"
-    val completelyEmptyFunctionWithEmptyOptions = "([]()[])"
-    val emptyParamsButWithBody = "([](str \"test\"))"
-    val emptyParamsButWithBodyAndEmptyOptions = "([](str \"test\")[])"
-    val emptyParamsButWithBodyAndMarkdownOption = "([](str \"test\")[\"markdown\"])"
-    val emptyParamsButWithBodyAndMarkdownOptionAfterExpression = "([](str \"test\")[(str \"markdown\")])"
-    val paramsWithEmptyBody = "([x]())"
-    val paramsWithEmptyBodyAndEmptyOptions = "([x]()[])"
-    val fullValidExample = "([x](str \"Hello {{x}}\")[\"markdown\"])"
-    val multipleLargeHelloNamesFunction = "([names](str " +
+    val completelyEmptyFunction = "[]()"
+    val completelyEmptyFunctionWithEmptyOptions = "[]()[]"
+    val emptyParamsButWithBody = "[](str \"test\")"
+    val emptyParamsButWithBodyAndEmptyOptions = "[](str \"test\")[]"
+    val emptyParamsButWithBodyAndMarkdownOption = "[](str \"test\")[\"markdown\"]"
+    val emptyParamsButWithBodyAndMarkdownOptionAfterExpression = "[](str \"test\")[(str \"markdown\")]"
+    val paramsWithEmptyBody = "[x]()"
+    val paramsWithEmptyBodyAndEmptyOptions = "[x]()[]"
+    val fullValidExample = "[x](str \"Hello {{x}}\")[\"markdown\"]"
+    val multipleLargeHelloNamesFunction = "[names](str " +
             "\"{{#names}}" +
             "# Hello {{.}}" +
             "{{/names}}\"" +
-            ")[\"markdown\"])"
-    val emptyParamsButWithBodyAndSymbolAsOption = "([](str \"test\")[someOptionToBeResolved])"
+            ")[\"markdown\"]"
+    val emptyParamsButWithBodyAndSymbolAsOption = "[](str \"test\")[someOptionToBeResolved]"
     // Invalid
-    val invalidFormatNoEnclosingList = "[x](str \"Hello {{x}}\")[\"markdown\"])"
-    val invalidFormatParamsNotVector = "((x)(str \"Hello {{x}}\")[\"markdown\"])"
-    val invalidFormatOptionsNotVector = "((x)(str \"Hello {{x}}\")(\"markdown\"))"
-    val paramsCantBeCollections = "([(x)](str \"test\"))"
-    val paramsCantBeStrings = "([\"x\"](str \"test\"))"
+    val invalidFormatParamsNotVector = "(x)(str \"Hello {{x}}\")[\"markdown\"]"
+    val invalidFormatOptionsNotVector = "[x](str \"Hello {{x}}\")(\"markdown\")"
+    val paramsCantBeCollections = "[(x)](str \"test\")"
+    val paramsCantBeStrings = "[\"x\"](str \"test\")"
 
     @Test
     fun testValidFunctionFormat() {
@@ -48,7 +47,6 @@ class TextFunctionInterfaceTest {
         assertEquals(true, TextFunctionInterface.isFunctionTextInValidFormat(emptyParamsButWithBodyAndSymbolAsOption))
 
         assertEquals(false, TextFunctionInterface.isFunctionTextInValidFormat(paramsCantBeStrings))
-        assertEquals(false, TextFunctionInterface.isFunctionTextInValidFormat(invalidFormatNoEnclosingList))
         assertEquals(false, TextFunctionInterface.isFunctionTextInValidFormat(invalidFormatParamsNotVector))
         assertEquals(false, TextFunctionInterface.isFunctionTextInValidFormat(invalidFormatOptionsNotVector))
         assertEquals(false, TextFunctionInterface.isFunctionTextInValidFormat(paramsCantBeCollections))
@@ -67,7 +65,7 @@ class TextFunctionInterfaceTest {
 
     @Test
     fun testNamespaceForFunction() {
-        TextFunctionInterface.defineFunction("outputNamespace", "([](str \"called-correctly\")[])")
+        TextFunctionInterface.defineFunction("outputNamespace", "[](str \"called-correctly\")[]")
         // If we can call it via first param here that specifies the name space, then the function
         // was definitely given the correct namespace
         val functionResults = RT.`var`("func", "outputNamespace").invoke(null)

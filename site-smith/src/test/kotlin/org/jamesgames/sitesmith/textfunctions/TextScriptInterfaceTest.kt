@@ -13,68 +13,68 @@ import kotlin.test.assertEquals
  */
 class TextScriptInterfaceTest {
 
-    val largeHelloFunction = "([x](str \"# Hello {{x}}\")[(str \"markdown\")])"
-    val multipleLargeHelloNamesFunction = "([names](str " +
+    val largeHelloFunction = "[x](str \"# Hello {{x}}\")[(str \"markdown\")]"
+    val multipleLargeHelloNamesFunction = "[names](str " +
             "\"{{#names}}" +
             "# Hello {{.}}" + System.lineSeparator() + System.lineSeparator() +
             "{{/names}}\"" +
-            ")[\"markdown\"])"
-    val helloFunctionWhereArgIsString = "([x](str \"Hello {{x}}\"))"
-    val helloNoArgsFunction = "([](str \"Hello, look no arguments\"))"
-    val functionWithFunctionCallForArg = "([aFunction](str " +
+            ")[\"markdown\"]"
+    val helloFunctionWhereArgIsString = "[x](str \"Hello {{x}}\")"
+    val helloNoArgsFunction = "[](str \"Hello, look no arguments\")"
+    val functionWithFunctionCallForArg = "[aFunction](str " +
             "\"{{#aFunction}}FunctionArgument{{/aFunction}}\"" +
-            "))"
+            ")"
 
     // valid
-    val emptyTestScript = "()"
+    val emptyTestScript = ""
     val emptyTestExpectedOutput = ""
 
     val helloNoArgsFuncName = "hello-no-args"
     val helloNoArgsCall = "(func/$helloNoArgsFuncName)"
-    val testScriptWithFunctionWithNoArgs = "($helloNoArgsCall)"
+    val testScriptWithFunctionWithNoArgs = "$helloNoArgsCall"
     val helloNoArgsExpectedOutput = "Hello, look no arguments${System.lineSeparator()}"
 
     val helloSomeStringArgFuncName = "hello"
     val helloWorldArgsCall = "(func/$helloSomeStringArgFuncName \"world\")"
-    val testScriptWithFunctionWithArgs = "($helloWorldArgsCall)"
+    val testScriptWithFunctionWithArgs = "$helloWorldArgsCall"
     val helloWorldFuncExpectedOutput = "Hello world${System.lineSeparator()}"
 
     val helloLargeWorldFuncName = "hello-large"
     val helloLargeWorldCall = "(func/$helloLargeWorldFuncName \"large world\")"
-    val testScriptWithHelloWorldLargeCall = "($helloLargeWorldCall)"
+    val testScriptWithHelloWorldLargeCall = "$helloLargeWorldCall"
     val helloLargeWorldExpectedOutput = "<h1><a href=\"#hello-large-world\" name=\"hello-large-world\">Hello large world</a></h1>${System.lineSeparator()}"
 
     val nonTextFunctionCall = "(str \"not an text function but still okay\" (System/lineSeparator))"
-    val testScriptWithNonTextFunction = "($nonTextFunctionCall)"
+    val testScriptWithNonTextFunction = "$nonTextFunctionCall"
     val nonTextFunctionCallExpectedOutput = "not an text function but still okay${System.lineSeparator()}"
 
     val helloVariousLargeNamesFuncName = "hello-large-names"
     val helloVariousLargeNamesCall = "(func/$helloVariousLargeNamesFuncName [\"bob\" \"bill\" \"ben\"])"
-    val testScriptWithVariousLargeNames = "($helloVariousLargeNamesCall)"
+    val testScriptWithVariousLargeNames = "$helloVariousLargeNamesCall"
     // markdown converter Site Smith uses outputs just newline character, not the system newline string
     val helloVariousLargeNamesExpectedOutput = "<h1><a href=\"#hello-bob\" name=\"hello-bob\">Hello bob</a></h1>${System.lineSeparator()}" +
             "<h1><a href=\"#hello-bill\" name=\"hello-bill\">Hello bill</a></h1>${System.lineSeparator()}" +
             "<h1><a href=\"#hello-ben\" name=\"hello-ben\">Hello ben</a></h1>${System.lineSeparator()}"
     val helloWorldNonLiteralArg = "(func/$helloSomeStringArgFuncName (str \"wor\" \"ld\" \"2\"))"
-    val testScriptWithFuncWithNonLiteralArg = "($helloWorldNonLiteralArg)"
+    val testScriptWithFuncWithNonLiteralArg = "$helloWorldNonLiteralArg"
     val helloWorldNonLiteralArgExpectedOutput = "Hello world2${System.lineSeparator()}"
 
     val textFunctionPassingFuncName = "function-that-accepts-a-function"
     val textFuncPassingFuncAsArg = "(func/$textFunctionPassingFuncName #(str \"$$$\" % \"$$$\"))"
-    val testScriptWithFuncCallPassingFunc = "($textFuncPassingFuncAsArg)"
+    val testScriptWithFuncCallPassingFunc = "$textFuncPassingFuncAsArg"
     val funcCallPassingFuncExpectedOutput = "$$\$FunctionArgument$$$${System.lineSeparator()}"
 
-    val textFunctionPassesClojureValue = "([x y](str x \"{{y}}\"))"
+    val textFunctionPassesClojureValue = "[x y](str x \"{{y}}\")"
     val textFunctionPassesClojureValueName = "accepts-clojure-value-function"
     val textFunctionPassesClojureValueCall = "(func/$textFunctionPassesClojureValueName 42 (str \"test\" 42))"
-    val testScriptForFuncPassesClojureValue = "($textFunctionPassesClojureValueCall)"
+    val testScriptForFuncPassesClojureValue = "$textFunctionPassesClojureValueCall"
     val testScriptPassesClojureValueExpectedOutput = "42test42${System.lineSeparator()}"
 
-    val testScriptWithMultipleFunctions = "(" + helloNoArgsCall +
+    val testScriptWithMultipleFunctions = helloNoArgsCall +
             helloWorldArgsCall +
             helloLargeWorldCall +
             nonTextFunctionCall +
-            helloVariousLargeNamesCall + ")"
+            helloVariousLargeNamesCall
     val multipleFuncsExpectedOutput = helloNoArgsExpectedOutput +
             helloWorldFuncExpectedOutput +
             helloLargeWorldExpectedOutput +
@@ -83,8 +83,8 @@ class TextScriptInterfaceTest {
 
 
     // invalid
-    val scriptWhereFunctionNameIsAString = "((\"func1\" \"arg1\"))"
-    val scriptWithVectorNotLists = "([func1 \"arg1\"])"
+    val scriptWhereFunctionNameIsAString = "(\"func1\" \"arg1\")"
+    val scriptWithVectorNotLists = "[func1 \"arg1\"]"
 
     // page name
     val pageNameNotRelevantForTest = "N/A"

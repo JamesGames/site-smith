@@ -1,1 +1,1 @@
-([link-data](str "<a href=\"" (:linkNameOrUrl link-data) "\">" (:text link-data) "</a>"))
+[link-data](str "<a href=\"" (:linkNameOrUrl link-data) "\">" (:text link-data) "</a>")

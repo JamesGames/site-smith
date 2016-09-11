@@ -1,7 +1,6 @@
-(
-  [names]
-  (str "
+[names]
+(str "
 {{#names}}
 #Hello {{.}}
 {{/names}}")
-  ["markdown"])
+["markdown"]

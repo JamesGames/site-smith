@@ -12,10 +12,10 @@ import java.nio.file.Paths
 internal class TextScriptParser(private val textScriptSourceFile: File) {
     companion object {
         private val formatAndExample =
-                "Format: (clojure-function-calls*)" + System.lineSeparator() +
+                "Format: clojure-function-calls*" + System.lineSeparator() +
                         "Example:" + System.lineSeparator() +
-                        "((someTextFunctionName \"stringArg\" (+ 2 2) resolvableSymbol)" + System.lineSeparator() +
-                        " (str \"words\"))"
+                        "(func/someTextFunc \"stringArg\" (+ 2 2) resolvableSymbol)" + System.lineSeparator() +
+                        "(str \"words\")"
     }
 
     fun getTextScript(): TextScript {

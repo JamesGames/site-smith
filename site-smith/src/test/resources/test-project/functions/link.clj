@@ -1,1 +1,1 @@
-([linkNameOrUrl text](str "<a href=\"{{linkNameOrUrl}}\">{{text}}</a>"))
+[linkNameOrUrl text](str "<a href=\"{{linkNameOrUrl}}\">{{text}}</a>")
