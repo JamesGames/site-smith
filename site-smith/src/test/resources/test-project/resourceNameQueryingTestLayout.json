@@ -22,6 +22,28 @@
         "fileNameInResourceDir": "resource2.txt",
         "fileName": "homePageResourceFileB.txt"
       }
+    ],
+    "directories": [
+      {
+        "name": "dirForFilteredNames",
+        "resources": [
+          {
+            "uniqueName": "abc_1_def",
+            "fileNameInResourceDir": "abc_1_def.txt",
+            "fileName": "abc_1_def.txt"
+          },
+          {
+            "uniqueName": "abc_2.txt",
+            "fileNameInResourceDir": "abc_2.txt",
+            "fileName": "abc_2.txt"
+          },
+          {
+            "uniqueName": "3_def",
+            "fileNameInResourceDir": "3_def.txt",
+            "fileName": "3_def.txt"
+          }
+        ]
+      }
     ]
   }
 }

@@ -16,9 +16,9 @@ class ProjectTest {
 
     val exampleScriptExpectedOutput = "<h1><a href=\"#hello-bob\" name=\"hello-bob\">Hello bob</a></h1>${System.lineSeparator()}" +
             "<h1><a href=\"#hello-bill\" name=\"hello-bill\">Hello bill</a></h1>${System.lineSeparator()}" +
-            "<h1><a href=\"#hello-ben\" name=\"hello-ben\">Hello ben</a></h1>${System.lineSeparator()}" +
-            "<p>$$\$FunctionArgument$$$</p>${System.lineSeparator()}" +
-            "<a href=\"subDir/\">Relative link to test page 2</a>${System.lineSeparator()}"
+            "<h1><a href=\"#hello-ben\" name=\"hello-ben\">Hello ben</a></h1>${System.lineSeparator()}${System.lineSeparator()}" +
+            "<p>$$\$FunctionArgument$$$</p>${System.lineSeparator()}${System.lineSeparator()}" +
+            "<a href=\"subDir/\">Relative link to test page 2</a>${System.lineSeparator()}${System.lineSeparator()}"
 
     fun makeAllNewLinesEqual(input: String) =
             input.replace(System.lineSeparator(), "\n")
@@ -190,11 +190,21 @@ class ProjectTest {
 
         var files = outputDir.listFiles()
         assertTrue(fileNamesWithinDirMatch(
-                listOf("index.html", "homePageResourceFileA.txt", "homePageResourceFileB.txt"),
+                listOf("index.html", "homePageResourceFileA.txt", "homePageResourceFileB.txt", "dirForFilteredNames"),
                 files))
+        val subDir = files.filter { it.isDirectory && it.name.equals("dirForFilteredNames") }.first().listFiles()
+        assertTrue(fileNamesWithinDirMatch(
+                listOf("abc_1_def.txt", "abc_2.txt", "3_def.txt"),
+                subDir))
+
         val testPage1File = files.filter { it.name.equals("index.html") }.first()
         val testPage1pageContent = String(Files.readAllBytes(testPage1File.toPath()))
+        // Note for this test not all Resource files are added to the project layout!
         assertTrue(testPage1pageContent.contains("resource names containing 'Resource' count: 2"))
+        assertTrue(testPage1pageContent.contains("with util call, resource names beginning with 'abc' count: 2"))
+        assertTrue(testPage1pageContent.contains("with util call, resource names ending with 'def' count: 2"))
+        assertTrue(testPage1pageContent.contains("with string shortcut, resource names beginning with 'abc' count: 2"))
+        assertTrue(testPage1pageContent.contains("with string shortcut, resource names ending with 'def' count: 2"))
         assertTrue(testPage1pageContent.contains("someResource1"))
         assertTrue(testPage1pageContent.contains("someResource2"))
         assertTrue(testPage1pageContent.contains("testPage"))

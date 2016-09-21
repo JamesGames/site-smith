@@ -75,10 +75,10 @@ class TextScriptInterfaceTest {
             helloLargeWorldCall +
             nonTextFunctionCall +
             helloVariousLargeNamesCall
-    val multipleFuncsExpectedOutput = helloNoArgsExpectedOutput +
-            helloWorldFuncExpectedOutput +
-            helloLargeWorldExpectedOutput +
-            nonTextFunctionCallExpectedOutput +
+    val multipleFuncsExpectedOutput = helloNoArgsExpectedOutput + System.lineSeparator() +
+            helloWorldFuncExpectedOutput + System.lineSeparator() +
+            helloLargeWorldExpectedOutput + System.lineSeparator() +
+            nonTextFunctionCallExpectedOutput + System.lineSeparator() +
             helloVariousLargeNamesExpectedOutput
 
 
@@ -100,7 +100,7 @@ class TextScriptInterfaceTest {
     }
 
     fun makeAllNewLinesEqual(input: String) =
-            input.replace(System.lineSeparator(), "\n")
+            input.replace(System.lineSeparator(), "\n").trimEnd()
 
 
     @Test
