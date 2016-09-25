@@ -16,9 +16,9 @@ class ProjectTest {
 
     val exampleScriptExpectedOutput = "<h1><a href=\"#hello-bob\" name=\"hello-bob\">Hello bob</a></h1>${System.lineSeparator()}" +
             "<h1><a href=\"#hello-bill\" name=\"hello-bill\">Hello bill</a></h1>${System.lineSeparator()}" +
-            "<h1><a href=\"#hello-ben\" name=\"hello-ben\">Hello ben</a></h1>${System.lineSeparator()}${System.lineSeparator()}" +
-            "<p>$$\$FunctionArgument$$$</p>${System.lineSeparator()}${System.lineSeparator()}" +
-            "<a href=\"subDir/\">Relative link to test page 2</a>${System.lineSeparator()}${System.lineSeparator()}"
+            "<h1><a href=\"#hello-ben\" name=\"hello-ben\">Hello ben</a></h1>" +
+            "<p>$$\$FunctionArgument$$$</p>" +
+            "<a href=\"subDir/\">Relative link to test page 2</a>"
 
     fun makeAllNewLinesEqual(input: String) =
             input.replace(System.lineSeparator(), "\n")
@@ -148,7 +148,7 @@ class ProjectTest {
                 subDir))
         val testPage2File = subDir.filter { it.name.equals("index.html") }.first()
         val testPage2PageContent = String(Files.readAllBytes(testPage2File.toPath()))
-        assertTrue(testPage2PageContent.contains("<a href=\"../\">Relative link to test page 1</a>${System.lineSeparator()}"))
+        assertTrue(testPage2PageContent.contains("<a href=\"../\">Relative link to test page 1</a>"))
     }
 
     @Test

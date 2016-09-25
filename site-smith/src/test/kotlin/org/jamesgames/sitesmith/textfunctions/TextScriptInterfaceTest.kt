@@ -35,21 +35,21 @@ class TextScriptInterfaceTest {
     val helloNoArgsFuncName = "hello-no-args"
     val helloNoArgsCall = "(func/$helloNoArgsFuncName)"
     val testScriptWithFunctionWithNoArgs = "$helloNoArgsCall"
-    val helloNoArgsExpectedOutput = "Hello, look no arguments${System.lineSeparator()}"
+    val helloNoArgsExpectedOutput = "Hello, look no arguments"
 
     val helloSomeStringArgFuncName = "hello"
     val helloWorldArgsCall = "(func/$helloSomeStringArgFuncName \"world\")"
     val testScriptWithFunctionWithArgs = "$helloWorldArgsCall"
-    val helloWorldFuncExpectedOutput = "Hello world${System.lineSeparator()}"
+    val helloWorldFuncExpectedOutput = "Hello world"
 
     val helloLargeWorldFuncName = "hello-large"
     val helloLargeWorldCall = "(func/$helloLargeWorldFuncName \"large world\")"
     val testScriptWithHelloWorldLargeCall = "$helloLargeWorldCall"
-    val helloLargeWorldExpectedOutput = "<h1><a href=\"#hello-large-world\" name=\"hello-large-world\">Hello large world</a></h1>${System.lineSeparator()}"
+    val helloLargeWorldExpectedOutput = "<h1><a href=\"#hello-large-world\" name=\"hello-large-world\">Hello large world</a></h1>"
 
     val nonTextFunctionCall = "(str \"not an text function but still okay\" (System/lineSeparator))"
     val testScriptWithNonTextFunction = "$nonTextFunctionCall"
-    val nonTextFunctionCallExpectedOutput = "not an text function but still okay${System.lineSeparator()}"
+    val nonTextFunctionCallExpectedOutput = "not an text function but still okay"
 
     val helloVariousLargeNamesFuncName = "hello-large-names"
     val helloVariousLargeNamesCall = "(func/$helloVariousLargeNamesFuncName [\"bob\" \"bill\" \"ben\"])"
@@ -77,16 +77,16 @@ class TextScriptInterfaceTest {
     val badOptionFunctionCall = "(func/$badOptionFunctionName)"
     val testScriptwithBadOptionFunctionCall = "$badOptionFunctionCall"
 
-    val testScriptWithMultipleFunctions = helloNoArgsCall +
-            helloWorldArgsCall +
-            helloLargeWorldCall +
-            nonTextFunctionCall +
+    val testScriptWithMultipleFunctions = "(util/str-ln $helloNoArgsCall)" +
+            "(util/str-ln $helloWorldArgsCall)" +
+            "(util/str-ln $helloLargeWorldCall)" +
+            "(util/str-ln $nonTextFunctionCall)" +
             helloVariousLargeNamesCall
     val multipleFuncsExpectedOutput = helloNoArgsExpectedOutput + System.lineSeparator() +
             helloWorldFuncExpectedOutput + System.lineSeparator() +
             helloLargeWorldExpectedOutput + System.lineSeparator() +
-            nonTextFunctionCallExpectedOutput + System.lineSeparator() +
-            helloVariousLargeNamesExpectedOutput
+            nonTextFunctionCallExpectedOutput +System.lineSeparator() +
+            System.lineSeparator() + helloVariousLargeNamesExpectedOutput
 
 
     // invalid

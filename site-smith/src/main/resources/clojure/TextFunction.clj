@@ -87,7 +87,7 @@
         argument-map-for-template-engine (zipmap (map keyword params) arguments)
         ^String rendered-text (render function-body-evaled argument-map-for-template-engine)
         options-applied-text (applyOptions rendered-text function name)]
-    (str options-applied-text (System/lineSeparator))))
+    options-applied-text))
 
 (defn- define-text-function
   "Defines a function based off of the text supplied that can be called by the user text scripts.

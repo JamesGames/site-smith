@@ -68,4 +68,4 @@
     (let [script-text-in-list (str "(" script-text ")")
           script-structure (script-text-to-clojure-structure script-text-in-list)
           script-structure-with-str-resolves (resolve-str-shortcuts script-structure)]
-      (reduce str (map (comp util/str-ln eval) script-structure-with-str-resolves)))))
+      (reduce str (map eval script-structure-with-str-resolves)))))

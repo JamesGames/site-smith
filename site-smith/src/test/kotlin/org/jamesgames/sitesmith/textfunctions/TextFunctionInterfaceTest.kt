@@ -68,6 +68,6 @@ class TextFunctionInterfaceTest {
         // If we can call it via first param here that specifies the name space, then the function
         // was definitely given the correct namespace
         val functionResults = RT.`var`("func", "outputNamespace").invoke(null)
-        assertEquals("called-correctly${System.lineSeparator()}", functionResults)
+        assertEquals("called-correctly", functionResults)
     }
 }
