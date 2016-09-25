@@ -1,5 +1,6 @@
 package org.jamesgames.sitesmith.builder
 
+import clojure.lang.ExceptionInfo
 import org.jamesgames.sitesmith.builder.parsers.TextFunctionParser
 import org.jamesgames.sitesmith.builder.parsers.TextScriptParser
 import org.jamesgames.sitesmith.resources.Page
@@ -49,8 +50,11 @@ class SiteComponentDatabase(private val textFunctionDirectory: File,
                         getResourceNameToPathFunction(page),
                         textScriptMap.getTextScript(scriptName).scriptText,
                         resourceMap.getAllResourceNames()))
-            } catch (e: Exception) {
-                throw ScriptExecutionException(page.getUniqueName(), scriptName, e.message + "")
+            }catch (e: ExceptionInfo) {
+                throw ScriptExecutionException(page.getUniqueName(), scriptName, e.toString(), e)
+            }
+            catch (e: Exception) {
+                throw ScriptExecutionException(page.getUniqueName(), scriptName, e.message + "", e)
             }
 
     fun getResourceNameToPathFunction(page: Page) = { s: String -> resourceMap.getRelativeResourcePath(s, page) }

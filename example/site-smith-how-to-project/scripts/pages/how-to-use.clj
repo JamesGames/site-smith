@@ -1,2 +1,1 @@
-(
-  (func/how-to-page-begin))
+(func/how-to-page-begin)

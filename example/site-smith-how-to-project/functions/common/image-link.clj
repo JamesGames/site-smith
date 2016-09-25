@@ -1,2 +1,2 @@
-([linkName imageName altText]
-(str "<a href=\"{{linkName}}\"> <img src=\"{{imageName}}\" alt=\"{{altText}}\"/> </a>"))
+[linkName imageName altText]
+(str "<a href=\"{{linkName}}\"> <img src=\"{{imageName}}\" alt=\"{{altText}}\"/> </a>")

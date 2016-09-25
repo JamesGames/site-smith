@@ -1,2 +1,1 @@
-((func/home-page-begin)
-  )
+(func/home-page-begin)

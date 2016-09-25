@@ -14,7 +14,7 @@ internal class TextFunctionParser(private val textFunctionSourceFile: File) {
     companion object {
         private val formatAndExample =
                 "Format: [vector-of-parameter-names][clojure-string-expression][optional-vector-of-options]" +
-                        System.lineSeparator() + "Example: [x y](str x y)[\"some-option\" some-resolvable-option]"
+                        System.lineSeparator() + "Example: [x y](str x y)[markdown]"
     }
 
     fun getTextFunction(): TextFunction {

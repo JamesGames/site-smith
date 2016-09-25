@@ -1,7 +1,5 @@
-([links] (let [link-func
-               #(str "<a class=\"footerlink\" href=\""
-                     (:pageName %) "\">"
-                     (:pageTitle %) "</a>")]
-              (str "<div id=\"footer\">"
-                   (clojure.string/join " | " (map link-func links))
-                   "</div>")))
+[links]
+(let [link-func #(func/link "footerlink" (:pageName %) (:pageTitle %))]
+     (str "<div id=\"footer\">"
+          (clojure.string/join " | " (map link-func links))
+          "</div>"))

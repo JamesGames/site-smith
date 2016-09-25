@@ -4,6 +4,8 @@ package org.jamesgames.sitesmith.textfunctions
  * @author James Murphy
  */
 
+import clojure.lang.ExceptionInfo
+import org.jamesgames.sitesmith.builder.ScriptExecutionException
 import org.junit.Test
 import java.util.*
 import kotlin.test.assertEquals
@@ -13,12 +15,13 @@ import kotlin.test.assertEquals
  */
 class TextScriptInterfaceTest {
 
-    val largeHelloFunction = "[x](str \"# Hello {{x}}\")[(str \"markdown\")]"
+    val badOptionFunction = "[x](str \"bad\")[notrealoption]"
+    val largeHelloFunction = "[x](str \"# Hello {{x}}\")[markdown]"
     val multipleLargeHelloNamesFunction = "[names](str " +
             "\"{{#names}}" +
             "# Hello {{.}}" + System.lineSeparator() + System.lineSeparator() +
             "{{/names}}\"" +
-            ")[\"markdown\"]"
+            ")[markdown]"
     val helloFunctionWhereArgIsString = "[x](str \"Hello {{x}}\")"
     val helloNoArgsFunction = "[](str \"Hello, look no arguments\")"
     val functionWithFunctionCallForArg = "[aFunction](str " +
@@ -70,6 +73,10 @@ class TextScriptInterfaceTest {
     val testScriptForFuncPassesClojureValue = "$textFunctionPassesClojureValueCall"
     val testScriptPassesClojureValueExpectedOutput = "42test42${System.lineSeparator()}"
 
+    val badOptionFunctionName = "function-with-bad-option"
+    val badOptionFunctionCall = "(func/$badOptionFunctionName)"
+    val testScriptwithBadOptionFunctionCall = "$badOptionFunctionCall"
+
     val testScriptWithMultipleFunctions = helloNoArgsCall +
             helloWorldArgsCall +
             helloLargeWorldCall +
@@ -86,6 +93,7 @@ class TextScriptInterfaceTest {
     val scriptWhereFunctionNameIsAString = "(\"func1\" \"arg1\")"
     val scriptWithVectorNotLists = "[func1 \"arg1\"]"
 
+
     // page name
     val pageNameNotRelevantForTest = "N/A"
 
@@ -97,6 +105,7 @@ class TextScriptInterfaceTest {
         TextFunctionInterface.defineFunction(helloVariousLargeNamesFuncName, multipleLargeHelloNamesFunction)
         TextFunctionInterface.defineFunction(textFunctionPassingFuncName, functionWithFunctionCallForArg)
         TextFunctionInterface.defineFunction(textFunctionPassesClojureValueName, textFunctionPassesClojureValue)
+        TextFunctionInterface.defineFunction(badOptionFunctionName, badOptionFunction)
     }
 
     fun makeAllNewLinesEqual(input: String) =
@@ -115,9 +124,18 @@ class TextScriptInterfaceTest {
         assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptWithFuncCallPassingFunc))
         assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptWithMultipleFunctions))
         assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptForFuncPassesClojureValue))
+        assertEquals(true, TextScriptInterface.isScriptInValidFormat(testScriptwithBadOptionFunctionCall))
 
         assertEquals(false, TextScriptInterface.isScriptInValidFormat(scriptWhereFunctionNameIsAString))
         assertEquals(false, TextScriptInterface.isScriptInValidFormat(scriptWithVectorNotLists))
+    }
+
+    @Test(expected = ExceptionInfo::class)
+    fun testInvokeInvalidTextFunctionWithBadOption() {
+        val resourceNameToPathConverter = { s: String -> s }
+        val namesList = HashSet<String>()
+        TextScriptInterface.executeScript(pageNameNotRelevantForTest,
+                resourceNameToPathConverter, testScriptwithBadOptionFunctionCall, namesList)
     }
 
     @Test
@@ -156,4 +174,6 @@ class TextScriptInterfaceTest {
                 makeAllNewLinesEqual(TextScriptInterface.executeScript(pageNameNotRelevantForTest,
                         resourceNameToPathConverter, testScriptForFuncPassesClojureValue, namesList)))
     }
+
+
 }

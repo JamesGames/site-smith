@@ -17,11 +17,11 @@
   [script-text]
   (let [script-text-in-list (str "(" script-text ")")
         script (script-text-to-clojure-structure script-text-in-list)]
-    (let [is-list (list? script)
-          is-series-of-func-calls (every? list? script)
-          funcs-are-not-empty-lists (every? #(< 0 (count %)) script)
-          func-names-are-symbols (or (every? symbol? (map script-function-name script)))]
-      (and is-list is-series-of-func-calls funcs-are-not-empty-lists func-names-are-symbols))))
+    (let [is-list? (list? script)
+          is-series-of-func-calls? (every? list? script)
+          funcs-are-not-empty-lists? (every? #(< 0 (count %)) script)
+          func-names-are-symbols? (or (every? symbol? (map script-function-name script)))]
+      (and is-list? is-series-of-func-calls? funcs-are-not-empty-lists? func-names-are-symbols?))))
 
 (def startOfResourceReference "resource:")
 (def startOfResourceListReference "resource*:")
@@ -69,7 +69,3 @@
           script-structure (script-text-to-clojure-structure script-text-in-list)
           script-structure-with-str-resolves (resolve-str-shortcuts script-structure)]
       (reduce str (map (comp util/str-ln eval) script-structure-with-str-resolves)))))
-
-
-
-

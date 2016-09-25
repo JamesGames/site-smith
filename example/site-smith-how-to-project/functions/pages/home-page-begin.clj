@@ -1,4 +1,4 @@
-([] (str "
+[] (str "
 Site Smith
 ==========
 
@@ -80,4 +80,4 @@ Credits
 -------
 - James Murphy - JamesGames.Org(at)gmail(dot)com
 ")
-  ["markdown"])
+[markdown]

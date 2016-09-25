@@ -3,4 +3,4 @@
 {{#names}}
 #Hello {{.}}
 {{/names}}")
-["markdown"]
+[markdown]

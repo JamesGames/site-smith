@@ -15,20 +15,20 @@ class TextFunctionInterfaceTest {
     val completelyEmptyFunctionWithEmptyOptions = "[]()[]"
     val emptyParamsButWithBody = "[](str \"test\")"
     val emptyParamsButWithBodyAndEmptyOptions = "[](str \"test\")[]"
-    val emptyParamsButWithBodyAndMarkdownOption = "[](str \"test\")[\"markdown\"]"
-    val emptyParamsButWithBodyAndMarkdownOptionAfterExpression = "[](str \"test\")[(str \"markdown\")]"
+    val emptyParamsButWithBodyAndMarkdownOption = "[](str \"test\")[markdown]"
+    val emptyParamsButWithBodyAndMarkdownOptionAfterExpression = "[](str \"test\")[markdown]"
     val paramsWithEmptyBody = "[x]()"
     val paramsWithEmptyBodyAndEmptyOptions = "[x]()[]"
-    val fullValidExample = "[x](str \"Hello {{x}}\")[\"markdown\"]"
+    val fullValidExample = "[x](str \"Hello {{x}}\")[markdown]"
     val multipleLargeHelloNamesFunction = "[names](str " +
             "\"{{#names}}" +
             "# Hello {{.}}" +
             "{{/names}}\"" +
-            ")[\"markdown\"]"
+            ")[markdown]"
     val emptyParamsButWithBodyAndSymbolAsOption = "[](str \"test\")[someOptionToBeResolved]"
     // Invalid
-    val invalidFormatParamsNotVector = "(x)(str \"Hello {{x}}\")[\"markdown\"]"
-    val invalidFormatOptionsNotVector = "[x](str \"Hello {{x}}\")(\"markdown\")"
+    val invalidFormatParamsNotVector = "(x)(str \"Hello {{x}}\")[markdown]"
+    val invalidFormatOptionsNotVector = "[x](str \"Hello {{x}}\")(markdown)"
     val paramsCantBeCollections = "[(x)](str \"test\")"
     val paramsCantBeStrings = "[\"x\"](str \"test\")"
 
@@ -51,7 +51,6 @@ class TextFunctionInterfaceTest {
         assertEquals(false, TextFunctionInterface.isFunctionTextInValidFormat(invalidFormatOptionsNotVector))
         assertEquals(false, TextFunctionInterface.isFunctionTextInValidFormat(paramsCantBeCollections))
     }
-
 
     @Test
     fun testAppendFunctionTextToMap() {

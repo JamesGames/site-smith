@@ -1,4 +1,4 @@
-([] (str "
+[] (str "
 How to Use
 ==========
 
@@ -92,4 +92,5 @@ Site Smith uses [Maven](https://maven.apache.org/) to build. Run maven in the ro
 
 
 
-  ") ["markdown"])
+  ")
+[markdown]
