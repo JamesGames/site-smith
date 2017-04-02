@@ -1,0 +1,55 @@
+{
+  "specifyResourcesByDirectory": true,
+  "root": {
+    "name": "root",
+    "pages": [
+      {
+        "uniqueName": "homePage",
+        "fileName": "index.html",
+        "pageTitle": "Site Home Page",
+        "textScriptsForPage": [
+          "script"
+        ]
+      },
+      {
+        "uniqueName": "page2",
+        "fileName": "page2.html",
+        "pageTitle": "Page2",
+        "textScriptsForPage": [
+          "script"
+        ]
+      },
+      {
+        "uniqueName": "page3",
+        "fileName": "page3.html",
+        "pageTitle": "Page3",
+        "textScriptsForPage": [
+          "script"
+        ]
+      }
+    ],
+    "directories": [
+      {
+        "name": "subDir",
+        "pages": [
+          {
+            "uniqueName": "subDirHomePage",
+            "fileName": "index.html",
+            "pageTitle": "Sub Dir Home Page",
+            "textScriptsForPage": [
+              "script"
+            ]
+          },
+          {
+            "uniqueName": "page5",
+            "fileName": "page5.html",
+            "pageTitle": "Page5",
+            "textScriptsForPage": [
+              "script"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

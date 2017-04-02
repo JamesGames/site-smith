@@ -32,5 +32,5 @@
   (.apply *name-to-path-func* resource-name))
 
 (defn str-ln
-  [text]
-  (str text (System/lineSeparator)))
+  [& text]
+   (str (apply str text) (System/lineSeparator)))

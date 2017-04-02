@@ -23,9 +23,14 @@ internal class ResourceMap {
         val relativePathToResource = relativeTo.getPath().toFile().parentFile.toPath().relativize(resourcePath).normalize()
         // https://github.com/fhd/clostache/issues/43 replacing slash type as work around
         relativePathToResource.toString().replace('\\', '/').let {
-            // and always force trailing slash. Since using relative paths, ../ and .. always resolves to directoryName/
-            // and never just directoryName. I suppose I could generate an ht access with a rewrite rule to remove
-            // trailing slashes (if that's even possible?)
+            // Empty when relative path to the same directory
+            if (it.isEmpty())
+                // Force to html rel path to same directory format
+                return "./"
+            // Always force trailing slash. Since using relative paths, ../ and .. always resolves to directoryName/
+            // and never just directoryName, so keep using a trailing slash in cases where one isn't made by the
+            // relative path. I suppose I could generate an ht access with a rewrite rule to remove
+            // trailing slashes for any users that don't want trailing slashes (if that's even possible?)
             return if (isIndexOrDefaultFile && !it.endsWith("/")) it + '/' else it
         }
     }
