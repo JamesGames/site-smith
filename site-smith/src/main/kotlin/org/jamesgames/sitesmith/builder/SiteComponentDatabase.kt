@@ -9,7 +9,6 @@ import org.jamesgames.sitesmith.textfunctions.TextScriptInterface
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.*
 
 /**
  * @author James Murphy
@@ -19,8 +18,8 @@ class SiteComponentDatabase(private val textFunctionDirectory: File,
                             val globalCssFileNames: List<String>) {
 
     companion object {
-        const private val textFunctionSourceExtension = ".clj"
-        const private val textScriptSourceExtension = ".clj"
+        const val textFunctionSourceExtension = ".clj"
+        const val textScriptSourceExtension = ".clj"
     }
 
     private val textFunctionMap: TextFunctionMap = TextFunctionMap()
@@ -50,10 +49,9 @@ class SiteComponentDatabase(private val textFunctionDirectory: File,
                         getResourceNameToPathFunction(page),
                         textScriptMap.getTextScript(scriptName).scriptText,
                         resourceMap.getAllResourceNames()))
-            }catch (e: ExceptionInfo) {
+            } catch (e: ExceptionInfo) {
                 throw ScriptExecutionException(page.getUniqueName(), scriptName, e.toString(), e)
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 throw ScriptExecutionException(page.getUniqueName(), scriptName, e.message + "", e)
             }
 

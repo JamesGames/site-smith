@@ -70,16 +70,9 @@ class ProjectTest {
         assertTrue(files[0].isFile)
         assertTrue(files[1].isFile)
         assertTrue(files[2].isFile)
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("index.html", "homePageResourceFileA.txt", "homePageResourceFileB.txt"),
                 files))
-    }
-
-    private fun fileNamesWithinDirMatch(expectedFileNames: List<String>, filesInDir: Array<File>): Boolean {
-        return filesInDir.size == expectedFileNames.size &&
-                filesInDir
-                        .map { expectedFileNames.contains(it.name) }
-                        .reduce { a: Boolean, b: Boolean -> a && b }
     }
 
     @Test
@@ -91,15 +84,15 @@ class ProjectTest {
         assertTrue(outputDir.exists())
         assertTrue(outputDir.isDirectory)
         val files = outputDir.listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("index.html", "homeResource2.txt", "homeResource1.txt", "css", "subDirectory"),
                 files))
         val cssDirFiles = files.filter { it.isDirectory && it.name.equals("css") }.first().listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("customGlobal.css", "additionalCssFile.css"),
                 cssDirFiles))
         val subDirFiles = files.filter { it.isDirectory && it.name.equals("subDirectory") }.first().listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("a_page_in_a_sub_directory.html", "index.html", "resource2.txt"),
                 subDirFiles))
     }
@@ -113,15 +106,15 @@ class ProjectTest {
         assertTrue(outputDir.exists())
         assertTrue(outputDir.isDirectory)
         val files = outputDir.listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("index.html", "resource1.txt", "directoryA", "directoryB"),
                 files))
         val dirA = files.filter { it.isDirectory && it.name.equals("directoryA") }.first().listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("resource3.txt", "resource4.txt", "index.html"),
                 dirA))
         val dirB = files.filter { it.isDirectory && it.name.equals("directoryB") }.first().listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("resource2.txt"),
                 dirB))
     }
@@ -136,15 +129,16 @@ class ProjectTest {
         assertTrue(outputDir.isDirectory)
 
         var files = outputDir.listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("index.html", "subDir"),
                 files))
         val testPage1File = files.filter { it.name.equals("index.html") }.first()
         val testPage1pageContent = String(Files.readAllBytes(testPage1File.toPath()))
-        assertTrue(makeAllNewLinesEqual(testPage1pageContent).contains((makeAllNewLinesEqual(exampleScriptExpectedOutput))))
+        assertTrue(makeAllNewLinesEqual(testPage1pageContent).contains(
+                (makeAllNewLinesEqual(exampleScriptExpectedOutput))))
 
         val subDir = files.filter { it.isDirectory && it.name.equals("subDir") }.first().listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("index.html"),
                 subDir))
         val testPage2File = subDir.filter { it.name.equals("index.html") }.first()
@@ -162,7 +156,7 @@ class ProjectTest {
         assertTrue(outputDir.isDirectory)
 
         var files = outputDir.listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("index.html", "subDir"),
                 files))
         val testPage1File = files.filter { it.name.equals("index.html") }.first()
@@ -171,7 +165,7 @@ class ProjectTest {
         assertTrue(!testPage1pageContent.contains("testPage2"))
 
         val subDir = files.filter { it.isDirectory && it.name.equals("subDir") }.first().listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("index.html"),
                 subDir))
         val testPage2File = subDir.filter { it.name.equals("index.html") }.first()
@@ -190,11 +184,11 @@ class ProjectTest {
         assertTrue(outputDir.isDirectory)
 
         var files = outputDir.listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("index.html", "homePageResourceFileA.txt", "homePageResourceFileB.txt", "dirForFilteredNames"),
                 files))
         val subDir = files.filter { it.isDirectory && it.name.equals("dirForFilteredNames") }.first().listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("abc_1_def.txt", "abc_2.txt", "3_def.txt"),
                 subDir))
 
@@ -221,7 +215,7 @@ class ProjectTest {
         assertTrue(outputDir.isDirectory)
 
         var files = outputDir.listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("index.html", "page2.html", "page3.html", "subDir"),
                 files))
 
@@ -253,7 +247,7 @@ class ProjectTest {
 <a href="subDir/">subDirHomePage</a>""")))
 
         val subDirFiles = files.filter { it.isDirectory && it.name.equals("subDir") }.first().listFiles()
-        assertTrue(fileNamesWithinDirMatch(
+        assertTrue(Companion.fileNamesWithinDirMatch(
                 listOf("index.html", "page5.html"),
                 subDirFiles))
 
@@ -276,4 +270,12 @@ class ProjectTest {
 <a href="./">subDirHomePage</a>""")))
     }
 
+    companion object {
+        fun fileNamesWithinDirMatch(expectedFileNames: List<String>, filesInDir: Array<File>): Boolean {
+            return filesInDir.size == expectedFileNames.size &&
+                    filesInDir
+                            .map { expectedFileNames.contains(it.name) }
+                            .reduce { a: Boolean, b: Boolean -> a && b }
+        }
+    }
 }
