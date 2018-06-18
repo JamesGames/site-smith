@@ -24,6 +24,9 @@ class SiteBuilderTest {
         val projectDirToCopyFromFile = File(projectDirToCopyFrom)
         newTempProjectLocationFile = File(projectDirToCopyFromFile.parent + newTempProjectLocation)
 
+        if (!newTempProjectLocationFile!!.exists()) {
+            newTempProjectLocationFile!!.mkdir()
+        }
         FileUtils.cleanDirectory(newTempProjectLocationFile)
         FileUtils.copyDirectory(projectDirToCopyFromFile, newTempProjectLocationFile)
 
