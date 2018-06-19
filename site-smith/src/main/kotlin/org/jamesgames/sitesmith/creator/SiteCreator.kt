@@ -40,6 +40,12 @@ class SiteCreator(private val siteLayoutFile: File,
         }
     }
 
+    private fun verifyNoFileExists(matchingFiles: List<File>, fileNameWithExtension: String) {
+        when {
+            matchingFiles.isNotEmpty() -> throw ModificationException("$fileNameWithExtension already exists")
+        }
+    }
+
     private fun overwriteFile(newText: String, file: File) = FileWriter(file).use { it.write(newText) }
 
     private fun matchingFiles(directoryToRecurseSearch: File,
@@ -82,5 +88,29 @@ class SiteCreator(private val siteLayoutFile: File,
         val matchingFiles = matchingFiles(rootContainingDirectory, file.name)
         verifySingleFileExists(matchingFiles, file.name)
         file.delete()
+    }
+
+    fun RenameTextFunction(functionName: String, newName: String) {
+        renameFile(functionName + SiteComponentDatabase.textFunctionSourceExtension,
+                newName + SiteComponentDatabase.textFunctionSourceExtension,
+                textFunctionDirectory)
+    }
+
+    fun RenameTextSript(scriptName: String, newName: String) {
+        renameFile(scriptName + SiteComponentDatabase.textScriptSourceExtension,
+                newName + SiteComponentDatabase.textScriptSourceExtension,
+                textScriptDirectory)
+    }
+
+    private fun renameFile(oldFileName: String, newFileName: String, rootContainingDirectory: File) {
+        val oldFile = Paths.get(rootContainingDirectory.absolutePath, oldFileName).toFile()
+        val matchingOldFiles = matchingFiles(rootContainingDirectory, oldFile.name)
+        verifySingleFileExists(matchingOldFiles, oldFile.name)
+
+        val newFile = Paths.get(rootContainingDirectory.absolutePath, newFileName).toFile()
+        val matchingNewFiles = matchingFiles(rootContainingDirectory, newFile.name)
+        verifyNoFileExists(matchingNewFiles, newFile.name)
+
+        oldFile.renameTo(newFile)
     }
 }
