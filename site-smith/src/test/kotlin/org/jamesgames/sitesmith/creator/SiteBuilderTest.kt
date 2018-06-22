@@ -6,6 +6,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.io.File
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
@@ -134,9 +136,9 @@ class SiteBuilderTest {
 
         siteCreator!!.deleteTextFunction("link")
 
-        var functionDoesNotExist = null == onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
+        var existingFunctionPostDelete = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
                 .firstOrNull { it.name == "link.clj" }
-        assertTrue(functionDoesNotExist)
+        assertNull(existingFunctionPostDelete)
     }
 
     @Test
@@ -147,9 +149,71 @@ class SiteBuilderTest {
 
         siteCreator!!.deleteTextScript("exampleScript")
 
-        var functionDoesNotExist = null == onlyRootLayoutProject!!.textScriptDirectory.listFiles()
+        var existingScriptPostDelete = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
                 .firstOrNull { it.name == "exampleScript.clj" }
-        assertTrue(functionDoesNotExist)
+        assertNull(existingScriptPostDelete)
+    }
+
+    @Test
+    fun renameTextFunction() {
+        var existingFunction = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
+                .first { it.name == "link.clj" }
+        assertTrue(existingFunction.exists())
+        var originalFunctionText = fileAsString(existingFunction)
+
+        siteCreator!!.RenameTextFunction("link", "linkRenamed")
+
+        var oldFunction = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
+                .firstOrNull { it.name == "link.clj" }
+        assertNull(oldFunction)
+
+        var newFunction = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
+                .first { it.name == "linkRenamed.clj" }
+        assertTrue(newFunction.exists())
+
+        var newFunctionText = fileAsString(newFunction)
+        assertEquals(originalFunctionText, newFunctionText)
+    }
+
+    @Test
+    fun renameTextScript() {
+        var existingScript = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
+                .first { it.name == "exampleScript.clj" }
+        assertTrue(existingScript.exists())
+        var originalScriptText = fileAsString(existingScript)
+
+        siteCreator!!.RenameTextSript("exampleScript", "exampleScriptRenamed")
+
+        var oldScript = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
+                .firstOrNull { it.name == "exampleScript.clj" }
+        assertNull(oldScript)
+
+        var newScript = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
+                .first { it.name == "exampleScriptRenamed.clj" }
+        assertTrue(newScript.exists())
+
+        var newScriptText = fileAsString(newScript)
+        assertEquals(originalScriptText, newScriptText)
+    }
+
+    @Test(expected = ModificationException::class)
+    fun renameTextFunction_ExceptionOnRenamingToExistingFile() {
+        var existingFunction = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
+                .first { it.name == "link.clj" }
+        assertTrue(existingFunction.exists())
+
+        siteCreator!!.createTextFunction("", "linkRenamed")
+        siteCreator!!.RenameTextFunction("link", "linkRenamed")
+    }
+
+    @Test(expected = ModificationException::class)
+    fun renameTextScript_ExceptionOnRenamingToExistingFile() {
+        var existingScript = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
+                .first { it.name == "exampleScript.clj" }
+        assertTrue(existingScript.exists())
+
+        siteCreator!!.createTextScript("", "exampleScriptRenamed")
+        siteCreator!!.RenameTextSript("exampleScript", "exampleScriptRenamed")
     }
 
     companion object {
