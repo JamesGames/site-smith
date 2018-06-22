@@ -40,7 +40,7 @@ class SiteBuilderTest {
         assertTrue(onlyRootLayoutProject!!.buildSite())
         assertTrue(outputDir.exists())
         assertTrue(justAPageLayout!!.exists())
-        assertTrue(Companion.fileAsString(justAPageLayout).isNotEmpty())
+        assertTrue(fileAsString(justAPageLayout).isNotEmpty())
 
         siteCreator = SiteCreator(onlyRootLayoutProject!!.siteLayout, onlyRootLayoutProject!!.textFunctionDirectory,
                 onlyRootLayoutProject!!.textScriptDirectory)
@@ -51,55 +51,64 @@ class SiteBuilderTest {
         FileUtils.cleanDirectory(newTempProjectLocationFile)
     }
 
+    private fun getFunctionFile(fileName: String) = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
+            .first { it.name == fileName }
+
+    private fun getScriptFile(fileName: String) = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
+            .first { it.name == fileName }
+
+    private fun getFunctionFileOrNull(fileName: String) = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
+            .firstOrNull { it.name == fileName }
+
+    private fun getScriptFileOrNull(fileName: String) = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
+            .firstOrNull { it.name == fileName }
+
     @Test
     fun modifyLayoutFile() {
         val newTextToUse = "new text for layout"
 
-        var existingLayoutFileText = Companion.fileAsString(justAPageLayout)
+        var existingLayoutFileText = fileAsString(justAPageLayout)
         assertTrue(!existingLayoutFileText.equals(newTextToUse))
 
         siteCreator!!.modifyLayoutFile(newTextToUse)
 
-        var newLayoutFileText = Companion.fileAsString(justAPageLayout)
+        var newLayoutFileText = fileAsString(justAPageLayout)
         assertTrue(newLayoutFileText.equals(newLayoutFileText))
     }
 
     @Test
     fun modifyTextFunction() {
-        var existingTextFunction = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
-                .first { it.name == "link.clj" }
+        var existingTextFunction = getFunctionFile("link.clj")
         val newTextToUse = "new text for function"
 
-        var existingTextFunctionText = Companion.fileAsString(existingTextFunction)
+        var existingTextFunctionText = fileAsString(existingTextFunction)
         assertTrue(!existingTextFunctionText.equals(newTextToUse))
 
         siteCreator!!.modifyTextFunction(newTextToUse, "link")
 
-        var newTextFunctionText = Companion.fileAsString(existingTextFunction)
+        var newTextFunctionText = fileAsString(existingTextFunction)
         assertTrue(newTextFunctionText.equals(newTextToUse))
     }
 
     @Test
     fun modifyTextScript() {
-        var existingTextScript = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
-                .first { it.name == "exampleScript.clj" }
+        var existingTextScript = getScriptFile("exampleScript.clj")
         val newTextToUse = "new text for script"
 
-        var existingTextScriptText = Companion.fileAsString(existingTextScript)
+        var existingTextScriptText = fileAsString(existingTextScript)
         assertTrue(!existingTextScriptText.equals(newTextToUse))
 
         siteCreator!!.modifyTextScript(newTextToUse, "exampleScript")
 
-        var newTextScriptText = Companion.fileAsString(existingTextScript)
+        var newTextScriptText = fileAsString(existingTextScript)
         assertTrue(newTextScriptText.equals(newTextToUse))
     }
 
     @Test
     fun createNewTextFunction() {
         var functionNameToCreate = "someNewFunc"
-        var functionDoesNotExistYet = null == onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
-                .firstOrNull { it.name == functionNameToCreate }
-        assertTrue(functionDoesNotExistYet)
+        var wouldBeFunctionFile = getFunctionFileOrNull(functionNameToCreate)
+        assertNull(wouldBeFunctionFile)
 
         var functionTextToUse = "some function text"
         siteCreator!!.createTextFunction(functionTextToUse, functionNameToCreate)
@@ -107,68 +116,59 @@ class SiteBuilderTest {
         var newlyCreatedFunction = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
                 .first { it.name == functionNameToCreate + ".clj" }
         assertTrue(newlyCreatedFunction.exists())
-        var functionTextActuallyUsed = Companion.fileAsString(newlyCreatedFunction)
+        var functionTextActuallyUsed = fileAsString(newlyCreatedFunction)
         assertTrue(functionTextToUse.equals(functionTextActuallyUsed))
     }
 
     @Test
     fun createNewTextScript() {
         var scriptNameToCreate = "someNewScript"
-        var scriptDoesNotExistYet = null == onlyRootLayoutProject!!.textScriptDirectory.listFiles()
-                .firstOrNull { it.name == scriptNameToCreate }
-        assertTrue(scriptDoesNotExistYet)
+        var wouldBeScriptFile = getScriptFileOrNull(scriptNameToCreate)
+        assertNull(wouldBeScriptFile)
 
         var scriptTextToUse = "some script text"
         siteCreator!!.createTextScript(scriptTextToUse, scriptNameToCreate)
 
-        var newlyCreatedScript = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
-                .first { it.name == scriptNameToCreate + ".clj" }
+        var newlyCreatedScript = getScriptFile(scriptNameToCreate + ".clj")
         assertTrue(newlyCreatedScript.exists())
-        var scriptTextActuallyUsed = Companion.fileAsString(newlyCreatedScript)
+        var scriptTextActuallyUsed = fileAsString(newlyCreatedScript)
         assertTrue(scriptTextToUse.equals(scriptTextActuallyUsed))
     }
 
     @Test
     fun deleteTextFunction() {
-        var existingFunction = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
-                .first { it.name == "link.clj" }
+        var existingFunction = getFunctionFile("link.clj")
         assertTrue(existingFunction.exists())
 
         siteCreator!!.deleteTextFunction("link")
 
-        var existingFunctionPostDelete = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
-                .firstOrNull { it.name == "link.clj" }
+        var existingFunctionPostDelete = getFunctionFileOrNull("link.clj")
         assertNull(existingFunctionPostDelete)
     }
 
     @Test
     fun deleteTextScript() {
-        var existingScript = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
-                .first { it.name == "exampleScript.clj" }
+        var existingScript = getScriptFile("exampleScript.clj")
         assertTrue(existingScript.exists())
 
         siteCreator!!.deleteTextScript("exampleScript")
 
-        var existingScriptPostDelete = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
-                .firstOrNull { it.name == "exampleScript.clj" }
+        var existingScriptPostDelete = getScriptFileOrNull("exampleScript.clj")
         assertNull(existingScriptPostDelete)
     }
 
     @Test
     fun renameTextFunction() {
-        var existingFunction = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
-                .first { it.name == "link.clj" }
+        var existingFunction = getFunctionFile("link.clj")
         assertTrue(existingFunction.exists())
         var originalFunctionText = fileAsString(existingFunction)
 
         siteCreator!!.RenameTextFunction("link", "linkRenamed")
 
-        var oldFunction = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
-                .firstOrNull { it.name == "link.clj" }
+        var oldFunction = getFunctionFileOrNull("link.clj")
         assertNull(oldFunction)
 
-        var newFunction = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
-                .first { it.name == "linkRenamed.clj" }
+        var newFunction = getFunctionFile("linkRenamed.clj")
         assertTrue(newFunction.exists())
 
         var newFunctionText = fileAsString(newFunction)
@@ -177,19 +177,16 @@ class SiteBuilderTest {
 
     @Test
     fun renameTextScript() {
-        var existingScript = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
-                .first { it.name == "exampleScript.clj" }
+        var existingScript = getScriptFile("exampleScript.clj")
         assertTrue(existingScript.exists())
         var originalScriptText = fileAsString(existingScript)
 
         siteCreator!!.RenameTextSript("exampleScript", "exampleScriptRenamed")
 
-        var oldScript = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
-                .firstOrNull { it.name == "exampleScript.clj" }
+        var oldScript = getScriptFileOrNull("exampleScript.clj")
         assertNull(oldScript)
 
-        var newScript = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
-                .first { it.name == "exampleScriptRenamed.clj" }
+        var newScript = getScriptFile("exampleScriptRenamed.clj")
         assertTrue(newScript.exists())
 
         var newScriptText = fileAsString(newScript)
@@ -198,8 +195,7 @@ class SiteBuilderTest {
 
     @Test(expected = ModificationException::class)
     fun renameTextFunction_ExceptionOnRenamingToExistingFile() {
-        var existingFunction = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
-                .first { it.name == "link.clj" }
+        var existingFunction = getFunctionFile("link.clj")
         assertTrue(existingFunction.exists())
 
         siteCreator!!.createTextFunction("", "linkRenamed")
@@ -208,8 +204,7 @@ class SiteBuilderTest {
 
     @Test(expected = ModificationException::class)
     fun renameTextScript_ExceptionOnRenamingToExistingFile() {
-        var existingScript = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
-                .first { it.name == "exampleScript.clj" }
+        var existingScript = getScriptFile("exampleScript.clj")
         assertTrue(existingScript.exists())
 
         siteCreator!!.createTextScript("", "exampleScriptRenamed")
