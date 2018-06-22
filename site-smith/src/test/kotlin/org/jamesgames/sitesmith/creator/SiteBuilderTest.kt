@@ -57,11 +57,11 @@ class SiteBuilderTest {
     private fun getScriptFile(fileName: String) = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
             .first { it.name == fileName }
 
-    private fun getFunctionFileOrNull(fileName: String) = onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
-            .firstOrNull { it.name == fileName }
+    private fun assertFunctionFileDoesNotExist(fileName: String) = assertNull(onlyRootLayoutProject!!.textFunctionDirectory.listFiles()
+            .firstOrNull { it.name == fileName })
 
-    private fun getScriptFileOrNull(fileName: String) = onlyRootLayoutProject!!.textScriptDirectory.listFiles()
-            .firstOrNull { it.name == fileName }
+    private fun assertScriptFileDoesNotExist(fileName: String) = assertNull(onlyRootLayoutProject!!.textScriptDirectory.listFiles()
+            .firstOrNull { it.name == fileName })
 
     @Test
     fun modifyLayoutFile() {
@@ -107,8 +107,7 @@ class SiteBuilderTest {
     @Test
     fun createNewTextFunction() {
         var functionNameToCreate = "someNewFunc"
-        var wouldBeFunctionFile = getFunctionFileOrNull(functionNameToCreate)
-        assertNull(wouldBeFunctionFile)
+        assertFunctionFileDoesNotExist(functionNameToCreate)
 
         var functionTextToUse = "some function text"
         siteCreator!!.createTextFunction(functionTextToUse, functionNameToCreate)
@@ -123,8 +122,7 @@ class SiteBuilderTest {
     @Test
     fun createNewTextScript() {
         var scriptNameToCreate = "someNewScript"
-        var wouldBeScriptFile = getScriptFileOrNull(scriptNameToCreate)
-        assertNull(wouldBeScriptFile)
+        assertScriptFileDoesNotExist(scriptNameToCreate)
 
         var scriptTextToUse = "some script text"
         siteCreator!!.createTextScript(scriptTextToUse, scriptNameToCreate)
@@ -142,8 +140,7 @@ class SiteBuilderTest {
 
         siteCreator!!.deleteTextFunction("link")
 
-        var existingFunctionPostDelete = getFunctionFileOrNull("link.clj")
-        assertNull(existingFunctionPostDelete)
+        assertFunctionFileDoesNotExist("link.clj")
     }
 
     @Test
@@ -153,8 +150,7 @@ class SiteBuilderTest {
 
         siteCreator!!.deleteTextScript("exampleScript")
 
-        var existingScriptPostDelete = getScriptFileOrNull("exampleScript.clj")
-        assertNull(existingScriptPostDelete)
+        assertScriptFileDoesNotExist("exampleScript.clj")
     }
 
     @Test
@@ -165,8 +161,7 @@ class SiteBuilderTest {
 
         siteCreator!!.RenameTextFunction("link", "linkRenamed")
 
-        var oldFunction = getFunctionFileOrNull("link.clj")
-        assertNull(oldFunction)
+        assertFunctionFileDoesNotExist("link.clj")
 
         var newFunction = getFunctionFile("linkRenamed.clj")
         assertTrue(newFunction.exists())
@@ -183,8 +178,7 @@ class SiteBuilderTest {
 
         siteCreator!!.RenameTextSript("exampleScript", "exampleScriptRenamed")
 
-        var oldScript = getScriptFileOrNull("exampleScript.clj")
-        assertNull(oldScript)
+        assertScriptFileDoesNotExist("exampleScript.clj")
 
         var newScript = getScriptFile("exampleScriptRenamed.clj")
         assertTrue(newScript.exists())
