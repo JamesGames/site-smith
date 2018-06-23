@@ -223,6 +223,13 @@ class SiteBuilderTest {
         assertEquals(expectedScriptText, actualScriptText)
     }
 
+    @Test
+    fun readLayout() {
+        var expectedLayoutText = fileAsString(justAPageLayout)
+        var actualLayoutText = siteCreator!!.readLayout()
+        assertEquals(expectedLayoutText, actualLayoutText)
+    }
+
     companion object {
         private fun fileAsString(file: File?): String = com.google.common.io.Files.toString(file, Charsets.UTF_8)
     }

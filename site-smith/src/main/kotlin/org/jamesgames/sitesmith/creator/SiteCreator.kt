@@ -122,6 +122,10 @@ class SiteCreator(private val siteLayoutFile: File,
         return readFile(scriptName + SiteComponentDatabase.textScriptSourceExtension, textScriptDirectory)
     }
 
+    fun readLayout(): String {
+        return com.google.common.io.Files.toString(siteLayoutFile, Charsets.UTF_8)
+    }
+
     private fun readFile(fileName: String, rootContainingDirectory: File): String {
         val file = Paths.get(rootContainingDirectory.absolutePath, fileName).toFile()
         val matchingFiles = matchingFiles(rootContainingDirectory, file.name)
