@@ -159,7 +159,7 @@ class SiteBuilderTest {
         assertTrue(existingFunction.exists())
         var originalFunctionText = fileAsString(existingFunction)
 
-        siteCreator!!.RenameTextFunction("link", "linkRenamed")
+        siteCreator!!.renameTextFunction("link", "linkRenamed")
 
         assertFunctionFileDoesNotExist("link.clj")
 
@@ -176,7 +176,7 @@ class SiteBuilderTest {
         assertTrue(existingScript.exists())
         var originalScriptText = fileAsString(existingScript)
 
-        siteCreator!!.RenameTextSript("exampleScript", "exampleScriptRenamed")
+        siteCreator!!.renameTextScript("exampleScript", "exampleScriptRenamed")
 
         assertScriptFileDoesNotExist("exampleScript.clj")
 
@@ -193,7 +193,7 @@ class SiteBuilderTest {
         assertTrue(existingFunction.exists())
 
         siteCreator!!.createTextFunction("", "linkRenamed")
-        siteCreator!!.RenameTextFunction("link", "linkRenamed")
+        siteCreator!!.renameTextFunction("link", "linkRenamed")
     }
 
     @Test(expected = ModificationException::class)
@@ -202,7 +202,25 @@ class SiteBuilderTest {
         assertTrue(existingScript.exists())
 
         siteCreator!!.createTextScript("", "exampleScriptRenamed")
-        siteCreator!!.RenameTextSript("exampleScript", "exampleScriptRenamed")
+        siteCreator!!.renameTextScript("exampleScript", "exampleScriptRenamed")
+    }
+
+    @Test
+    fun readTextFunction() {
+        var existingFunction = getFunctionFile("link.clj")
+        assertTrue(existingFunction.exists())
+        var expectedFunctionText = fileAsString(existingFunction)
+        var actualFunctionText = siteCreator!!.readTextFunction("link")
+        assertEquals(expectedFunctionText, actualFunctionText)
+    }
+
+    @Test
+    fun readTextScript() {
+        var existingScript = getScriptFile("exampleScript.clj")
+        assertTrue(existingScript.exists())
+        var expectedScriptText = fileAsString(existingScript)
+        var actualScriptText = siteCreator!!.readTextScript("exampleScript")
+        assertEquals(expectedScriptText, actualScriptText)
     }
 
     companion object {

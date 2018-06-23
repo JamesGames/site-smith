@@ -90,13 +90,13 @@ class SiteCreator(private val siteLayoutFile: File,
         file.delete()
     }
 
-    fun RenameTextFunction(functionName: String, newName: String) {
+    fun renameTextFunction(functionName: String, newName: String) {
         renameFile(functionName + SiteComponentDatabase.textFunctionSourceExtension,
                 newName + SiteComponentDatabase.textFunctionSourceExtension,
                 textFunctionDirectory)
     }
 
-    fun RenameTextSript(scriptName: String, newName: String) {
+    fun renameTextScript(scriptName: String, newName: String) {
         renameFile(scriptName + SiteComponentDatabase.textScriptSourceExtension,
                 newName + SiteComponentDatabase.textScriptSourceExtension,
                 textScriptDirectory)
@@ -112,5 +112,20 @@ class SiteCreator(private val siteLayoutFile: File,
         verifyNoFileExists(matchingNewFiles, newFile.name)
 
         oldFile.renameTo(newFile)
+    }
+
+    fun readTextFunction(functionName: String): String {
+        return readFile(functionName + SiteComponentDatabase.textFunctionSourceExtension, textFunctionDirectory)
+    }
+
+    fun readTextScript(scriptName: String): String {
+        return readFile(scriptName + SiteComponentDatabase.textScriptSourceExtension, textScriptDirectory)
+    }
+
+    private fun readFile(fileName: String, rootContainingDirectory: File): String {
+        val file = Paths.get(rootContainingDirectory.absolutePath, fileName).toFile()
+        val matchingFiles = matchingFiles(rootContainingDirectory, file.name)
+        verifySingleFileExists(matchingFiles, file.name)
+        return com.google.common.io.Files.toString(file, Charsets.UTF_8)
     }
 }
