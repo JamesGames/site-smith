@@ -14,15 +14,15 @@ class SiteCreator(private val siteLayoutFile: File,
                   private val textFunctionDirectory: File,
                   private val textScriptDirectory: File) {
 
-    fun modifyLayoutFile(newText: String) = overwriteFile(newText, siteLayoutFile)
+    fun updateLayoutFile(newText: String) = overwriteFile(newText, siteLayoutFile)
 
-    fun modifyTextFunction(newText: String, functionName: String) =
-            modifyFile(newText, functionName + SiteComponentDatabase.textFunctionSourceExtension, textFunctionDirectory)
+    fun updateTextFunction(newText: String, functionName: String) =
+            updateFile(newText, functionName + SiteComponentDatabase.textFunctionSourceExtension, textFunctionDirectory)
 
-    fun modifyTextScript(newText: String, scriptName: String) =
-            modifyFile(newText, scriptName + SiteComponentDatabase.textScriptSourceExtension, textScriptDirectory)
+    fun updateTextScript(newText: String, scriptName: String) =
+            updateFile(newText, scriptName + SiteComponentDatabase.textScriptSourceExtension, textScriptDirectory)
 
-    private fun modifyFile(newText: String, fileName: String, rootContainingDirectory: File) =
+    private fun updateFile(newText: String, fileName: String, rootContainingDirectory: File) =
             overwriteFile(newText, findMatchingFile(fileName, rootContainingDirectory))
 
     private fun findMatchingFile(fileName: String, directoryToRecurseSearch: File): File {
@@ -34,15 +34,15 @@ class SiteCreator(private val siteLayoutFile: File,
     private fun verifySingleFileExists(matchingFiles: List<File>,
                                        fileNameWithExtension: String) {
         when {
-            matchingFiles.isEmpty() -> throw ModificationException("$fileNameWithExtension was not found")
-            matchingFiles.size > 1 -> throw ModificationException(
+            matchingFiles.isEmpty() -> throw UpdateException("$fileNameWithExtension was not found")
+            matchingFiles.size > 1 -> throw UpdateException(
                     "$fileNameWithExtension was found in multiple directories")
         }
     }
 
     private fun verifyNoFileExists(matchingFiles: List<File>, fileNameWithExtension: String) {
         when {
-            matchingFiles.isNotEmpty() -> throw ModificationException("$fileNameWithExtension already exists")
+            matchingFiles.isNotEmpty() -> throw UpdateException("$fileNameWithExtension already exists")
         }
     }
 
@@ -69,7 +69,7 @@ class SiteCreator(private val siteLayoutFile: File,
         val file = Paths.get(rootContainingDirectory.absolutePath, fileName).toFile()
         val matchingFiles = matchingFiles(rootContainingDirectory, file.name)
         if (matchingFiles.isNotEmpty()) {
-            throw ModificationException("${file.name} already exists")
+            throw UpdateException("${file.name} already exists")
         }
         file.createNewFile()
         overwriteFile(text, file)

@@ -64,41 +64,41 @@ class SiteBuilderTest {
             .firstOrNull { it.name == fileName })
 
     @Test
-    fun modifyLayoutFile() {
+    fun updateLayoutFile() {
         val newTextToUse = "new text for layout"
 
         var existingLayoutFileText = fileAsString(justAPageLayout)
         assertTrue(!existingLayoutFileText.equals(newTextToUse))
 
-        siteCreator!!.modifyLayoutFile(newTextToUse)
+        siteCreator!!.updateLayoutFile(newTextToUse)
 
         var newLayoutFileText = fileAsString(justAPageLayout)
         assertTrue(newLayoutFileText.equals(newLayoutFileText))
     }
 
     @Test
-    fun modifyTextFunction() {
+    fun updateTextFunction() {
         var existingTextFunction = getFunctionFile("link.clj")
         val newTextToUse = "new text for function"
 
         var existingTextFunctionText = fileAsString(existingTextFunction)
         assertTrue(!existingTextFunctionText.equals(newTextToUse))
 
-        siteCreator!!.modifyTextFunction(newTextToUse, "link")
+        siteCreator!!.updateTextFunction(newTextToUse, "link")
 
         var newTextFunctionText = fileAsString(existingTextFunction)
         assertTrue(newTextFunctionText.equals(newTextToUse))
     }
 
     @Test
-    fun modifyTextScript() {
+    fun updateTextScript() {
         var existingTextScript = getScriptFile("exampleScript.clj")
         val newTextToUse = "new text for script"
 
         var existingTextScriptText = fileAsString(existingTextScript)
         assertTrue(!existingTextScriptText.equals(newTextToUse))
 
-        siteCreator!!.modifyTextScript(newTextToUse, "exampleScript")
+        siteCreator!!.updateTextScript(newTextToUse, "exampleScript")
 
         var newTextScriptText = fileAsString(existingTextScript)
         assertTrue(newTextScriptText.equals(newTextToUse))
@@ -187,7 +187,7 @@ class SiteBuilderTest {
         assertEquals(originalScriptText, newScriptText)
     }
 
-    @Test(expected = ModificationException::class)
+    @Test(expected = UpdateException::class)
     fun renameTextFunction_ExceptionOnRenamingToExistingFile() {
         var existingFunction = getFunctionFile("link.clj")
         assertTrue(existingFunction.exists())
@@ -196,7 +196,7 @@ class SiteBuilderTest {
         siteCreator!!.renameTextFunction("link", "linkRenamed")
     }
 
-    @Test(expected = ModificationException::class)
+    @Test(expected = UpdateException::class)
     fun renameTextScript_ExceptionOnRenamingToExistingFile() {
         var existingScript = getScriptFile("exampleScript.clj")
         assertTrue(existingScript.exists())
