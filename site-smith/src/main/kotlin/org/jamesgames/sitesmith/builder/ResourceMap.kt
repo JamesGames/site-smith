@@ -25,7 +25,7 @@ internal class ResourceMap {
         relativePathToResource.toString().replace('\\', '/').let {
             // Empty when relative path to the same directory
             if (it.isEmpty())
-                // Force to html rel path to same directory format
+            // Force to html rel path to same directory format
                 return "./"
             // Always force trailing slash. Since using relative paths, ../ and .. always resolves to directoryName/
             // and never just directoryName, so keep using a trailing slash in cases where one isn't made by the

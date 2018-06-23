@@ -5,5 +5,5 @@ package org.jamesgames.sitesmith.sitecomponents
  */
 class TextScriptParseException : RuntimeException {
     constructor(scriptName: String, errorMsg: String) :
-    super("Failed to parse Text Script: $scriptName. $errorMsg")
+            super("Failed to parse Text Script: $scriptName. $errorMsg")
 }

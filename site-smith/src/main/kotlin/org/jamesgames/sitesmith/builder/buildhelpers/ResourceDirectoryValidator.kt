@@ -1,6 +1,5 @@
 package org.jamesgames.sitesmith.builder.buildhelpers
 
-import org.jamesgames.sitesmith.resources.Resource
 import java.io.File
 import java.nio.file.Files
 import java.util.*

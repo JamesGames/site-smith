@@ -5,7 +5,6 @@ package org.jamesgames.sitesmith.textfunctions
  */
 
 import clojure.lang.ExceptionInfo
-import org.jamesgames.sitesmith.builder.ScriptExecutionException
 import org.junit.Test
 import java.util.*
 import kotlin.test.assertEquals
@@ -85,7 +84,7 @@ class TextScriptInterfaceTest {
     val multipleFuncsExpectedOutput = helloNoArgsExpectedOutput + System.lineSeparator() +
             helloWorldFuncExpectedOutput + System.lineSeparator() +
             helloLargeWorldExpectedOutput + System.lineSeparator() +
-            nonTextFunctionCallExpectedOutput +System.lineSeparator() +
+            nonTextFunctionCallExpectedOutput + System.lineSeparator() +
             System.lineSeparator() + helloVariousLargeNamesExpectedOutput
 
 

@@ -9,7 +9,6 @@ import org.jamesgames.sitesmith.builder.buildhelpers.SiteStubGenerator
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.*
 
 /**
  * @author James Murphy
@@ -67,7 +66,7 @@ class SiteBuilder(private val siteLayoutFile: File,
     private fun recordFailResults(failedBuildHelper: BuildHelper) {
         results = arrayOf(failedBuildHelper.getErrorMessages(),
                 failedBuildHelper.getWarningMessages(),
-                failureString).joinToString (System.lineSeparator())
+                failureString).joinToString(System.lineSeparator())
     }
 
     private fun recordSuccessResults(buildHelpers: MutableList<BuildHelper>) {

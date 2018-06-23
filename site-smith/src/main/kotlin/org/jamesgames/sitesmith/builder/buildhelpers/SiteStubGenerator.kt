@@ -2,8 +2,8 @@ package org.jamesgames.sitesmith.builder.buildhelpers
 
 import org.jamesgames.sitesmith.builder.SiteComponentDatabase
 import org.jamesgames.sitesmith.builder.SiteLayout
-import org.jamesgames.sitesmith.resources.Page
 import org.jamesgames.sitesmith.resources.OptionalPageAttributes
+import org.jamesgames.sitesmith.resources.Page
 import org.jamesgames.sitesmith.resources.SiteFile
 import java.io.File
 import java.nio.file.Files

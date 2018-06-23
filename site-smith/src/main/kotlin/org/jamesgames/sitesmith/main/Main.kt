@@ -15,7 +15,8 @@ class Main {
                 "Project page: github.com/jamesgames/site-smith${System.lineSeparator()}${System.lineSeparator()}" +
                 "Options:"
 
-        @JvmStatic fun main(args: Array<String>) {
+        @JvmStatic
+        fun main(args: Array<String>) {
             val options = Options()
             options.addOption(Option.builder(projectDirOption)
                     .longOpt("project-directory")
@@ -38,11 +39,11 @@ class Main {
                             File(line.getOptionValue(siteLayoutOption)))
                     project.buildSite()
                     System.out.println(project.results)
-                } catch(exceptionFromProject: Exception) {
+                } catch (exceptionFromProject: Exception) {
                     "Issue during site creation: " + exceptionFromProject.toString()
                     throw exceptionFromProject
                 })
-            } catch(exp: ParseException) {
+            } catch (exp: ParseException) {
                 System.out.println("Command line argument parsing failed. Reason: ${exp.message}")
                 printHelp(options)
             }

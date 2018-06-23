@@ -9,6 +9,7 @@ interface Resource {
     companion object {
         val startOfExternalFile = "external:"
     }
+
     fun getUniqueName(): String
     fun getPath(): Path
 }
