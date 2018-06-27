@@ -2,6 +2,7 @@ package org.jamesgames.sitesmith.main
 
 import org.apache.commons.cli.*
 import org.jamesgames.sitesmith.project.Project
+import spark.Spark.init
 import java.io.File
 
 /**
@@ -9,8 +10,9 @@ import java.io.File
  */
 class Main {
     companion object {
-        const private val siteLayoutOption = "sl"
-        const private val projectDirOption = "pd"
+        private const val siteLayoutOption = "sl"
+        private const val projectDirOption = "pd"
+        private const val useGuiOption = "gui"
         private val cliHeaderMessage = "Welcome to the site-smith website generator tool${System.lineSeparator()}" +
                 "Project page: github.com/jamesgames/site-smith${System.lineSeparator()}${System.lineSeparator()}" +
                 "Options:"
@@ -30,19 +32,30 @@ class Main {
                     .hasArg()
                     .desc("The file depicting the layout of the files and directories for the generated website")
                     .build())
+            options.addOption(Option.builder(useGuiOption)
+                    .desc("Serves a web page to help create SiteSmith projects")
+                    .build())
 
             val parser = DefaultParser()
             try {
                 val line = parser.parse(options, args)
-                System.out.println(try {
-                    var project = Project(File(line.getOptionValue(projectDirOption)),
-                            File(line.getOptionValue(siteLayoutOption)))
-                    project.buildSite()
-                    project.results
-                } catch (exceptionFromProject: Exception) {
-                    "Issue during site creation: " + exceptionFromProject.toString()
-                    throw exceptionFromProject
-                })
+                var project = Project(File(line.getOptionValue(projectDirOption)),
+                        File(line.getOptionValue(siteLayoutOption)))
+                val useGui = line.hasOption(useGuiOption)
+                if (useGui) {
+                    // todo, setup API
+                    init()
+                    System.out.println("Hosting UI on http://localhost:4567")
+                } else {
+                    val cmdLineResults = try {
+                        project.buildSite()
+                        project.results
+                    } catch (exceptionFromProject: Exception) {
+                        "Issue during site creation: " + exceptionFromProject.toString()
+                        throw exceptionFromProject
+                    }
+                    System.out.println(cmdLineResults)
+                }
             } catch (exp: ParseException) {
                 System.out.println("Command line argument parsing failed. Reason: ${exp.message}")
                 printHelp(options)
