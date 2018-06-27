@@ -38,7 +38,7 @@ class Main {
                     var project = Project(File(line.getOptionValue(projectDirOption)),
                             File(line.getOptionValue(siteLayoutOption)))
                     project.buildSite()
-                    System.out.println(project.results)
+                    project.results
                 } catch (exceptionFromProject: Exception) {
                     "Issue during site creation: " + exceptionFromProject.toString()
                     throw exceptionFromProject
