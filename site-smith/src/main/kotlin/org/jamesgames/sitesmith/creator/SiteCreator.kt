@@ -68,7 +68,7 @@ class SiteCreator(private val siteLayoutFile: File,
     private fun createFile(text: String, fileName: String, rootContainingDirectory: File) {
         val file = Paths.get(rootContainingDirectory.absolutePath, fileName).toFile()
         val matchingFiles = matchingFiles(rootContainingDirectory, file.name)
-        verifySingleFileExists(matchingFiles, file.name)
+        verifyNoFileExists(matchingFiles, file.name)
         file.createNewFile()
         overwriteFile(text, file)
     }
