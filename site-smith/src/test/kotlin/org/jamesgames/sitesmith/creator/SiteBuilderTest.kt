@@ -230,6 +230,24 @@ class SiteBuilderTest {
         assertEquals(expectedLayoutText, actualLayoutText)
     }
 
+    @Test
+    fun getTextFunctionNames() {
+        val functionNames = siteCreator!!.getTextFunctionNames()
+        assertEquals(
+                listOf("function-that-accepts-a-function", "hello-large-names",
+                        "link", "link-that-reads-nested-resource-path").sorted(),
+                functionNames.sorted())
+    }
+
+    @Test
+    fun getScriptNames() {
+        val scriptNames = siteCreator!!.getTextScriptNames()
+        assertEquals(
+                listOf("exampleScript", "exampleScript2",
+                        "scriptForQueryingResourceNames", "scriptThatOutputsItsPage").sorted(),
+                scriptNames.sorted())
+    }
+
     companion object {
         private fun fileAsString(file: File?): String = com.google.common.io.Files.toString(file, Charsets.UTF_8)
     }

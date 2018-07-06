@@ -6,6 +6,7 @@ import java.io.FileWriter
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Collectors
+import java.util.stream.Stream
 
 /**
  * @author James Murphy
@@ -130,4 +131,26 @@ class SiteCreator(private val siteLayoutFile: File,
         verifySingleFileExists(matchingFiles, file.name)
         return com.google.common.io.Files.toString(file, Charsets.UTF_8)
     }
+
+    fun getTextFunctionNames(): List<String> {
+        return allFiles(textFunctionDirectory, SiteComponentDatabase.textFunctionSourceExtension)
+                .map{ it.nameWithoutExtension }
+                .sorted()
+                .collect(Collectors.toList())
+    }
+
+    fun getTextScriptNames(): List<String> {
+        return allFiles(textScriptDirectory, SiteComponentDatabase.textScriptSourceExtension)
+                .map { it.nameWithoutExtension }
+                .sorted()
+                .collect(Collectors.toList())
+    }
+
+    private fun allFiles(directoryToRecurseSearch: File,
+                              extensionFilter: String): Stream<File> = Files.walk(
+            Paths.get(directoryToRecurseSearch.toURI()))
+            .map { it.toFile() }
+            .filter { it != directoryToRecurseSearch }
+            .filter { it.isFile }
+            .filter { it.name.endsWith(extensionFilter) }
 }
