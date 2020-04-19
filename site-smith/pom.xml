@@ -84,11 +84,6 @@
             <artifactId>clostache</artifactId>
             <version>1.4.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.sparkjava</groupId>
-            <artifactId>spark-core</artifactId>
-            <version>2.6.0</version>
-        </dependency>
         <!-- slf4j dependency added to squash printed warning from sparkjava -->
         <dependency>
             <groupId>org.slf4j</groupId>

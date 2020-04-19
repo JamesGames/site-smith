@@ -2,7 +2,6 @@ package org.jamesgames.sitesmith.main
 
 import org.apache.commons.cli.*
 import org.jamesgames.sitesmith.project.Project
-import spark.Spark.init
 import java.io.File
 
 /**
@@ -41,21 +40,14 @@ class Main {
                 val line = parser.parse(options, args)
                 var project = Project(File(line.getOptionValue(projectDirOption)),
                         File(line.getOptionValue(siteLayoutOption)))
-                val useGui = line.hasOption(useGuiOption)
-                if (useGui) {
-                    // todo, setup API
-                    init()
-                    System.out.println("Hosting UI on http://localhost:4567")
-                } else {
-                    val cmdLineResults = try {
-                        project.buildSite()
-                        project.results
-                    } catch (exceptionFromProject: Exception) {
-                        "Issue during site creation: " + exceptionFromProject.toString()
-                        throw exceptionFromProject
-                    }
-                    System.out.println(cmdLineResults)
+                val cmdLineResults = try {
+                    project.buildSite()
+                    project.results
+                } catch (exceptionFromProject: Exception) {
+                    "Issue during site creation: " + exceptionFromProject.toString()
+                    throw exceptionFromProject
                 }
+                    System.out.println(cmdLineResults)
             } catch (exp: ParseException) {
                 System.out.println("Command line argument parsing failed. Reason: ${exp.message}")
                 printHelp(options)
