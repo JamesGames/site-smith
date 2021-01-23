@@ -8,46 +8,45 @@ I decided to make Site Smith to automate my own personal website in some capacit
 and to find a hobby project to learn Kotlin and Clojure.
 
 My overall goal was to create a simple scripting environment (in Clojure), that can generate static websites.
-My approach for this was to have 4 simple inputs into Site Smith:
+My approach for this was to have 4 different file based inputs into Site Smith:
 
 1. A site layout file. A site map like file in json, which depicts the site's hierarchy of files, and
 what scripts are used to generate a page, and various other options.
 
-    ```json
-    "pages": [
+```json
+"pages": [
+   {
+      "uniqueName": "home-page",
+      "fileName": "index.html",
+      "pageTitle": "Home Page",
+      "textScriptsForPage": ["header", "homePageScript", "footer"]
+   }
+],
+"directories": [
+  {
+   "name": "how_to_use",
+   "pages": [
       {
-        "uniqueName": "home-page",
-        "fileName": "index.html",
-        "pageTitle": "Home Page",
-        "textScriptsForPage": ["header", "homePageScript", "footer"]
+         "uniqueName": "howToPage",
+         "fileName": "index.html",
+         "pageTitle": "How to use Site Smith",
+         "textScriptsForPage": ["header", "howToPageScript", "footer"]
       }
-    ],
-    "directories": [
-      {
-        "name": "how_to_use",
-        "pages": [
-          {
-            "uniqueName": "howToPage",
-            "fileName": "index.html",
-            "pageTitle": "How to use Site Smith",
-            "textScriptsForPage": ["header", "howToPageScript", "footer"]
-          }
-    ```
+...
+```
 
 2. A scripts directory. User written Clojure code in the form of Site Smith's "text scripts", where one file is one
 script, which can be referenced from a page description in the layout file.
 
-    ```clojure
-    ;; header.clj
-    (
-      (image-link "resource:homePage" "resource:site-smith-logo.png" "Site Smith header image")
-      (navigation-bar [{:pageName "resource:homePage" :pageTitle "Home"}
-                     {:pageName "resource:howToPage" :pageTitle "How to use"}
-                     {:pageName "resource:sourceCodePage" :pageTitle "Source Code"}
-                     {:pageName "resource:aboutPage" :pageTitle "About"}])
-      (str "<p>Site generated on: " (.toString (java.util.Date.)) "</p>")
-    )
-    ```
+```clojure
+;; header.clj
+(image-link "resource:homePage" "resource:site-smith-logo.png" "Site Smith header image")
+(navigation-bar [{:pageName "resource:homePage" :pageTitle "Home"}
+               {:pageName "resource:howToPage" :pageTitle "How to use"}
+               {:pageName "resource:sourceCodePage" :pageTitle "Source Code"}
+               {:pageName "resource:aboutPage" :pageTitle "About"}])
+(str "<p>Site generated on: " (.toString (java.util.Date.)) "</p>")
+```
 
 3. A functions directory. More user written Clojure code, but in form of Site Smith's "text functions", where one file
 is one function, that can be called from a text script. A couple defining features of text functions are that string
@@ -55,16 +54,15 @@ arguments starting with "resource:" can auto evaluate to a relative path to the 
 string argument names, and that parameter names with the text function are passed to a templating text engine
 (currently [Clostache](https://github.com/fhd/clostache)) for the final function result.
 
-    ```clojure
-    ;; link.clj
-    (
-      ([class linkNameOrUrl text]
-      (str "<a class=\"{{class}}\" href=\"{{linkNameOrUrl}}\">{{text}}</a>"))
-    )
-    ;; a call from a script with (link "footer-link" "resource:howToPage" "how to use")
-    ;; from a page that is one directory below the target link would produce
-    ;; <a class="footerlink" href="how_to_use/">how to use</a>
-    ```
+```clojure
+;; link.clj
+([class linkNameOrUrl text]
+(str "<a class=\"{{class}}\" href=\"{{linkNameOrUrl}}\">{{text}}</a>"))
+
+;; a call from a script with (link "footer-link" "resource:howToPage" "how to use")
+;; from a page that is one directory below the target link would produce
+;; <a class="footerlink" href="how_to_use/">how to use</a>
+```
     
 4. A resource file directory, whose contents are copied directly into the generated website directory structure as is,
 or can be specified file by file through the site layout file on how and where they will appear in the site's structure.
@@ -100,9 +98,9 @@ All function text results are applied to a template engine, allowing you to inse
 data in a list, using special syntax. The syntax and features of the template engine are currently
 those found in the [Clostache](https://github.com/fhd/clostache) project.
 ```clojure
-([paragraphText](str "<p>{{paragraphText}}</p>"))
+[paragraphText](str "<p>{{paragraphText}}</p>")
 ;; instead of (but still possible if you wish)
-([paragraphText](str "<p>" paragraphText "</p>"))
+[paragraphText](str "<p>" paragraphText "</p>")
 ```
 
 
@@ -117,29 +115,11 @@ a markdown engine (currently [pegdown](https://github.com/sirthias/pegdown)) to 
   ["markdown"])
 ```
 
-Current Site Layout File Structure
-----------------------------------
-Here's a copy of the internal data structure of the layout file:
-```kotlin
-internal class SiteLayout(val root: SiteLayout.DirectoryInfo,
-                          val globalCssFileName: String?,
-                          val specifyResourcesByDirectory: Boolean) {
-
-    data class PageInfo(val fileName: String,
-                        val uniqueName: String? = fileName,
-                        val pageTitle: String,
-                        val additionalCssFiles: List<String>? = ArrayList(),
-                        val textScriptsForPage: List<String>? = ArrayList())
-
-    data class ResourceInfo(val fileName: String,
-                            val uniqueName: String? = fileName,
-                            val fileNameInResourceDir: String? = fileName)
-
-    data class DirectoryInfo(val name: String,
-                             val pages: List<PageInfo>? = ArrayList(),
-                             val resources: List<ResourceInfo>? = ArrayList(),
-                             val directories: List<DirectoryInfo>? = ArrayList())
-}
+How to Build and Run
+============
+Site Smith uses [Maven](https://maven.apache.org/) to build:
+```
+mvn install
 ```
 
 Command Line Arguments
@@ -155,13 +135,9 @@ Command Line Arguments
                                      files and directories for the generated
                                      website
 
-How to Build
-============
-Site Smith uses [Maven](https://maven.apache.org/) to build. Run maven in the root project directory.
-
 
 Credits
 -------
-- James Murphy - JamesGames.Org(at)gmail(dot)com
+- James Murphy - jamesgames.org(at)gmail
 
 ![](example/site-smith-how-to-project/resources/logo/site-smith-badge.png)
