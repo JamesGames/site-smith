@@ -20,7 +20,7 @@
     </developers>
 
     <properties>
-        <kotlin.version>1.3.72</kotlin.version>
+        <kotlin.version>1.6.0</kotlin.version>
         <application.class>org.jamesgames.sitesmith.main.Main</application.class>
         <jvmTarget>10</jvmTarget>
         <kotlin.compiler.jvmTarget>${jvmTarget}</kotlin.compiler.jvmTarget>
